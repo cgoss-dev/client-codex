@@ -2,6 +2,12 @@
 
 A field-service CRM for scheduling jobs and planning routes for multiple technicians.
 
+## Mockup
+
+[![Client Codex schedule mockup](docs/mockups/client-codex-schedule.png)](docs/mockups/client-codex-schedule.pdf)
+
+Schedule view concept with a weekly calendar, technician selection, and map preview. Select the image to open the full-resolution PDF.
+
 ## Stack
 
 - Bootstrap
