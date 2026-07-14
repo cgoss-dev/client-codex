@@ -11,7 +11,61 @@
   background-color: var(--bs-body-bg);
 }
 
-.app-accent {
+@media (min-width: 768px) {
+  .app-sidebar {
+    width: clamp(12rem, 20vw, 15rem);
+  }
+}
+
+.app-nav {
+  --bs-nav-pills-link-active-bg: var(--bs-orange);
+  --bs-nav-pills-link-active-color: var(--bs-black);
+}
+
+.app-nav .nav-link:not(.active) {
+  background-color: var(--bs-light);
+  color: var(--bs-dark);
+}
+
+.app-nav .nav-link.active {
+  color: var(--bs-black);
+}
+
+.calendar-weekdays {
+  display: grid;
+  font-size: 0.625rem;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.calendar-card {
+  margin-inline: auto;
+  max-width: 11rem;
+}
+
+@media (min-width: 768px) {
+  .calendar-card {
+    max-width: 15rem;
+  }
+}
+
+.calendar-weekdays abbr {
+  white-space: nowrap;
+}
+
+.calendar-dates {
+  display: grid;
+  gap: 0.125rem;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  font-size: 0.625rem;
+  line-height: 1;
+  width: 100%;
+}
+
+.calendar-day-current {
   background-color: var(--bs-orange);
   color: var(--bs-black);
 }
