@@ -1,0 +1,17 @@
+.app-header {
+  background-color: var(--bs-primary);
+  color: var(--bs-white);
+}
+
+.app-sidebar {
+  background-color: var(--bs-tertiary-bg);
+}
+
+.app-workspace {
+  background-color: var(--bs-body-bg);
+}
+
+.app-accent {
+  background-color: var(--bs-orange);
+  color: var(--bs-black);
+}
