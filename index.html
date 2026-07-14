@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Client Codex</title>
 
@@ -12,13 +12,13 @@
       rel="stylesheet"
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
       crossorigin="anonymous"
-    >
+    />
 
     <!-- Our stylesheet loads second so we can customize Bootstrap. -->
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css" />
   </head>
 
-  <body>
+  <body class="d-flex flex-column min-vh-100">
     <header>
       <nav class="navbar navbar-expand-md app-header px-3 py-2" data-bs-theme="dark" aria-label="Primary navigation">
         <div class="container-fluid px-0">
@@ -59,99 +59,98 @@
       </nav>
     </header>
 
-    <main class="container-fluid">
+    <main class="container-fluid d-flex flex-grow-1">
       <div class="row">
-        <aside class="col-12 col-md-auto app-sidebar px-2 py-3">
-          <section aria-labelledby="calendar-heading">
-            <h2 id="calendar-heading" class="h5 text-center mb-3">
-              Calendar
-            </h2>
+        <aside class="offcanvas-md offcanvas-start col-md-auto app-sidebar" tabindex="-1" id="scheduleSidebar" aria-label="Sidebar">
+          <button
+            class="btn app-sidebar-handle app-sidebar-close d-md-none shadow-sm"
+            type="button"
+            data-bs-dismiss="offcanvas"
+            data-bs-target="#scheduleSidebar"
+            aria-label="Close sidebar"
+          >
+            <span aria-hidden="true">&lsaquo;</span>
+          </button>
 
-            <div class="card calendar-card border-0">
-              <div class="card-body p-2">
-                <div class="d-flex justify-content-between align-items-center">
-                  <button
-                    class="btn btn-sm btn-light"
-                    type="button"
-                    aria-label="Previous month"
-                  >
-                    &lsaquo;
-                  </button>
+          <div class="offcanvas-body d-block px-2 py-3">
+            <section aria-labelledby="calendar-heading">
+              <h2 id="calendar-heading" class="h5 text-center mb-3">Calendar</h2>
 
-                  <time datetime="2026-07">Jul</time>
+              <div class="card calendar-card border-0">
+                <div class="card-body p-2">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-sm btn-light" type="button" aria-label="Previous month">&lsaquo;</button>
 
-                  <button
-                    class="btn btn-sm btn-light"
-                    type="button"
-                    aria-label="Next month"
-                  >
-                    &rsaquo;
-                  </button>
-                </div>
+                    <time datetime="2026-07">Jul</time>
 
-                <div
-                  class="calendar-weekdays mt-3 text-center"
-                  aria-label="Days of the week"
-                >
-                  <abbr class="text-decoration-none" title="Sunday">Sun</abbr>
-                  <abbr class="text-decoration-none" title="Monday">Mon</abbr>
-                  <abbr class="text-decoration-none" title="Tuesday">Tue</abbr>
-                  <abbr class="text-decoration-none" title="Wednesday">Wed</abbr>
-                  <abbr class="text-decoration-none" title="Thursday">Thu</abbr>
-                  <abbr class="text-decoration-none" title="Friday">Fri</abbr>
-                  <abbr class="text-decoration-none" title="Saturday">Sat</abbr>
-                </div>
+                    <button class="btn btn-sm btn-light" type="button" aria-label="Next month">&rsaquo;</button>
+                  </div>
 
-                <div class="calendar-dates mt-2" aria-label="July 2026 dates">
-                  <span aria-hidden="true"></span>
-                  <span aria-hidden="true"></span>
-                  <span aria-hidden="true"></span>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 1, 2026">1</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 2, 2026">2</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 3, 2026">3</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 4, 2026">4</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 5, 2026">5</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 6, 2026">6</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 7, 2026">7</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 8, 2026">8</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 9, 2026">9</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 10, 2026">10</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 11, 2026">11</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 12, 2026">12</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 13, 2026">13</button>
-                  <button
-                    class="btn calendar-day calendar-day-current p-0"
-                    type="button"
-                    aria-label="July 14, 2026, today"
-                    aria-current="date"
-                  >
-                    14
-                  </button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 15, 2026">15</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 16, 2026">16</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 17, 2026">17</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 18, 2026">18</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 19, 2026">19</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 20, 2026">20</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 21, 2026">21</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 22, 2026">22</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 23, 2026">23</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 24, 2026">24</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 25, 2026">25</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 26, 2026">26</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 27, 2026">27</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 28, 2026">28</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 29, 2026">29</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 30, 2026">30</button>
-                  <button class="btn calendar-day p-0" type="button" aria-label="July 31, 2026">31</button>
-                  <span aria-hidden="true"></span>
+                  <div class="calendar-weekdays mt-3 text-center" aria-label="Days of the week">
+                    <abbr class="text-decoration-none" title="Sunday">Sun</abbr>
+                    <abbr class="text-decoration-none" title="Monday">Mon</abbr>
+                    <abbr class="text-decoration-none" title="Tuesday">Tue</abbr>
+                    <abbr class="text-decoration-none" title="Wednesday">Wed</abbr>
+                    <abbr class="text-decoration-none" title="Thursday">Thu</abbr>
+                    <abbr class="text-decoration-none" title="Friday">Fri</abbr>
+                    <abbr class="text-decoration-none" title="Saturday">Sat</abbr>
+                  </div>
+
+                  <div class="calendar-dates mt-2" aria-label="July 2026 dates">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 1, 2026">1</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 2, 2026">2</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 3, 2026">3</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 4, 2026">4</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 5, 2026">5</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 6, 2026">6</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 7, 2026">7</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 8, 2026">8</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 9, 2026">9</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 10, 2026">10</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 11, 2026">11</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 12, 2026">12</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 13, 2026">13</button>
+                    <button class="btn calendar-day calendar-day-current p-0" type="button" aria-label="July 14, 2026, today" aria-current="date">14</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 15, 2026">15</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 16, 2026">16</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 17, 2026">17</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 18, 2026">18</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 19, 2026">19</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 20, 2026">20</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 21, 2026">21</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 22, 2026">22</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 23, 2026">23</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 24, 2026">24</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 25, 2026">25</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 26, 2026">26</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 27, 2026">27</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 28, 2026">28</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 29, 2026">29</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 30, 2026">30</button>
+                    <button class="btn calendar-day p-0" type="button" aria-label="July 31, 2026">31</button>
+                    <span aria-hidden="true"></span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </div>
         </aside>
 
         <section class="col-12 col-md app-workspace p-3">
+          <button
+            class="btn btn-primary app-sidebar-handle app-sidebar-toggle d-md-none shadow-sm"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#scheduleSidebar"
+            aria-controls="scheduleSidebar"
+            aria-label="Open sidebar"
+          >
+            <span aria-hidden="true">&rsaquo;</span>
+          </button>
+
           <h1 class="h5">Schedule</h1>
           <p class="mb-0">The weekly schedule will go here.</p>
         </section>

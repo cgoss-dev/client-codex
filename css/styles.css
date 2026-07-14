@@ -4,6 +4,8 @@
 }
 
 .app-sidebar {
+  --bs-offcanvas-width: 15rem;
+
   background-color: var(--bs-tertiary-bg);
 }
 
@@ -11,8 +13,44 @@
   background-color: var(--bs-body-bg);
 }
 
+.app-sidebar-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.5rem;
+  height: 5rem;
+  padding: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.app-sidebar-toggle {
+  position: fixed;
+  left: 0;
+  z-index: 1030;
+}
+
+.app-sidebar-close {
+  --bs-btn-color: var(--bs-dark);
+  --bs-btn-bg: var(--bs-white);
+  --bs-btn-border-color: var(--bs-border-color);
+  --bs-btn-hover-color: var(--bs-dark);
+  --bs-btn-hover-bg: var(--bs-tertiary-bg);
+  --bs-btn-hover-border-color: var(--bs-border-color);
+
+  position: absolute;
+  right: 0;
+  z-index: 1;
+  transform: translate(100%, -50%);
+}
+
 @media (min-width: 768px) {
   .app-sidebar {
+    background-color: var(--bs-secondary-bg) !important;
     width: clamp(12rem, 20vw, 15rem);
   }
 }
