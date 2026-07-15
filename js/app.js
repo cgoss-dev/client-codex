@@ -1,4 +1,7 @@
 const weekStartToggle = document.querySelector("#weekStartToggle");
+const scheduleNavLink = document.querySelector("#scheduleNavLink");
+const accountsNavLink = document.querySelector("#accountsNavLink");
+const appViewElements = document.querySelectorAll("[data-app-view]");
 const calendarDates = document.querySelector(".calendar-dates");
 const calendarMonth = document.querySelector("#calendarMonth");
 const previousMonthButton = document.querySelector("#previousMonthButton");
@@ -27,6 +30,30 @@ const appointmentInfo3Button = document.querySelector("#appointmentInfo3Button")
 const appointmentInfo5Button = document.querySelector("#appointmentInfo5Button");
 const weekendsOffButton = document.querySelector("#weekendsOffButton");
 const weekendsOnButton = document.querySelector("#weekendsOnButton");
+
+const showAppView = (viewName) => {
+  appViewElements.forEach((element) => {
+    element.classList.toggle("d-none", element.dataset.appView !== viewName);
+  });
+
+  [scheduleNavLink, accountsNavLink].forEach((link) => {
+    const isActive = link?.getAttribute("href") === `#${viewName}`;
+    link?.classList.toggle("active", isActive);
+
+    if (isActive) {
+      link?.setAttribute("aria-current", "page");
+    } else {
+      link?.removeAttribute("aria-current");
+    }
+  });
+};
+
+const showViewFromHash = () => {
+  showAppView(window.location.hash === "#accounts" ? "accounts" : "schedule");
+};
+
+window.addEventListener("hashchange", showViewFromHash);
+showViewFromHash();
 
 if (weekStartToggle && calendarDates && calendarMonth) {
   const weekStartStorageKey = "clientCodex.weekStartsOnMonday";

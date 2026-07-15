@@ -200,6 +200,22 @@ body > main {
   width: 4rem;
 }
 
+.app-sidebar-action {
+  align-items: center;
+  display: flex;
+  font-family: inherit;
+  font-size: var(--app-control-font-size);
+  height: var(--app-control-height);
+  justify-content: center;
+  padding-block: 0;
+}
+
+.app-account-empty-state {
+  background-color: var(--bs-tertiary-bg);
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
 .app-layout-row {
   flex: 1 1 auto;
   min-height: 0;
@@ -393,13 +409,6 @@ body > main {
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: var(--bs-border-radius);
   overflow: hidden;
-}
-
-.app-mini-map {
-  aspect-ratio: 1;
-  object-fit: none;
-  object-position: center;
-  width: 100%;
 }
 
 .app-sidebar-handle {

@@ -39,10 +39,10 @@
           <div class="collapse navbar-collapse" id="primaryNavigation">
             <ul class="navbar-nav nav nav-pills app-nav ms-md-auto gap-2 py-3 py-md-0">
               <li class="nav-item">
-                <a class="nav-link btn btn-light active" href="#" aria-current="page">Schedule</a>
+                <a class="nav-link btn btn-light active" id="scheduleNavLink" href="#schedule" aria-current="page">Schedule</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link btn btn-light" href="#">Clients</a>
+                <a class="nav-link btn btn-light" id="accountsNavLink" href="#accounts">Accounts</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link btn btn-light" href="#">Billing</a>
@@ -61,7 +61,7 @@
 
     <main class="container-fluid d-flex flex-grow-1">
       <div class="row app-layout-row">
-        <aside class="offcanvas-md offcanvas-start col-md-auto app-sidebar px-0" tabindex="-1" id="scheduleSidebar" aria-label="Sidebar">
+        <aside class="offcanvas-md offcanvas-start col-md-auto app-sidebar px-0" data-app-view="schedule" tabindex="-1" id="scheduleSidebar" aria-label="Schedule sidebar">
           <button
             class="btn app-sidebar-handle app-sidebar-close d-md-none shadow-sm"
             type="button"
@@ -131,19 +131,22 @@
               </div>
             </section>
 
-            <section class="app-sidebar-section" aria-labelledby="map-heading">
-              <h2 id="map-heading" class="h3 app-sidebar-title text-center">Map</h2>
+            <section class="app-sidebar-section" aria-labelledby="appointments-heading">
+              <h2 id="appointments-heading" class="h3 app-sidebar-title text-center">Appointments</h2>
 
-              <img
-                class="img-fluid app-sidebar-card app-mini-map"
-                src="images/mini-map-placeholder.png"
-                alt="Map placeholder showing roads and waterways"
-              />
+              <div class="card app-sidebar-card">
+                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Appointment actions">
+                  <button class="btn btn-light app-sidebar-action" type="button">Create New Appt</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Lookup by Acct #</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Lookup by Client</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Lookup by Location</button>
+                </div>
+              </div>
             </section>
           </div>
         </aside>
 
-        <section class="col-12 col-md app-workspace">
+        <section class="col-12 col-md app-workspace" data-app-view="schedule">
           <button
             class="btn btn-primary app-sidebar-handle app-sidebar-toggle d-md-none shadow-sm"
             type="button"
@@ -239,6 +242,85 @@
                 <button class="btn btn-light btn-sm app-format-button" id="weekendsOffButton" type="button">Off</button>
                 <button class="btn btn-light btn-sm app-format-button" id="weekendsOnButton" type="button">On</button>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <aside
+          class="offcanvas-md offcanvas-start col-md-auto app-sidebar px-0 d-none"
+          data-app-view="accounts"
+          tabindex="-1"
+          id="accountsSidebar"
+          aria-label="Accounts sidebar"
+        >
+          <button
+            class="btn app-sidebar-handle app-sidebar-close d-md-none shadow-sm"
+            type="button"
+            data-bs-dismiss="offcanvas"
+            data-bs-target="#accountsSidebar"
+            aria-label="Close accounts sidebar"
+          >
+            <span aria-hidden="true">&lsaquo;</span>
+          </button>
+
+          <div class="offcanvas-body d-block app-sidebar-content px-3">
+            <section class="app-sidebar-section" aria-labelledby="account-create-heading">
+              <h2 id="account-create-heading" class="h3 app-sidebar-title text-center">Create</h2>
+
+              <div class="card app-sidebar-card">
+                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Create account records">
+                  <button class="btn btn-light app-sidebar-action" type="button">New Account</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">New Client</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">New Location</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="app-sidebar-section" aria-labelledby="account-lookup-heading">
+              <h2 id="account-lookup-heading" class="h3 app-sidebar-title text-center">Lookup</h2>
+
+              <div class="card app-sidebar-card">
+                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Look up account records">
+                  <button class="btn btn-light app-sidebar-action" type="button">Account #</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Client</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Location</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="app-sidebar-section" aria-labelledby="account-rentals-heading">
+              <h2 id="account-rentals-heading" class="h3 app-sidebar-title text-center">Rentals</h2>
+
+              <div class="card app-sidebar-card">
+                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Rental account records">
+                  <button class="btn btn-light app-sidebar-action" type="button">Property Management</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Owners</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Tenants</button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </aside>
+
+        <section class="col-12 col-md app-workspace d-none" data-app-view="accounts" aria-labelledby="accounts-main-heading">
+          <button
+            class="btn btn-primary app-sidebar-handle app-sidebar-toggle d-md-none shadow-sm"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#accountsSidebar"
+            aria-controls="accountsSidebar"
+            aria-label="Open accounts sidebar"
+          >
+            <span aria-hidden="true">&rsaquo;</span>
+          </button>
+
+          <div class="app-main-heading-row">
+            <h1 class="h3 app-main-title" id="accounts-main-heading">Accounts</h1>
+          </div>
+
+          <div class="card app-account-empty-state">
+            <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
+              <p class="mb-0">Select an account or create a new account to get started.</p>
             </div>
           </div>
         </section>
