@@ -117,8 +117,8 @@
               </div>
             </section>
 
-            <section class="app-sidebar-section" aria-labelledby="technicians-heading">
-              <h2 id="technicians-heading" class="h3 app-sidebar-title text-center">Technicians</h2>
+            <section class="app-sidebar-section" aria-labelledby="technician-heading">
+              <h2 id="technician-heading" class="h3 app-sidebar-title text-center">Technician</h2>
 
               <div class="card app-sidebar-card">
                 <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Filter schedule by technician">
@@ -135,9 +135,9 @@
               <h2 id="map-heading" class="h3 app-sidebar-title text-center">Map</h2>
 
               <img
-                class="img-fluid app-sidebar-card"
+                class="img-fluid app-sidebar-card app-mini-map"
                 src="images/mini-map-placeholder.png"
-                alt="Map showing example technician locations"
+                alt="Map placeholder showing roads and waterways"
               />
             </section>
           </div>
@@ -155,18 +155,44 @@
             <span aria-hidden="true">&rsaquo;</span>
           </button>
 
-          <div class="app-main-heading-row">
-            <h1 class="h3 app-main-title" id="schedule-heading">Schedule</h1>
-          </div>
+          <div class="app-main-panels" id="mainPanels">
+            <section class="app-schedule-panel" aria-labelledby="schedule-heading">
+              <div class="app-main-heading-row">
+                <h1 class="h3 app-main-title" id="schedule-heading">Schedule</h1>
 
-          <div class="table-responsive app-schedule-wrapper">
-            <table class="table align-middle mb-0 app-schedule-table">
-              <caption class="visually-hidden" id="scheduleCaption"></caption>
-              <thead>
-                <tr id="scheduleWeekdays"></tr>
-              </thead>
-              <tbody id="scheduleBody"></tbody>
-            </table>
+                <div class="app-schedule-heading-controls" id="scheduleHeadingControls">
+                  <div class="btn-group" role="group" aria-label="Move schedule date range">
+                    <button class="btn btn-light app-schedule-step-button" id="previousScheduleDatesButton" type="button">Prev</button>
+                    <button class="btn btn-light app-schedule-step-button" id="nextScheduleDatesButton" type="button">Next</button>
+                  </div>
+                  <button class="btn btn-light app-view-route-button" id="viewRouteButton" type="button" aria-pressed="false">Route Off</button>
+                </div>
+              </div>
+
+              <div class="table-responsive app-schedule-wrapper">
+                <table class="table align-middle mb-0 app-schedule-table">
+                  <caption class="visually-hidden" id="scheduleCaption"></caption>
+                  <thead>
+                    <tr id="scheduleWeekdays"></tr>
+                  </thead>
+                  <tbody id="scheduleBody"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="app-route-panel" id="routePanel" aria-labelledby="route-heading" hidden>
+              <div class="app-main-heading-row" id="routeHeadingRow">
+                <h2 class="h3 app-main-title" id="route-heading">Route</h2>
+              </div>
+
+              <div class="app-route-map-frame">
+                <img
+                  class="app-route-map"
+                  src="images/mini-map-placeholder.png"
+                  alt="Zoomed-out map placeholder for the selected day's route"
+                />
+              </div>
+            </section>
           </div>
 
           <div class="app-format-popup shadow" id="scheduleFormatPopup" popover role="dialog" aria-labelledby="scheduleFormatHeading">

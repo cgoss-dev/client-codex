@@ -7,6 +7,13 @@ const scheduleCaption = document.querySelector("#scheduleCaption");
 const scheduleWeekdays = document.querySelector("#scheduleWeekdays");
 const scheduleBody = document.querySelector("#scheduleBody");
 const scheduleTable = document.querySelector(".app-schedule-table");
+const mainPanels = document.querySelector("#mainPanels");
+const routePanel = document.querySelector("#routePanel");
+const scheduleHeadingControls = document.querySelector("#scheduleHeadingControls");
+const routeHeadingRow = document.querySelector("#routeHeadingRow");
+const viewRouteButton = document.querySelector("#viewRouteButton");
+const previousScheduleDatesButton = document.querySelector("#previousScheduleDatesButton");
+const nextScheduleDatesButton = document.querySelector("#nextScheduleDatesButton");
 const scheduleFormatPopup = document.querySelector("#scheduleFormatPopup");
 const timeFormat12Button = document.querySelector("#timeFormat12Button");
 const timeFormat24Button = document.querySelector("#timeFormat24Button");
@@ -29,6 +36,7 @@ if (weekStartToggle && calendarDates && calendarMonth) {
   const scheduleEndHourStorageKey = "clientCodex.scheduleEndHour";
   const dateRangeStorageKey = "clientCodex.dateRangeDays";
   const appointmentInfoStorageKey = "clientCodex.appointmentInfoLines";
+  const routeVisibilityStorageKey = "clientCodex.showsRoute";
   const sundayFirst = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const today = new Date();
   const earliestMonth = new Date(today.getFullYear(), today.getMonth() - 12, 1);
@@ -42,6 +50,7 @@ if (weekStartToggle && calendarDates && calendarMonth) {
   let scheduleEndHour = 18;
   let dateRangeDays = 7;
   let appointmentInfoLines = 1;
+  let showsRoute = false;
 
   try {
     startsOnMonday = localStorage.getItem(weekStartStorageKey) === "true";
@@ -74,6 +83,8 @@ if (weekStartToggle && calendarDates && calendarMonth) {
     if ([1, 3, 5].includes(storedAppointmentInfoLines)) {
       appointmentInfoLines = storedAppointmentInfoLines;
     }
+
+    showsRoute = localStorage.getItem(routeVisibilityStorageKey) === "true";
   } catch {
     // The calendar still works if browser storage is unavailable.
   }
@@ -279,7 +290,7 @@ if (weekStartToggle && calendarDates && calendarMonth) {
 
     scheduleBody.replaceChildren(...scheduleRows);
     if (scheduleTable) {
-      const widthInRem = 3 + scheduleDates.length * 6;
+      const widthInRem = 2 + scheduleDates.length * 4;
       const gapInRem = (scheduleDates.length + 2) * 0.125;
       scheduleTable.style.minWidth = `calc(${widthInRem}rem + ${gapInRem}rem)`;
       scheduleTable.style.setProperty(
@@ -354,6 +365,22 @@ if (weekStartToggle && calendarDates && calendarMonth) {
     }
   };
 
+  const updateRouteView = () => {
+    mainPanels?.classList.toggle("app-route-visible", showsRoute);
+
+    if (routePanel) {
+      routePanel.hidden = !showsRoute;
+    }
+
+    if (viewRouteButton) {
+      viewRouteButton.textContent = showsRoute ? "Route On" : "Route Off";
+      viewRouteButton.classList.toggle("active", showsRoute);
+      viewRouteButton.setAttribute("aria-pressed", String(showsRoute));
+      (showsRoute ? routeHeadingRow : scheduleHeadingControls)?.append(viewRouteButton);
+    }
+
+  };
+
   function positionFormatPopup() {
     const trigger = document.querySelector(".schedule-time-toggle");
 
@@ -417,6 +444,7 @@ if (weekStartToggle && calendarDates && calendarMonth) {
     );
     calendarDates.setAttribute("aria-label", `${monthLabel} dates`);
     calendarDates.replaceChildren(...calendarCells);
+    updateRouteView();
     updateSchedule();
   };
 
@@ -489,6 +517,64 @@ if (weekStartToggle && calendarDates && calendarMonth) {
     updateSchedule();
   };
 
+  const setRouteVisibility = (showRoute) => {
+    showsRoute = showRoute;
+
+    try {
+      localStorage.setItem(routeVisibilityStorageKey, String(showsRoute));
+    } catch {
+      // The preference lasts for this page view if browser storage is unavailable.
+    }
+
+    updateRouteView();
+  };
+
+  const moveScheduleDateRange = (direction) => {
+    if (direction > 0) {
+      const currentScheduleDates = getScheduleDates();
+      const lastDisplayedDate = currentScheduleDates[currentScheduleDates.length - 1];
+      let nextDate = new Date(
+        lastDisplayedDate.getFullYear(),
+        lastDisplayedDate.getMonth(),
+        lastDisplayedDate.getDate() + 1,
+      );
+
+      while (!showsWeekends && (nextDate.getDay() === 0 || nextDate.getDay() === 6)) {
+        nextDate = new Date(nextDate.getFullYear(), nextDate.getMonth(), nextDate.getDate() + 1);
+      }
+
+      selectedDate = nextDate;
+    } else {
+      let previousDate = new Date(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate() - 1,
+      );
+      let displayedDayCount = 0;
+
+      while (displayedDayCount < dateRangeDays) {
+        const isWeekend = previousDate.getDay() === 0 || previousDate.getDay() === 6;
+
+        if (showsWeekends || !isWeekend) {
+          displayedDayCount += 1;
+        }
+
+        if (displayedDayCount < dateRangeDays) {
+          previousDate = new Date(
+            previousDate.getFullYear(),
+            previousDate.getMonth(),
+            previousDate.getDate() - 1,
+          );
+        }
+      }
+
+      selectedDate = previousDate;
+    }
+
+    displayedMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+    updateCalendar();
+  };
+
   const showRelativeMonth = (monthOffset) => {
     displayedMonth = new Date(
       displayedMonth.getFullYear(),
@@ -514,6 +600,9 @@ if (weekStartToggle && calendarDates && calendarMonth) {
   appointmentInfo1Button?.addEventListener("click", () => setAppointmentInfoLines(1));
   appointmentInfo3Button?.addEventListener("click", () => setAppointmentInfoLines(3));
   appointmentInfo5Button?.addEventListener("click", () => setAppointmentInfoLines(5));
+  viewRouteButton?.addEventListener("click", () => setRouteVisibility(!showsRoute));
+  previousScheduleDatesButton?.addEventListener("click", () => moveScheduleDateRange(-1));
+  nextScheduleDatesButton?.addEventListener("click", () => moveScheduleDateRange(1));
   weekendsOffButton?.addEventListener("click", () => setWeekendVisibility(false));
   weekendsOnButton?.addEventListener("click", () => setWeekendVisibility(true));
 
