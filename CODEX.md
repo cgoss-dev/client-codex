@@ -17,7 +17,10 @@ Build a simple field-service CRM for scheduling and routing multiple technicians
 - Keep the code beginner-friendly and explain important concepts.
 - Prefer Bootstrap utilities over custom CSS.
 - Build our own calendar, scheduling, and technician-assignment features.
-- Start with customers, locations, technicians, jobs, and appointments.
+- Treat Owners, Managers, and Tenants as Clients linked to Accounts and Locations.
+- Classify Locations as Residence or Rental; mark Rentals as Vacant or Occupied.
+- Keep the Bill To Account separate from the Service Location.
+- Start with accounts, clients, locations, technicians, jobs, and appointments.
 - Prevent overlapping technician appointments.
 - Keep mapping and routing code replaceable.
 - Treat Google Calendar as an optional future integration.

@@ -1,6 +1,7 @@
 const weekStartToggle = document.querySelector("#weekStartToggle");
 const scheduleNavLink = document.querySelector("#scheduleNavLink");
 const accountsNavLink = document.querySelector("#accountsNavLink");
+const billingNavLink = document.querySelector("#billingNavLink");
 const appViewElements = document.querySelectorAll("[data-app-view]");
 const calendarDates = document.querySelector(".calendar-dates");
 const calendarMonth = document.querySelector("#calendarMonth");
@@ -36,7 +37,7 @@ const showAppView = (viewName) => {
     element.classList.toggle("d-none", element.dataset.appView !== viewName);
   });
 
-  [scheduleNavLink, accountsNavLink].forEach((link) => {
+  [scheduleNavLink, accountsNavLink, billingNavLink].forEach((link) => {
     const isActive = link?.getAttribute("href") === `#${viewName}`;
     link?.classList.toggle("active", isActive);
 
@@ -49,7 +50,8 @@ const showAppView = (viewName) => {
 };
 
 const showViewFromHash = () => {
-  showAppView(window.location.hash === "#accounts" ? "accounts" : "schedule");
+  const requestedView = window.location.hash.slice(1);
+  showAppView(["accounts", "billing"].includes(requestedView) ? requestedView : "schedule");
 };
 
 window.addEventListener("hashchange", showViewFromHash);

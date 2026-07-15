@@ -210,10 +210,43 @@ body > main {
   padding-block: 0;
 }
 
-.app-account-empty-state {
-  background-color: var(--bs-tertiary-bg);
+.app-detail-grid {
+  display: grid;
   flex: 1 1 auto;
+  gap: var(--app-main-spacing);
+  grid-auto-rows: minmax(10rem, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   min-height: 0;
+  overflow: auto;
+}
+
+.app-detail-card {
+  height: 100%;
+  min-width: 0;
+}
+
+.app-detail-card .card-header {
+  background-color: var(--bs-light);
+}
+
+.app-detail-heading {
+  font-weight: 800;
+  margin: 0;
+}
+
+.app-detail-list,
+.app-detail-note {
+  font-size: var(--app-control-font-size);
+}
+
+.app-detail-list dt {
+  font-weight: 800;
+}
+
+@media (min-width: 992px) {
+  .app-detail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .app-layout-row {

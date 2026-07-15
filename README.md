@@ -6,7 +6,7 @@ A field-service CRM for scheduling jobs and planning routes for multiple technic
 
 [![Client Codex schedule mockup](docs/mockups/client-codex-schedule.png)](docs/mockups/client-codex-schedule.pdf)
 
-Schedule view concept with a weekly calendar, technician selection, and map preview. Select the image to open the full-resolution PDF.
+Schedule view concept with a weekly calendar, technician selection, and map preview.
 
 ## Stack
 
@@ -18,7 +18,10 @@ Schedule view concept with a weekly calendar, technician selection, and map prev
 
 ## Planned Features
 
-- Customers and service locations
+- Accounts and clients
+- Client roles: Owners, Managers, and Tenants
+- Service locations classified as Residence or Rental
+- Rental occupancy tracked as Vacant or Occupied
 - Technicians and availability
 - Jobs and appointments
 - Scheduling calendar with conflict detection
@@ -29,7 +32,7 @@ Schedule view concept with a weekly calendar, technician selection, and map prev
 
 1. Build the Bootstrap layout.
 2. Set up Flask and SQLite.
-3. Add customers and service locations.
+3. Add accounts, clients, roles, and service locations.
 4. Add technicians, jobs, and appointments.
 5. Build the scheduling calendar.
 6. Add maps and route planning.
