@@ -22,7 +22,7 @@
     <header>
       <nav class="navbar navbar-expand-md app-header py-2" data-bs-theme="dark" aria-label="Primary navigation">
         <div class="container-fluid px-0">
-          <a class="navbar-brand fs-3 fw-bold" href="#">Client Codex</a>
+          <a class="navbar-brand h3 app-header-title mb-0" href="#">Client Codex</a>
 
           <button
             class="navbar-toggler"
@@ -60,7 +60,7 @@
     </header>
 
     <main class="container-fluid d-flex flex-grow-1">
-      <div class="row">
+      <div class="row app-layout-row">
         <aside class="offcanvas-md offcanvas-start col-md-auto app-sidebar px-0" tabindex="-1" id="scheduleSidebar" aria-label="Sidebar">
           <button
             class="btn app-sidebar-handle app-sidebar-close d-md-none shadow-sm"
@@ -72,28 +72,36 @@
             <span aria-hidden="true">&lsaquo;</span>
           </button>
 
-          <div class="offcanvas-body d-block app-sidebar-content px-2">
+          <div class="offcanvas-body d-block app-sidebar-content px-3">
             <section class="app-sidebar-section" aria-labelledby="calendar-heading">
-              <h2 id="calendar-heading" class="h5 app-sidebar-title text-center">Calendar</h2>
+              <h2 id="calendar-heading" class="h3 app-sidebar-title text-center">Calendar</h2>
 
-              <div class="card calendar-card app-sidebar-card font-monospace">
+              <div class="card calendar-card app-sidebar-card">
                 <div class="card-body calendar-body px-1">
-                  <div class="btn-group w-100" role="group" aria-label="Calendar month navigation">
-                    <button class="btn btn-light calendar-month-button" id="previousMonthButton" type="button" aria-label="Previous month">&lsaquo;</button>
-
-                    <button class="btn btn-light calendar-month-reset flex-grow-1" id="currentMonthButton" type="button" aria-label="Return to current month">
-                      <time id="calendarMonth" datetime="" aria-live="polite"></time>
+                  <div class="calendar-month-display text-center">
+                    <button
+                      class="btn btn-light calendar-month-button"
+                      id="previousMonthButton"
+                      type="button"
+                      aria-label="Show previous month"
+                    >
+                      &lsaquo;
                     </button>
-
-                    <button class="btn btn-light calendar-month-button" id="nextMonthButton" type="button" aria-label="Next month">&rsaquo;</button>
+                    <time class="calendar-month-label" id="calendarMonth" datetime="" aria-live="polite"></time>
+                    <button
+                      class="btn btn-light calendar-month-button"
+                      id="nextMonthButton"
+                      type="button"
+                      aria-label="Show next month"
+                    >
+                      &rsaquo;
+                    </button>
                   </div>
 
-                  <button
-                    class="calendar-weekdays btn-light text-center"
+                  <div
+                    class="calendar-weekdays text-center"
                     id="weekStartToggle"
-                    type="button"
-                    aria-label="Week starts on Sunday. Change to Monday."
-                    aria-pressed="false"
+                    aria-label="Week starts on Sunday"
                   >
                     <span class="calendar-weekend" aria-hidden="true">Sun</span>
                     <span aria-hidden="true">Mon</span>
@@ -102,7 +110,7 @@
                     <span aria-hidden="true">Thu</span>
                     <span aria-hidden="true">Fri</span>
                     <span class="calendar-weekend" aria-hidden="true">Sat</span>
-                  </button>
+                  </div>
 
                   <div class="calendar-dates"></div>
                 </div>
@@ -110,7 +118,7 @@
             </section>
 
             <section class="app-sidebar-section" aria-labelledby="technicians-heading">
-              <h2 id="technicians-heading" class="h5 app-sidebar-title text-center">Technicians</h2>
+              <h2 id="technicians-heading" class="h3 app-sidebar-title text-center">Technicians</h2>
 
               <div class="card app-sidebar-card">
                 <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Filter schedule by technician">
@@ -124,7 +132,7 @@
             </section>
 
             <section class="app-sidebar-section" aria-labelledby="map-heading">
-              <h2 id="map-heading" class="h5 app-sidebar-title text-center">Map</h2>
+              <h2 id="map-heading" class="h3 app-sidebar-title text-center">Map</h2>
 
               <img
                 class="img-fluid app-sidebar-card"
@@ -147,8 +155,66 @@
             <span aria-hidden="true">&rsaquo;</span>
           </button>
 
-          <h1 class="h5">Schedule</h1>
-          <p class="mb-0">The weekly schedule will go here.</p>
+          <div class="app-main-heading-row">
+            <h1 class="h3 app-main-title" id="schedule-heading">Schedule</h1>
+          </div>
+
+          <div class="table-responsive app-schedule-wrapper">
+            <table class="table align-middle mb-0 app-schedule-table">
+              <caption class="visually-hidden" id="scheduleCaption"></caption>
+              <thead>
+                <tr id="scheduleWeekdays"></tr>
+              </thead>
+              <tbody id="scheduleBody"></tbody>
+            </table>
+          </div>
+
+          <div class="app-format-popup shadow" id="scheduleFormatPopup" popover role="dialog" aria-labelledby="scheduleFormatHeading">
+            <h2 class="app-format-heading" id="scheduleFormatHeading">Schedule format</h2>
+
+            <div class="app-format-row">
+              <span>Time format</span>
+              <div class="btn-group" role="group" aria-label="Time format">
+                <button class="btn btn-light btn-sm app-format-button" id="timeFormat12Button" type="button">12h</button>
+                <button class="btn btn-light btn-sm app-format-button" id="timeFormat24Button" type="button">24h</button>
+              </div>
+            </div>
+
+            <div class="app-format-row">
+              <span>Time range</span>
+              <div class="app-time-range-controls" role="group" aria-label="Displayed time range">
+                <select class="form-select form-select-sm app-time-range-select" id="scheduleStartHour" aria-label="Schedule start hour"></select>
+                <span aria-hidden="true">–</span>
+                <select class="form-select form-select-sm app-time-range-select" id="scheduleEndHour" aria-label="Schedule end hour"></select>
+              </div>
+            </div>
+
+            <div class="app-format-row">
+              <span>Date range</span>
+              <div class="btn-group" role="group" aria-label="Date range">
+                <button class="btn btn-light btn-sm app-format-button" id="dateRange3Button" type="button">3</button>
+                <button class="btn btn-light btn-sm app-format-button" id="dateRange5Button" type="button">5</button>
+                <button class="btn btn-light btn-sm app-format-button" id="dateRange7Button" type="button">7</button>
+              </div>
+            </div>
+
+            <div class="app-format-row">
+              <span>Appointment info</span>
+              <div class="btn-group" role="group" aria-label="Appointment information lines">
+                <button class="btn btn-light btn-sm app-format-button" id="appointmentInfo1Button" type="button">1</button>
+                <button class="btn btn-light btn-sm app-format-button" id="appointmentInfo3Button" type="button">3</button>
+                <button class="btn btn-light btn-sm app-format-button" id="appointmentInfo5Button" type="button">5</button>
+              </div>
+            </div>
+
+            <div class="app-format-row">
+              <span>Weekends</span>
+              <div class="btn-group" role="group" aria-label="Weekend visibility">
+                <button class="btn btn-light btn-sm app-format-button" id="weekendsOffButton" type="button">Off</button>
+                <button class="btn btn-light btn-sm app-format-button" id="weekendsOnButton" type="button">On</button>
+              </div>
+            </div>
+          </div>
         </section>
       </div>
     </main>
