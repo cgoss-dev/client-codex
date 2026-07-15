@@ -20,7 +20,7 @@
 
   <body class="d-flex flex-column min-vh-100">
     <header>
-      <nav class="navbar navbar-expand-md app-header px-3 py-2" data-bs-theme="dark" aria-label="Primary navigation">
+      <nav class="navbar navbar-expand-md app-header py-2" data-bs-theme="dark" aria-label="Primary navigation">
         <div class="container-fluid px-0">
           <a class="navbar-brand fs-3 fw-bold" href="#">Client Codex</a>
 
@@ -39,19 +39,19 @@
           <div class="collapse navbar-collapse" id="primaryNavigation">
             <ul class="navbar-nav nav nav-pills app-nav ms-md-auto gap-2 py-3 py-md-0">
               <li class="nav-item">
-                <a class="nav-link active" href="#" aria-current="page">Schedule</a>
+                <a class="nav-link btn btn-light active" href="#" aria-current="page">Schedule</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Clients</a>
+                <a class="nav-link btn btn-light" href="#">Clients</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Billing</a>
+                <a class="nav-link btn btn-light" href="#">Billing</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Company</a>
+                <a class="nav-link btn btn-light" href="#">Company</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Settings</a>
+                <a class="nav-link btn btn-light" href="#">Settings</a>
               </li>
             </ul>
           </div>
@@ -61,7 +61,7 @@
 
     <main class="container-fluid d-flex flex-grow-1">
       <div class="row">
-        <aside class="offcanvas-md offcanvas-start col-md-auto app-sidebar" tabindex="-1" id="scheduleSidebar" aria-label="Sidebar">
+        <aside class="offcanvas-md offcanvas-start col-md-auto app-sidebar px-0" tabindex="-1" id="scheduleSidebar" aria-label="Sidebar">
           <button
             class="btn app-sidebar-handle app-sidebar-close d-md-none shadow-sm"
             type="button"
@@ -72,74 +72,70 @@
             <span aria-hidden="true">&lsaquo;</span>
           </button>
 
-          <div class="offcanvas-body d-block px-2 py-3">
-            <section aria-labelledby="calendar-heading">
-              <h2 id="calendar-heading" class="h5 text-center mb-3">Calendar</h2>
+          <div class="offcanvas-body d-block app-sidebar-content px-2">
+            <section class="app-sidebar-section" aria-labelledby="calendar-heading">
+              <h2 id="calendar-heading" class="h5 app-sidebar-title text-center">Calendar</h2>
 
-              <div class="card calendar-card border-0">
-                <div class="card-body p-2">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <button class="btn btn-sm btn-light" type="button" aria-label="Previous month">&lsaquo;</button>
+              <div class="card calendar-card app-sidebar-card font-monospace">
+                <div class="card-body calendar-body px-1">
+                  <div class="btn-group w-100" role="group" aria-label="Calendar month navigation">
+                    <button class="btn btn-light calendar-month-button" id="previousMonthButton" type="button" aria-label="Previous month">&lsaquo;</button>
 
-                    <time datetime="2026-07">Jul</time>
+                    <button class="btn btn-light calendar-month-reset flex-grow-1" id="currentMonthButton" type="button" aria-label="Return to current month">
+                      <time id="calendarMonth" datetime="" aria-live="polite"></time>
+                    </button>
 
-                    <button class="btn btn-sm btn-light" type="button" aria-label="Next month">&rsaquo;</button>
+                    <button class="btn btn-light calendar-month-button" id="nextMonthButton" type="button" aria-label="Next month">&rsaquo;</button>
                   </div>
 
-                  <div class="calendar-weekdays mt-3 text-center" aria-label="Days of the week">
-                    <abbr class="text-decoration-none" title="Sunday">Sun</abbr>
-                    <abbr class="text-decoration-none" title="Monday">Mon</abbr>
-                    <abbr class="text-decoration-none" title="Tuesday">Tue</abbr>
-                    <abbr class="text-decoration-none" title="Wednesday">Wed</abbr>
-                    <abbr class="text-decoration-none" title="Thursday">Thu</abbr>
-                    <abbr class="text-decoration-none" title="Friday">Fri</abbr>
-                    <abbr class="text-decoration-none" title="Saturday">Sat</abbr>
-                  </div>
+                  <button
+                    class="calendar-weekdays btn-light text-center"
+                    id="weekStartToggle"
+                    type="button"
+                    aria-label="Week starts on Sunday. Change to Monday."
+                    aria-pressed="false"
+                  >
+                    <span class="calendar-weekend" aria-hidden="true">Sun</span>
+                    <span aria-hidden="true">Mon</span>
+                    <span aria-hidden="true">Tue</span>
+                    <span aria-hidden="true">Wed</span>
+                    <span aria-hidden="true">Thu</span>
+                    <span aria-hidden="true">Fri</span>
+                    <span class="calendar-weekend" aria-hidden="true">Sat</span>
+                  </button>
 
-                  <div class="calendar-dates mt-2" aria-label="July 2026 dates">
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 1, 2026">1</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 2, 2026">2</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 3, 2026">3</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 4, 2026">4</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 5, 2026">5</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 6, 2026">6</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 7, 2026">7</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 8, 2026">8</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 9, 2026">9</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 10, 2026">10</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 11, 2026">11</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 12, 2026">12</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 13, 2026">13</button>
-                    <button class="btn calendar-day calendar-day-current p-0" type="button" aria-label="July 14, 2026, today" aria-current="date">14</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 15, 2026">15</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 16, 2026">16</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 17, 2026">17</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 18, 2026">18</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 19, 2026">19</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 20, 2026">20</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 21, 2026">21</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 22, 2026">22</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 23, 2026">23</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 24, 2026">24</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 25, 2026">25</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 26, 2026">26</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 27, 2026">27</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 28, 2026">28</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 29, 2026">29</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 30, 2026">30</button>
-                    <button class="btn calendar-day p-0" type="button" aria-label="July 31, 2026">31</button>
-                    <span aria-hidden="true"></span>
-                  </div>
+                  <div class="calendar-dates"></div>
                 </div>
               </div>
+            </section>
+
+            <section class="app-sidebar-section" aria-labelledby="technicians-heading">
+              <h2 id="technicians-heading" class="h5 app-sidebar-title text-center">Technicians</h2>
+
+              <div class="card app-sidebar-card">
+                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Filter schedule by technician">
+                  <button class="btn btn-light technician-button" type="button" aria-pressed="false">Tech 1</button>
+                  <button class="btn btn-light technician-button active" type="button" aria-pressed="true">Tech 2</button>
+                  <button class="btn btn-light technician-button" type="button" aria-pressed="false">Tech 3</button>
+                  <button class="btn btn-light technician-button" type="button" aria-pressed="false">Tech 4</button>
+                  <button class="btn btn-light technician-button" type="button" aria-pressed="false">Tech 5</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="app-sidebar-section" aria-labelledby="map-heading">
+              <h2 id="map-heading" class="h5 app-sidebar-title text-center">Map</h2>
+
+              <img
+                class="img-fluid app-sidebar-card"
+                src="images/mini-map-placeholder.png"
+                alt="Map showing example technician locations"
+              />
             </section>
           </div>
         </aside>
 
-        <section class="col-12 col-md app-workspace p-3">
+        <section class="col-12 col-md app-workspace">
           <button
             class="btn btn-primary app-sidebar-handle app-sidebar-toggle d-md-none shadow-sm"
             type="button"
@@ -157,11 +153,13 @@
       </div>
     </main>
 
-    <!-- Bootstrap JavaScript powers interactive components added later. -->
+    <!-- Bootstrap JavaScript powers responsive navigation and the sidebar. -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
+
+    <script src="js/app.js"></script>
   </body>
 </html>
