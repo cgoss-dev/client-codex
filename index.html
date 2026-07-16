@@ -20,7 +20,7 @@
 
   <body class="d-flex flex-column min-vh-100">
     <header>
-      <nav class="navbar navbar-expand-lg app-header py-2" data-bs-theme="dark" aria-label="Primary navigation">
+      <nav class="navbar navbar-expand-xl app-header py-2" data-bs-theme="dark" aria-label="Primary navigation">
         <div class="container-fluid px-0">
           <a class="navbar-brand h3 app-header-title mb-0" href="#">Client Codex</a>
 
@@ -30,7 +30,7 @@
             type="button"
             aria-controls="newPanel"
           >
-            New
+            Add
           </button>
 
           <button
@@ -46,7 +46,7 @@
           </button>
 
           <div class="collapse navbar-collapse" id="primaryNavigation">
-            <ul class="navbar-nav nav nav-pills app-nav ms-lg-auto gap-2 py-3 py-lg-0">
+            <ul class="navbar-nav nav nav-pills app-nav ms-xl-auto gap-2 py-3 py-xl-0">
               <li class="nav-item d-md-none">
                 <button
                   class="nav-link btn btn-light app-global-new-button"
@@ -54,7 +54,7 @@
                   type="button"
                   aria-controls="newPanel"
                 >
-                  New
+                  Add
                 </button>
               </li>
               <li class="nav-item">
@@ -362,49 +362,356 @@
 
         </section>
 
-        <section class="col-12 app-workspace d-none" data-app-view="new" aria-labelledby="new-heading">
+        <aside
+          class="offcanvas-xl offcanvas-start col-xl-auto app-sidebar px-0 d-none"
+          data-app-view="new"
+          tabindex="-1"
+          id="newSidebar"
+          aria-label="Add sidebar"
+        >
+          <div class="offcanvas-body d-block app-sidebar-content px-3">
+            <section class="app-sidebar-section" aria-labelledby="add-details-heading">
+              <h2 id="add-details-heading" class="h3 app-sidebar-title text-center">Details</h2>
+
+              <div class="card app-sidebar-card">
+                <fieldset class="card-body d-grid gap-2 p-2">
+                  <legend class="visually-hidden">Choose details to add</legend>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      id="includeLocation"
+                      name="includeLocation"
+                      type="checkbox"
+                      aria-controls="locationFields"
+                      form="newForm"
+                    />
+                    <label class="form-check-label" for="includeLocation">Location</label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      id="includeClient"
+                      name="includeClient"
+                      type="checkbox"
+                      aria-controls="clientFields clientRoleOptions"
+                      aria-expanded="false"
+                      form="newForm"
+                    />
+                    <label class="form-check-label" for="includeClient">Client</label>
+                  </div>
+
+                  <fieldset class="d-none gap-2 ms-3" id="clientRoleOptions" data-client-role-options hidden>
+                    <legend class="visually-hidden">Client roles and contacts</legend>
+
+                    <div class="d-grid gap-1">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          id="includeOwner"
+                          type="checkbox"
+                          data-client-role-toggle="owner"
+                          aria-controls="ownerSourceOptions client-owner-heading"
+                          aria-expanded="false"
+                          disabled
+                        />
+                        <label class="form-check-label" for="includeOwner">Owner</label>
+                      </div>
+
+                      <div class="d-none gap-2 ms-3" id="ownerSourceOptions" data-client-source-options="owner" hidden>
+                        <fieldset class="d-grid gap-1">
+                          <legend class="app-sidebar-option-title">Primary</legend>
+                          <div class="d-flex gap-3">
+                            <div class="form-check">
+                              <input
+                                class="form-check-input"
+                                id="newOwnerPrimary"
+                                name="ownerPrimarySource"
+                                type="radio"
+                                value="new"
+                                data-client-source-toggle
+                                data-role="owner"
+                                data-priority="primary"
+                                form="newForm"
+                                required
+                                disabled
+                              />
+                              <label class="form-check-label" for="newOwnerPrimary">New</label>
+                            </div>
+                            <div class="form-check">
+                              <input
+                                class="form-check-input"
+                                id="findOwnerPrimary"
+                                name="ownerPrimarySource"
+                                type="radio"
+                                value="find"
+                                data-client-source-toggle
+                                data-role="owner"
+                                data-priority="primary"
+                                form="newForm"
+                                disabled
+                              />
+                              <label class="form-check-label" for="findOwnerPrimary">Find</label>
+                            </div>
+                          </div>
+                        </fieldset>
+
+                        <fieldset class="d-grid gap-1" data-client-secondary-options="owner" disabled>
+                          <legend class="app-sidebar-option-title">Secondary</legend>
+                          <div class="d-flex gap-3">
+                            <div class="form-check">
+                              <input
+                                class="form-check-input"
+                                id="newOwnerSecondary"
+                                name="ownerSecondarySource"
+                                type="radio"
+                                value="new"
+                                data-client-source-toggle
+                                data-role="owner"
+                                data-priority="secondary"
+                                form="newForm"
+                              />
+                              <label class="form-check-label" for="newOwnerSecondary">New</label>
+                            </div>
+                            <div class="form-check">
+                              <input
+                                class="form-check-input"
+                                id="findOwnerSecondary"
+                                name="ownerSecondarySource"
+                                type="radio"
+                                value="find"
+                                data-client-source-toggle
+                                data-role="owner"
+                                data-priority="secondary"
+                                form="newForm"
+                              />
+                              <label class="form-check-label" for="findOwnerSecondary">Find</label>
+                            </div>
+                          </div>
+                        </fieldset>
+                      </div>
+
+                      <div class="form-check d-none ms-4" id="includeLinkOption">
+                        <input
+                          class="form-check-input"
+                          id="includeLinks"
+                          name="includeLinks"
+                          type="checkbox"
+                          aria-controls="linkFields"
+                          form="newForm"
+                        />
+                        <label class="form-check-label" for="includeLinks">Link Account</label>
+                      </div>
+                    </div>
+
+                    <div class="d-grid gap-1">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          id="includeManager"
+                          type="checkbox"
+                          data-client-role-toggle="manager"
+                          aria-controls="managerSourceOptions client-manager-heading"
+                          aria-expanded="false"
+                          disabled
+                        />
+                        <label class="form-check-label" for="includeManager">Manager</label>
+                      </div>
+
+                      <div class="d-none gap-2 ms-3" id="managerSourceOptions" data-client-source-options="manager" hidden>
+                        <fieldset class="d-grid gap-1">
+                          <legend class="app-sidebar-option-title">Primary</legend>
+                          <div class="d-flex gap-3">
+                            <div class="form-check">
+                              <input class="form-check-input" id="newManagerPrimary" name="managerPrimarySource" type="radio" value="new" data-client-source-toggle data-role="manager" data-priority="primary" form="newForm" required disabled />
+                              <label class="form-check-label" for="newManagerPrimary">New</label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" id="findManagerPrimary" name="managerPrimarySource" type="radio" value="find" data-client-source-toggle data-role="manager" data-priority="primary" form="newForm" disabled />
+                              <label class="form-check-label" for="findManagerPrimary">Find</label>
+                            </div>
+                          </div>
+                        </fieldset>
+                        <fieldset class="d-grid gap-1" data-client-secondary-options="manager" disabled>
+                          <legend class="app-sidebar-option-title">Secondary</legend>
+                          <div class="d-flex gap-3">
+                            <div class="form-check">
+                              <input class="form-check-input" id="newManagerSecondary" name="managerSecondarySource" type="radio" value="new" data-client-source-toggle data-role="manager" data-priority="secondary" form="newForm" />
+                              <label class="form-check-label" for="newManagerSecondary">New</label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" id="findManagerSecondary" name="managerSecondarySource" type="radio" value="find" data-client-source-toggle data-role="manager" data-priority="secondary" form="newForm" />
+                              <label class="form-check-label" for="findManagerSecondary">Find</label>
+                            </div>
+                          </div>
+                        </fieldset>
+                      </div>
+                    </div>
+
+                    <div class="d-grid gap-1">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          id="includeTenant"
+                          type="checkbox"
+                          data-client-role-toggle="tenant"
+                          aria-controls="tenantSourceOptions client-tenant-heading"
+                          aria-expanded="false"
+                          disabled
+                        />
+                        <label class="form-check-label" for="includeTenant">Tenant</label>
+                      </div>
+
+                      <div class="d-none gap-2 ms-3" id="tenantSourceOptions" data-client-source-options="tenant" hidden>
+                        <fieldset class="d-grid gap-1">
+                          <legend class="app-sidebar-option-title">Primary</legend>
+                          <div class="d-flex gap-3">
+                            <div class="form-check">
+                              <input class="form-check-input" id="newTenantPrimary" name="tenantPrimarySource" type="radio" value="new" data-client-source-toggle data-role="tenant" data-priority="primary" form="newForm" required disabled />
+                              <label class="form-check-label" for="newTenantPrimary">New</label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" id="findTenantPrimary" name="tenantPrimarySource" type="radio" value="find" data-client-source-toggle data-role="tenant" data-priority="primary" form="newForm" disabled />
+                              <label class="form-check-label" for="findTenantPrimary">Find</label>
+                            </div>
+                          </div>
+                        </fieldset>
+                        <fieldset class="d-grid gap-1" data-client-secondary-options="tenant" disabled>
+                          <legend class="app-sidebar-option-title">Secondary</legend>
+                          <div class="d-flex gap-3">
+                            <div class="form-check">
+                              <input class="form-check-input" id="newTenantSecondary" name="tenantSecondarySource" type="radio" value="new" data-client-source-toggle data-role="tenant" data-priority="secondary" form="newForm" />
+                              <label class="form-check-label" for="newTenantSecondary">New</label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" id="findTenantSecondary" name="tenantSecondarySource" type="radio" value="find" data-client-source-toggle data-role="tenant" data-priority="secondary" form="newForm" />
+                              <label class="form-check-label" for="findTenantSecondary">Find</label>
+                            </div>
+                          </div>
+                        </fieldset>
+                      </div>
+                    </div>
+                  </fieldset>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      id="includeAppointment"
+                      name="includeAppointment"
+                      type="checkbox"
+                      form="newForm"
+                    />
+                    <label class="form-check-label" for="includeAppointment">Appointment</label>
+                  </div>
+
+                </fieldset>
+              </div>
+
+              <div class="row g-2 mt-1">
+                <div class="col-6">
+                  <button class="btn btn-light w-100" id="cancelNewButton" type="button">Cancel</button>
+                </div>
+                <div class="col-6">
+                  <button class="btn btn-primary w-100" type="submit" form="newForm">Save</button>
+                </div>
+                <span class="visually-hidden" id="newFormStatus" aria-live="polite"></span>
+              </div>
+            </section>
+          </div>
+        </aside>
+
+        <section class="col-12 col-xl app-workspace d-none" data-app-view="new" aria-labelledby="new-heading">
+          <button
+            class="btn btn-primary app-sidebar-handle app-sidebar-toggle d-xl-none shadow-sm"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#newSidebar"
+            aria-controls="newSidebar"
+            aria-expanded="false"
+            aria-label="Open add sidebar"
+          >
+            <span aria-hidden="true">&rsaquo;</span>
+          </button>
+
           <div class="app-view-panel overflow-auto" id="newPanel">
             <div class="app-main-heading-row">
-              <h1 class="h3 app-main-title" id="new-heading">New</h1>
+              <h1 class="h3 app-main-title" id="new-heading">Add</h1>
             </div>
 
-            <form class="card" aria-labelledby="new-heading">
-              <div class="card-body">
-                <div class="row g-3">
+            <form id="newForm" aria-labelledby="new-heading" novalidate>
+              <div>
+                <div id="locationFields">
+                  <section class="card app-section-card mb-3" aria-labelledby="location-fields-heading">
+                    <div class="card-header app-add-section-header align-items-center d-flex justify-content-between gap-2">
+                      <h2 class="h5 app-add-section-title" id="location-fields-heading">Location</h2>
+                      <button
+                        class="btn app-card-toggle"
+                        type="button"
+                        data-card-toggle
+                        aria-controls="locationFieldsBody"
+                        aria-expanded="true"
+                        aria-label="Minimize Location"
+                      >
+                        <span aria-hidden="true">−</span>
+                      </button>
+                    </div>
 
-                  <div class="col-12 col-md-6">
-                    <label class="form-label" for="streetAddress">Street</label>
-                    <input class="form-control" id="streetAddress" name="streetAddress" type="text" />
-                  </div>
+                    <div class="card-body" id="locationFieldsBody">
+                      <div class="row g-3">
+                        <div class="col-12 col-md-6 form-floating">
+                          <input
+                            class="form-control"
+                            id="streetAddress"
+                            name="streetAddress"
+                            type="text"
+                            placeholder="Street"
+                            required
+                          />
+                          <label for="streetAddress">Street</label>
+                        </div>
 
-                  <div class="col-6 col-md-3">
-                    <label class="form-label" for="unitNumber">Unit</label>
-                    <input class="form-control" id="unitNumber" name="unitNumber" type="text" />
-                  </div>
+                        <div class="col-6 col-md-3 form-floating">
+                          <input
+                            class="form-control"
+                            id="unitNumber"
+                            name="unitNumber"
+                            type="text"
+                            placeholder="Unit"
+                          />
+                          <label for="unitNumber">Unit</label>
+                        </div>
 
-                  <div class="col-6 col-md-3">
-                    <label class="form-label" for="locationType">Type</label>
-                    <select class="form-select" id="locationType" name="locationType">
-                      <option selected value=""></option>
-                      <option value="residence">Residence</option>
-                      <option value="rental">Rental</option>
-                      <option value="commercial">Commercial</option>
-                    </select>
-                  </div>
+                        <div class="col-6 col-md-3 form-floating">
+                          <select class="form-select" id="locationType" name="locationType" required>
+                            <option selected value=""></option>
+                            <option value="residence">Residence</option>
+                            <option value="rental">Rental</option>
+                            <option value="commercial">Commercial</option>
+                          </select>
+                          <label for="locationType">Type</label>
+                        </div>
 
-                  <div class="col-12 col-md-6">
-                    <label class="form-label" for="city">City</label>
-                    <input class="form-control" id="city" name="city" type="text" />
-                  </div>
+                        <div class="col-12 col-md-6 form-floating">
+                          <input class="form-control" id="city" name="city" type="text" placeholder="City" required />
+                          <label for="city">City</label>
+                        </div>
 
-                  <div class="col-6 col-md-3">
-                    <label class="form-label" for="postalCode">ZIP</label>
-                    <input class="form-control" id="postalCode" inputmode="numeric" name="postalCode" type="text" />
-                  </div>
+                        <div class="col-6 col-md-3 form-floating">
+                          <input
+                            class="form-control"
+                            id="postalCode"
+                            inputmode="numeric"
+                            name="postalCode"
+                            type="text"
+                            placeholder="ZIP"
+                            required
+                          />
+                          <label for="postalCode">ZIP</label>
+                        </div>
 
-                  <div class="col-6 col-md-3">
-                    <label class="form-label" for="state">State</label>
-                    <select class="form-select" id="state" name="state">
+                        <div class="col-6 col-md-3 form-floating">
+                          <select class="form-select" id="state" name="state" required>
                       <option selected value=""></option>
                       <option value="AL">AL</option>
                       <option value="AK">AK</option>
@@ -457,15 +764,610 @@
                       <option value="WV">WV</option>
                       <option value="WI">WI</option>
                       <option value="WY">WY</option>
-                    </select>
-                  </div>
+                          </select>
+                          <label for="state">State</label>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
                 </div>
+
+                <div id="clientFields" hidden>
+                  <section class="card app-section-card mb-3" aria-labelledby="client-fields-heading">
+                    <div class="card-header app-add-section-header align-items-center d-flex justify-content-between gap-2">
+                      <h2 class="h5 app-add-section-title" id="client-fields-heading">Client</h2>
+                      <button
+                        class="btn app-card-toggle"
+                        type="button"
+                        data-card-toggle
+                        aria-controls="clientFieldsBody"
+                        aria-expanded="true"
+                        aria-label="Minimize Client"
+                      >
+                        <span aria-hidden="true">−</span>
+                      </button>
+                    </div>
+
+                    <div class="card-body" id="clientFieldsBody">
+                        <div id="clientRoleCards">
+                          <section
+                            class="card app-section-card mb-3"
+                            data-client-role-card="owner"
+                            aria-labelledby="client-owner-heading"
+                            hidden
+                          >
+                            <div class="card-header align-items-center d-flex justify-content-between gap-2">
+                              <h3 class="h5 app-detail-heading" id="client-owner-heading">Owner</h3>
+                              <button class="btn btn-light" data-swap-role-priority="owner" type="button" hidden>
+                                Swap Priority
+                              </button>
+                              <button
+                                class="btn btn-light app-card-toggle"
+                                type="button"
+                                data-card-toggle
+                                aria-controls="clientOwnerBody"
+                                aria-expanded="true"
+                                aria-label="Minimize Owner"
+                              >
+                                <span aria-hidden="true">−</span>
+                              </button>
+                            </div>
+                            <div class="card-body" id="clientOwnerBody">
+                              <div class="form-floating mb-3" data-client-role-lookup="owner" data-priority="primary" hidden>
+                                <input
+                                  class="form-control"
+                                  id="ownerPrimaryLookup"
+                                  name="ownerPrimaryLookup"
+                                  type="search"
+                                  placeholder="Find primary owner"
+                                  form="newForm"
+                                  required
+                                />
+                                <label for="ownerPrimaryLookup">Find Primary Owner</label>
+                              </div>
+                              <div class="form-floating mb-3" data-client-role-lookup="owner" data-priority="secondary" hidden>
+                                <input
+                                  class="form-control"
+                                  id="ownerSecondaryLookup"
+                                  name="ownerSecondaryLookup"
+                                  type="search"
+                                  placeholder="Find secondary owner"
+                                  form="newForm"
+                                  required
+                                />
+                                <label for="ownerSecondaryLookup">Find Secondary Owner</label>
+                              </div>
+                              <div data-role-contacts="owner"></div>
+
+                              <div id="linkFields" class="mt-3" hidden>
+                                <section class="card bg-white" aria-labelledby="link-fields-heading">
+                                  <div class="card-body">
+                                    <div class="align-items-center d-flex justify-content-between gap-2 mb-2">
+                                      <h3 class="h5 app-detail-heading" id="link-fields-heading">Link Account</h3>
+                                      <button
+                                        class="btn btn-light app-card-toggle"
+                                        type="button"
+                                        data-card-toggle
+                                        aria-controls="linkFieldsBody"
+                                        aria-expanded="true"
+                                        aria-label="Minimize Link Account"
+                                      >
+                                        <span aria-hidden="true">−</span>
+                                      </button>
+                                    </div>
+
+                                    <div id="linkFieldsBody">
+                                      <div class="row g-3">
+                                        <div class="col-12 col-md-6 form-floating">
+                                          <input
+                                            class="form-control"
+                                            id="relatedRecordLookup"
+                                            name="relatedRecordLookup"
+                                            type="search"
+                                            placeholder="Find existing account"
+                                            required
+                                          />
+                                          <label for="relatedRecordLookup">Find Existing Account</label>
+                                        </div>
+
+                                        <div class="col-12 col-md-6 form-floating">
+                                          <select
+                                            class="form-select"
+                                            id="linkRelationshipType"
+                                            name="linkRelationshipType"
+                                            required
+                                          >
+                                            <option selected value=""></option>
+                                            <option value="family">Family</option>
+                                            <option value="friend">Friend</option>
+                                          </select>
+                                          <label for="linkRelationshipType">Relationship</label>
+                                        </div>
+
+                                        <div class="col-12 form-floating">
+                                          <textarea
+                                            class="form-control"
+                                            id="linkNotes"
+                                            name="linkNotes"
+                                            placeholder="Authorization notes"
+                                          ></textarea>
+                                          <label for="linkNotes">Authorization Notes</label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </section>
+                              </div>
+                            </div>
+                          </section>
+
+                          <section
+                            class="card app-section-card mb-3"
+                            data-client-role-card="manager"
+                            aria-labelledby="client-manager-heading"
+                            hidden
+                          >
+                            <div class="card-header align-items-center d-flex justify-content-between gap-2">
+                              <h3 class="h5 app-detail-heading" id="client-manager-heading">Manager</h3>
+                              <button class="btn btn-light" data-swap-role-priority="manager" type="button" hidden>
+                                Swap Priority
+                              </button>
+                              <button
+                                class="btn btn-light app-card-toggle"
+                                type="button"
+                                data-card-toggle
+                                aria-controls="clientManagerBody"
+                                aria-expanded="true"
+                                aria-label="Minimize Manager"
+                              >
+                                <span aria-hidden="true">−</span>
+                              </button>
+                            </div>
+                            <div class="card-body" id="clientManagerBody">
+                              <div class="form-floating mb-3" data-client-role-lookup="manager" data-priority="primary" hidden>
+                                <input
+                                  class="form-control"
+                                  id="managerPrimaryLookup"
+                                  name="managerPrimaryLookup"
+                                  type="search"
+                                  placeholder="Find primary manager"
+                                  form="newForm"
+                                  required
+                                />
+                                <label for="managerPrimaryLookup">Find Primary Manager</label>
+                              </div>
+                              <div class="form-floating mb-3" data-client-role-lookup="manager" data-priority="secondary" hidden>
+                                <input
+                                  class="form-control"
+                                  id="managerSecondaryLookup"
+                                  name="managerSecondaryLookup"
+                                  type="search"
+                                  placeholder="Find secondary manager"
+                                  form="newForm"
+                                  required
+                                />
+                                <label for="managerSecondaryLookup">Find Secondary Manager</label>
+                              </div>
+                              <div data-role-contacts="manager"></div>
+                            </div>
+                          </section>
+
+                          <section
+                            class="card app-section-card mb-3"
+                            data-client-role-card="tenant"
+                            aria-labelledby="client-tenant-heading"
+                            hidden
+                          >
+                            <div class="card-header align-items-center d-flex justify-content-between gap-2">
+                              <h3 class="h5 app-detail-heading" id="client-tenant-heading">Tenant</h3>
+                              <button class="btn btn-light" data-swap-role-priority="tenant" type="button" hidden>
+                                Swap Priority
+                              </button>
+                              <button
+                                class="btn btn-light app-card-toggle"
+                                type="button"
+                                data-card-toggle
+                                aria-controls="clientTenantBody"
+                                aria-expanded="true"
+                                aria-label="Minimize Tenant"
+                              >
+                                <span aria-hidden="true">−</span>
+                              </button>
+                            </div>
+                            <div class="card-body" id="clientTenantBody">
+                              <div class="form-floating mb-3" data-client-role-lookup="tenant" data-priority="primary" hidden>
+                                <input
+                                  class="form-control"
+                                  id="tenantPrimaryLookup"
+                                  name="tenantPrimaryLookup"
+                                  type="search"
+                                  placeholder="Find primary tenant"
+                                  form="newForm"
+                                  required
+                                />
+                                <label for="tenantPrimaryLookup">Find Primary Tenant</label>
+                              </div>
+                              <div class="form-floating mb-3" data-client-role-lookup="tenant" data-priority="secondary" hidden>
+                                <input
+                                  class="form-control"
+                                  id="tenantSecondaryLookup"
+                                  name="tenantSecondaryLookup"
+                                  type="search"
+                                  placeholder="Find secondary tenant"
+                                  form="newForm"
+                                  required
+                                />
+                                <label for="tenantSecondaryLookup">Find Secondary Tenant</label>
+                              </div>
+                              <div data-role-contacts="tenant"></div>
+                            </div>
+                          </section>
+                        </div>
+
+                        <div id="clientContacts">
+                        <div
+                          data-client-contact
+                          data-contact-key="A"
+                          hidden
+                        >
+                          <fieldset hidden>
+                            <legend class="visually-hidden">Contact A role</legend>
+
+                            <div class="d-flex flex-wrap gap-3">
+                              <div class="form-check">
+                                <input
+                                  class="form-check-input"
+                                  id="clientContactAOwner"
+                                  name="clientContactARole"
+                                  type="radio"
+                                  value="owner"
+                                  aria-controls="clientContactADetails"
+                                  required
+                                />
+                                <label class="form-check-label" for="clientContactAOwner">Owner</label>
+                              </div>
+
+                              <div class="form-check">
+                                <input
+                                  class="form-check-input"
+                                  id="clientContactAManager"
+                                  name="clientContactARole"
+                                  type="radio"
+                                  value="manager"
+                                  aria-controls="clientContactADetails"
+                                />
+                                <label class="form-check-label" for="clientContactAManager">Manager</label>
+                              </div>
+
+                              <div class="form-check">
+                                <input
+                                  class="form-check-input"
+                                  id="clientContactATenant"
+                                  name="clientContactARole"
+                                  type="radio"
+                                  value="tenant"
+                                  aria-controls="clientContactADetails"
+                                />
+                                <label class="form-check-label" for="clientContactATenant">Tenant</label>
+                              </div>
+                            </div>
+                          </fieldset>
+
+                          <section
+                            class="card app-section-card mb-3"
+                            aria-labelledby="client-contact-a-heading"
+                            hidden
+                          >
+                          <div class="card-header align-items-center d-flex justify-content-between gap-2">
+                            <h4 class="h5 app-detail-heading" id="client-contact-a-heading">Primary</h4>
+                          </div>
+
+                          <div class="card-body">
+                            <div id="clientContactADetails" data-contact-details hidden>
+                              <div class="row g-3">
+                                <div class="col-12 form-floating">
+                                  <input
+                                    class="form-control"
+                                    id="clientContactAOrganization"
+                                    name="clientContactAOrganization"
+                                    type="text"
+                                    autocomplete="organization"
+                                    placeholder="Organization"
+                                  />
+                                  <label for="clientContactAOrganization">Organization (optional)</label>
+                                </div>
+
+                                <div class="col-12 col-md-6 form-floating">
+                                  <input
+                                    class="form-control"
+                                    id="clientContactAFirstName"
+                                    name="clientContactAFirstName"
+                                    type="text"
+                                    autocomplete="given-name"
+                                    placeholder="First"
+                                    required
+                                  />
+                                  <label for="clientContactAFirstName">First</label>
+                                </div>
+
+                                <div class="col-12 col-md-6 form-floating">
+                                  <input
+                                    class="form-control"
+                                    id="clientContactALastName"
+                                    name="clientContactALastName"
+                                    type="text"
+                                    autocomplete="family-name"
+                                    placeholder="Last"
+                                    required
+                                  />
+                                  <label for="clientContactALastName">Last</label>
+                                </div>
+
+                                <div class="col-12 col-md-6 form-floating">
+                                  <input
+                                    class="form-control"
+                                    id="clientContactAEmail"
+                                    name="clientContactAEmail"
+                                    type="email"
+                                    autocomplete="email"
+                                    placeholder="Email"
+                                  />
+                                  <label for="clientContactAEmail">Email</label>
+                                </div>
+
+                                <div class="col-12 col-md-6 form-floating">
+                                  <input
+                                    class="form-control"
+                                    id="clientContactAMobile"
+                                    name="clientContactAMobile"
+                                    type="tel"
+                                    autocomplete="tel"
+                                    placeholder="Mobile"
+                                  />
+                                  <label for="clientContactAMobile">Mobile</label>
+                                </div>
+                              </div>
+
+                              <fieldset class="mt-3" data-contact-purpose hidden>
+                                <legend class="visually-hidden">Contact A responsibility</legend>
+
+                                <div class="d-flex flex-wrap gap-3">
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      id="clientContactAScheduling"
+                                      name="clientContactAPurpose"
+                                      type="radio"
+                                      value="scheduling"
+                                      required
+                                    />
+                                    <label class="form-check-label" for="clientContactAScheduling">Scheduling</label>
+                                  </div>
+
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      id="clientContactABilling"
+                                      name="clientContactAPurpose"
+                                      type="radio"
+                                      value="billing"
+                                    />
+                                    <label class="form-check-label" for="clientContactABilling">Billing</label>
+                                  </div>
+
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      id="clientContactABoth"
+                                      name="clientContactAPurpose"
+                                      type="radio"
+                                      value="both"
+                                    />
+                                    <label class="form-check-label" for="clientContactABoth">Both</label>
+                                  </div>
+                                </div>
+                              </fieldset>
+                            </div>
+                          </div>
+                        </section>
+                        </div>
+
+                        <div
+                          data-client-contact
+                          data-contact-key="B"
+                          hidden
+                        >
+                          <fieldset hidden>
+                            <legend class="visually-hidden">Contact B role</legend>
+
+                            <div class="d-flex flex-wrap gap-3">
+                              <div class="form-check">
+                                <input
+                                  class="form-check-input"
+                                  id="clientContactBOwner"
+                                  name="clientContactBRole"
+                                  type="radio"
+                                  value="owner"
+                                  aria-controls="clientContactBDetails"
+                                  required
+                                />
+                                <label class="form-check-label" for="clientContactBOwner">Owner</label>
+                              </div>
+
+                              <div class="form-check">
+                                <input
+                                  class="form-check-input"
+                                  id="clientContactBManager"
+                                  name="clientContactBRole"
+                                  type="radio"
+                                  value="manager"
+                                  aria-controls="clientContactBDetails"
+                                />
+                                <label class="form-check-label" for="clientContactBManager">Manager</label>
+                              </div>
+
+                              <div class="form-check">
+                                <input
+                                  class="form-check-input"
+                                  id="clientContactBTenant"
+                                  name="clientContactBRole"
+                                  type="radio"
+                                  value="tenant"
+                                  aria-controls="clientContactBDetails"
+                                />
+                                <label class="form-check-label" for="clientContactBTenant">Tenant</label>
+                              </div>
+                            </div>
+                          </fieldset>
+
+                          <section
+                            class="card app-section-card mb-3"
+                            aria-labelledby="client-contact-b-heading"
+                            hidden
+                          >
+                          <div class="card-header align-items-center d-flex justify-content-between gap-2">
+                            <h4 class="h5 app-detail-heading" id="client-contact-b-heading">Secondary</h4>
+                          </div>
+
+                          <div class="card-body">
+                            <div id="clientContactBDetails" data-contact-details hidden>
+                              <div class="row g-3">
+                                <div class="col-12 form-floating">
+                                  <input
+                                    class="form-control"
+                                    id="clientContactBOrganization"
+                                    name="clientContactBOrganization"
+                                    type="text"
+                                    autocomplete="organization"
+                                    placeholder="Organization"
+                                  />
+                                  <label for="clientContactBOrganization">Organization (optional)</label>
+                                </div>
+
+                                <div class="col-12 col-md-6 form-floating">
+                                  <input
+                                    class="form-control"
+                                    id="clientContactBFirstName"
+                                    name="clientContactBFirstName"
+                                    type="text"
+                                    autocomplete="given-name"
+                                    placeholder="First"
+                                    required
+                                  />
+                                  <label for="clientContactBFirstName">First</label>
+                                </div>
+
+                                <div class="col-12 col-md-6 form-floating">
+                                  <input
+                                    class="form-control"
+                                    id="clientContactBLastName"
+                                    name="clientContactBLastName"
+                                    type="text"
+                                    autocomplete="family-name"
+                                    placeholder="Last"
+                                    required
+                                  />
+                                  <label for="clientContactBLastName">Last</label>
+                                </div>
+
+                                <div class="col-12 col-md-6 form-floating">
+                                  <input
+                                    class="form-control"
+                                    id="clientContactBEmail"
+                                    name="clientContactBEmail"
+                                    type="email"
+                                    autocomplete="email"
+                                    placeholder="Email"
+                                  />
+                                  <label for="clientContactBEmail">Email</label>
+                                </div>
+
+                                <div class="col-12 col-md-6 form-floating">
+                                  <input
+                                    class="form-control"
+                                    id="clientContactBMobile"
+                                    name="clientContactBMobile"
+                                    type="tel"
+                                    autocomplete="tel"
+                                    placeholder="Mobile"
+                                  />
+                                  <label for="clientContactBMobile">Mobile</label>
+                                </div>
+                              </div>
+
+                              <fieldset class="mt-3" data-contact-purpose hidden>
+                                <legend class="visually-hidden">Contact B responsibility</legend>
+
+                                <div class="d-flex flex-wrap gap-3">
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      id="clientContactBScheduling"
+                                      name="clientContactBPurpose"
+                                      type="radio"
+                                      value="scheduling"
+                                      required
+                                    />
+                                    <label class="form-check-label" for="clientContactBScheduling">Scheduling</label>
+                                  </div>
+
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      id="clientContactBBilling"
+                                      name="clientContactBPurpose"
+                                      type="radio"
+                                      value="billing"
+                                    />
+                                    <label class="form-check-label" for="clientContactBBilling">Billing</label>
+                                  </div>
+
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      id="clientContactBBoth"
+                                      name="clientContactBPurpose"
+                                      type="radio"
+                                      value="both"
+                                    />
+                                    <label class="form-check-label" for="clientContactBBoth">Both</label>
+                                  </div>
+                                </div>
+                              </fieldset>
+                            </div>
+                          </div>
+                        </section>
+                        </div>
+                        </div>
+
+                    </div>
+                  </section>
+                </div>
+
+                <div id="appointmentFields" hidden>
+                  <section class="card app-section-card mb-3" aria-labelledby="appointment-fields-heading">
+                    <div class="card-header app-add-section-header align-items-center d-flex justify-content-between gap-2">
+                      <h2 class="h5 app-add-section-title" id="appointment-fields-heading">Appointment</h2>
+                      <button
+                        class="btn app-card-toggle"
+                        type="button"
+                        data-card-toggle
+                        aria-controls="appointmentFieldsBody"
+                        aria-expanded="true"
+                        aria-label="Minimize Appointment"
+                      >
+                        <span aria-hidden="true">−</span>
+                      </button>
+                    </div>
+
+                    <div class="card-body" id="appointmentFieldsBody">
+                      Appointment fields will be added in a later step.
+                    </div>
+                  </section>
+                </div>
+
               </div>
 
-              <div class="card-footer d-flex justify-content-end gap-2">
-                <button class="btn btn-light" id="cancelNewButton" type="button">Cancel</button>
-                <button class="btn btn-primary" type="submit" disabled>Save</button>
-              </div>
             </form>
           </div>
         </section>
@@ -483,7 +1385,7 @@
 
               <div class="card app-sidebar-card">
                 <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Invoice actions">
-                  <button class="btn btn-light app-sidebar-action" type="button">New Invoice</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Add Invoice</button>
                   <button class="btn btn-light app-sidebar-action" type="button">Drafts</button>
                   <button class="btn btn-light app-sidebar-action" type="button">Unpaid</button>
                   <button class="btn btn-light app-sidebar-action" type="button">Paid</button>
@@ -629,11 +1531,15 @@
             <h1 class="h3 app-main-title" id="operations-main-heading">Operations</h1>
           </div>
 
-          <div class="card">
+          <section class="card app-section-card" aria-labelledby="operations-overview-heading">
+            <div class="card-header">
+              <h2 class="h5 app-detail-heading" id="operations-overview-heading">Overview</h2>
+            </div>
+
             <div class="card-body">
               <p class="mb-0">Shared business information and operational settings will go here.</p>
             </div>
-          </div>
+          </section>
         </section>
 
         <aside
@@ -688,11 +1594,15 @@
             <h1 class="h3 app-main-title" id="preferences-main-heading">Preferences</h1>
           </div>
 
-          <div class="card">
+          <section class="card app-section-card" aria-labelledby="preferences-overview-heading">
+            <div class="card-header">
+              <h2 class="h5 app-detail-heading" id="preferences-overview-heading">Overview</h2>
+            </div>
+
             <div class="card-body">
               <p class="mb-0">Private user preferences, saved documents, and reminders will go here.</p>
             </div>
-          </div>
+          </section>
         </section>
       </div>
     </main>

@@ -126,7 +126,9 @@ body > main {
 
 .app-main-title {
   flex-shrink: 0;
+  font-size: calc(1.3rem + 0.6vw);
   font-weight: 800;
+  line-height: 1.2;
   margin: 0;
 }
 
@@ -289,8 +291,79 @@ body > main {
   min-width: 0;
 }
 
-.app-detail-card .card-header {
+.app-detail-card .card-header,
+.app-section-card .card-header {
   background-color: var(--bs-light);
+}
+
+.app-section-card:has(> .app-add-section-header) {
+  background-color: var(--bs-primary-bg-subtle);
+  border-color: var(--bs-primary-border-subtle);
+  color: var(--bs-body-color);
+}
+
+.app-section-card > .app-add-section-header {
+  background-color: transparent;
+  border-bottom: 0;
+  color: inherit;
+  padding: 1rem 1rem 0;
+}
+
+.app-section-card > .app-add-section-header + .card-body {
+  padding: 0.5rem 1rem 1rem;
+}
+
+[data-client-role-card] {
+  background-color: var(--bs-secondary-bg);
+  color: var(--bs-body-color);
+}
+
+[data-client-role-card] > .card-header {
+  background-color: transparent;
+  border-bottom: 0;
+  padding: 1rem 1rem 0;
+}
+
+[data-client-role-card] > .card-body {
+  padding: 0.5rem 1rem 1rem;
+}
+
+[data-role-contacts] > [data-client-contact] > .card {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+[data-role-contacts] > [data-client-contact] > .card > .card-header {
+  background-color: transparent;
+  border-bottom: 0;
+  padding: 1rem 1rem 0;
+}
+
+[data-role-contacts] > [data-client-contact] > .card > .card-body {
+  padding: 0.5rem 1rem 1rem;
+}
+
+.app-add-section-title {
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.app-card-toggle {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 1rem;
+  height: 1.5rem;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  width: 1.5rem;
+}
+
+.app-add-section-header .app-card-toggle {
+  color: inherit;
 }
 
 .app-detail-card .card-body {
@@ -299,13 +372,66 @@ body > main {
 }
 
 .app-detail-heading {
-  font-weight: 800;
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.2;
   margin: 0;
+}
+
+[data-swap-role-priority] {
+  font-size: 0.75rem;
+  height: 1.5rem;
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+}
+
+.app-card-enter {
+  animation: app-card-enter 300ms ease-out;
+}
+
+@keyframes app-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-card-enter {
+    animation: none;
+  }
+}
+
+.form-floating > label {
+  color: var(--bs-secondary-color);
+  transform: scale(0.75) translateY(-0.5rem) translateX(0.15rem);
 }
 
 @media (min-width: 768px) {
   .app-detail-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-role-contacts-paired {
+    display: grid;
+    gap: var(--app-main-spacing);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-role-contacts-paired > [data-client-contact] > .card {
+    height: 100%;
+    margin-bottom: 0 !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .app-main-title {
+    font-size: 1.75rem;
   }
 }
 
@@ -505,6 +631,17 @@ body > main {
   overflow: hidden;
 }
 
+#newSidebar .form-check {
+  font-size: var(--app-control-font-size);
+}
+
+#newSidebar .app-sidebar-option-title {
+  float: none;
+  font-size: var(--app-control-font-size);
+  line-height: inherit;
+  margin-bottom: 0;
+}
+
 .app-sidebar-handle {
   display: inline-flex;
   align-items: center;
@@ -516,7 +653,7 @@ body > main {
   padding: 0;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   line-height: 1;
 }
 
@@ -555,7 +692,7 @@ body > main {
   align-items: flex-end;
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 1199.98px) {
   .app-nav-backdrop:not([hidden]) {
     background-color: rgba(0, 0, 0, 0.5);
     display: block;
@@ -624,7 +761,7 @@ body > main {
   color: var(--bs-black);
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   #primaryNavigation {
     flex-grow: 0;
   }
