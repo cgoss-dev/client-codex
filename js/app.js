@@ -2,6 +2,8 @@ const weekStartToggle = document.querySelector("#weekStartToggle");
 const scheduleNavLink = document.querySelector("#scheduleNavLink");
 const accountsNavLink = document.querySelector("#accountsNavLink");
 const billingNavLink = document.querySelector("#billingNavLink");
+const primaryNavigation = document.querySelector("#primaryNavigation");
+const primaryNavigationBackdrop = document.querySelector("#primaryNavigationBackdrop");
 const appViewElements = document.querySelectorAll("[data-app-view]");
 const calendarDates = document.querySelector(".calendar-dates");
 const calendarMonth = document.querySelector("#calendarMonth");
@@ -56,6 +58,64 @@ const showViewFromHash = () => {
 
 window.addEventListener("hashchange", showViewFromHash);
 showViewFromHash();
+
+primaryNavigation?.addEventListener("click", (event) => {
+  if (!event.target.closest(".nav-link") || window.matchMedia("(min-width: 992px)").matches) {
+    return;
+  }
+
+  window.bootstrap?.Collapse.getOrCreateInstance(primaryNavigation, { toggle: false }).hide();
+});
+
+primaryNavigation?.addEventListener("show.bs.collapse", () => {
+  document.querySelectorAll(".app-sidebar.show, .app-sidebar.showing").forEach((sidebar) => {
+    window.bootstrap?.Offcanvas.getOrCreateInstance(sidebar).hide();
+  });
+
+  primaryNavigationBackdrop?.removeAttribute("hidden");
+});
+
+primaryNavigation?.addEventListener("hidden.bs.collapse", () => {
+  primaryNavigationBackdrop?.setAttribute("hidden", "");
+});
+
+primaryNavigationBackdrop?.addEventListener("click", () => {
+  window.bootstrap?.Collapse.getOrCreateInstance(primaryNavigation, { toggle: false }).hide();
+});
+
+document.addEventListener("show.bs.offcanvas", (event) => {
+  if (!event.target.matches(".app-sidebar")) {
+    return;
+  }
+
+  window.bootstrap?.Collapse.getOrCreateInstance(primaryNavigation, { toggle: false }).hide();
+
+  const sidebarToggle = document.querySelector(`.app-sidebar-toggle[data-bs-target="#${event.target.id}"]`);
+  sidebarToggle?.classList.add("is-open");
+  sidebarToggle?.setAttribute("aria-expanded", "true");
+  sidebarToggle?.setAttribute("aria-label", "Close sidebar");
+
+  const chevron = sidebarToggle?.querySelector("[aria-hidden='true']");
+  if (chevron) {
+    chevron.textContent = "‹";
+  }
+});
+
+document.addEventListener("hide.bs.offcanvas", (event) => {
+  if (!event.target.matches(".app-sidebar")) {
+    return;
+  }
+
+  const sidebarToggle = document.querySelector(`.app-sidebar-toggle[data-bs-target="#${event.target.id}"]`);
+  sidebarToggle?.classList.remove("is-open");
+  sidebarToggle?.setAttribute("aria-expanded", "false");
+  sidebarToggle?.setAttribute("aria-label", "Open sidebar");
+
+  const chevron = sidebarToggle?.querySelector("[aria-hidden='true']");
+  if (chevron) {
+    chevron.textContent = "›";
+  }
+});
 
 if (weekStartToggle && calendarDates && calendarMonth) {
   const weekStartStorageKey = "clientCodex.weekStartsOnMonday";
@@ -236,15 +296,21 @@ if (weekStartToggle && calendarDates && calendarMonth) {
     const rangeEnd = scheduleDates[scheduleDates.length - 1];
     const timeHeading = document.createElement("th");
     const timeToggle = document.createElement("button");
-    const timeToggleIcon = document.createElement("span");
+    const timeToggleIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const gearCenterPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const gearOuterPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
     timeHeading.className = "schedule-time-heading p-0 text-center";
     timeHeading.scope = "col";
     timeToggle.className = "btn btn-light schedule-time-toggle";
     timeToggle.type = "button";
-    timeToggleIcon.className = "schedule-time-toggle-icon";
-    timeToggleIcon.textContent = "⚙";
+    timeToggleIcon.setAttribute("class", "bi bi-gear schedule-time-toggle-icon");
     timeToggleIcon.setAttribute("aria-hidden", "true");
+    timeToggleIcon.setAttribute("fill", "currentColor");
+    timeToggleIcon.setAttribute("viewBox", "0 0 16 16");
+    gearCenterPath.setAttribute("d", "M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0");
+    gearOuterPath.setAttribute("d", "M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z");
+    timeToggleIcon.append(gearCenterPath, gearOuterPath);
     timeToggle.setAttribute("aria-label", "Open schedule formatting");
     timeToggle.setAttribute("aria-controls", "scheduleFormatPopup");
     timeToggle.setAttribute("aria-expanded", String(scheduleFormatPopup?.matches(":popover-open") ?? false));

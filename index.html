@@ -20,7 +20,7 @@
 
   <body class="d-flex flex-column min-vh-100">
     <header>
-      <nav class="navbar navbar-expand-md app-header py-2" data-bs-theme="dark" aria-label="Primary navigation">
+      <nav class="navbar navbar-expand-lg app-header py-2" data-bs-theme="dark" aria-label="Primary navigation">
         <div class="container-fluid px-0">
           <a class="navbar-brand h3 app-header-title mb-0" href="#">Client Codex</a>
 
@@ -33,11 +33,22 @@
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            <span class="navbar-toggler-icon"></span>
+            <svg
+              class="bi bi-list app-hamburger-icon"
+              aria-hidden="true"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
+              />
+            </svg>
           </button>
 
           <div class="collapse navbar-collapse" id="primaryNavigation">
-            <ul class="navbar-nav nav nav-pills app-nav ms-md-auto gap-2 py-3 py-md-0">
+            <ul class="navbar-nav nav nav-pills app-nav ms-lg-auto gap-2 py-3 py-lg-0">
               <li class="nav-item">
                 <a class="nav-link btn btn-light active" id="scheduleNavLink" href="#schedule" aria-current="page">Schedule</a>
               </li>
@@ -59,19 +70,11 @@
       </nav>
     </header>
 
+    <div class="app-nav-backdrop" id="primaryNavigationBackdrop" hidden></div>
+
     <main class="container-fluid d-flex flex-grow-1">
       <div class="row app-layout-row">
-        <aside class="offcanvas-md offcanvas-start col-md-auto app-sidebar px-0" data-app-view="schedule" tabindex="-1" id="scheduleSidebar" aria-label="Schedule sidebar">
-          <button
-            class="btn app-sidebar-handle app-sidebar-close d-md-none shadow-sm"
-            type="button"
-            data-bs-dismiss="offcanvas"
-            data-bs-target="#scheduleSidebar"
-            aria-label="Close sidebar"
-          >
-            <span aria-hidden="true">&lsaquo;</span>
-          </button>
-
+        <aside class="offcanvas-xl offcanvas-start col-xl-auto app-sidebar px-0" data-app-view="schedule" tabindex="-1" id="scheduleSidebar" aria-label="Schedule sidebar">
           <div class="offcanvas-body d-block app-sidebar-content px-3">
             <section class="app-sidebar-section" aria-labelledby="calendar-heading">
               <h2 id="calendar-heading" class="h3 app-sidebar-title text-center">Calendar</h2>
@@ -146,13 +149,14 @@
           </div>
         </aside>
 
-        <section class="col-12 col-md app-workspace" data-app-view="schedule">
+        <section class="col-12 col-xl app-workspace" data-app-view="schedule">
           <button
-            class="btn btn-primary app-sidebar-handle app-sidebar-toggle d-md-none shadow-sm"
+            class="btn btn-primary app-sidebar-handle app-sidebar-toggle d-xl-none shadow-sm"
             type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#scheduleSidebar"
             aria-controls="scheduleSidebar"
+            aria-expanded="false"
             aria-label="Open sidebar"
           >
             <span aria-hidden="true">&rsaquo;</span>
@@ -247,22 +251,12 @@
         </section>
 
         <aside
-          class="offcanvas-md offcanvas-start col-md-auto app-sidebar px-0 d-none"
+          class="offcanvas-xl offcanvas-start col-xl-auto app-sidebar px-0 d-none"
           data-app-view="accounts"
           tabindex="-1"
           id="accountsSidebar"
           aria-label="Accounts sidebar"
         >
-          <button
-            class="btn app-sidebar-handle app-sidebar-close d-md-none shadow-sm"
-            type="button"
-            data-bs-dismiss="offcanvas"
-            data-bs-target="#accountsSidebar"
-            aria-label="Close accounts sidebar"
-          >
-            <span aria-hidden="true">&lsaquo;</span>
-          </button>
-
           <div class="offcanvas-body d-block app-sidebar-content px-3">
             <section class="app-sidebar-section" aria-labelledby="account-create-heading">
               <h2 id="account-create-heading" class="h3 app-sidebar-title text-center">Create</h2>
@@ -302,13 +296,14 @@
           </div>
         </aside>
 
-        <section class="col-12 col-md app-workspace d-none" data-app-view="accounts" aria-labelledby="accounts-main-heading">
+        <section class="col-12 col-xl app-workspace d-none" data-app-view="accounts" aria-labelledby="accounts-main-heading">
           <button
-            class="btn btn-primary app-sidebar-handle app-sidebar-toggle d-md-none shadow-sm"
+            class="btn btn-primary app-sidebar-handle app-sidebar-toggle d-xl-none shadow-sm"
             type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#accountsSidebar"
             aria-controls="accountsSidebar"
+            aria-expanded="false"
             aria-label="Open accounts sidebar"
           >
             <span aria-hidden="true">&rsaquo;</span>
@@ -324,18 +319,11 @@
                 <h2 class="h5 app-detail-heading" id="account-contact-heading">Contact Information</h2>
               </div>
               <div class="card-body">
-                <dl class="row mb-0 app-detail-list">
-                  <dt class="col-sm-5">Account Type</dt>
-                  <dd class="col-sm-7">&mdash;</dd>
-                  <dt class="col-sm-5">Account Name</dt>
-                  <dd class="col-sm-7">&mdash;</dd>
-                  <dt class="col-sm-5">Primary Contact</dt>
-                  <dd class="col-sm-7">&mdash;</dd>
-                  <dt class="col-sm-5">Phone</dt>
-                  <dd class="col-sm-7">&mdash;</dd>
-                  <dt class="col-sm-5">Email</dt>
-                  <dd class="col-sm-7 mb-0">&mdash;</dd>
-                </dl>
+                <p class="mb-0">Account Type: &mdash;</p>
+                <p class="mb-0">Account Name: &mdash;</p>
+                <p class="mb-0">Primary Contact: &mdash;</p>
+                <p class="mb-0">Phone: &mdash;</p>
+                <p class="mb-0">Email: &mdash;</p>
               </div>
             </section>
 
@@ -345,7 +333,7 @@
               </div>
               <div class="card-body">
                 <p class="mb-2">No client roles assigned.</p>
-                <p class="mb-0 text-body-secondary app-detail-note">
+                <p class="mb-0">
                   Clients may be Owners, Managers, or Tenants.
                 </p>
               </div>
@@ -357,7 +345,7 @@
               </div>
               <div class="card-body">
                 <p class="mb-2">No locations linked.</p>
-                <p class="mb-0 text-body-secondary app-detail-note">
+                <p class="mb-0">
                   Locations are Residences or Rentals. Rentals are marked Vacant or Occupied and must have an Owner or Manager.
                 </p>
               </div>
@@ -369,7 +357,7 @@
               </div>
               <div class="card-body">
                 <p class="mb-2">No billing profiles added.</p>
-                <p class="mb-0 text-body-secondary app-detail-note">
+                <p class="mb-0">
                   Billing profiles belong to the account and can pay for service at a linked location.
                 </p>
               </div>
@@ -378,22 +366,12 @@
         </section>
 
         <aside
-          class="offcanvas-md offcanvas-start col-md-auto app-sidebar px-0 d-none"
+          class="offcanvas-xl offcanvas-start col-xl-auto app-sidebar px-0 d-none"
           data-app-view="billing"
           tabindex="-1"
           id="billingSidebar"
           aria-label="Billing sidebar"
         >
-          <button
-            class="btn app-sidebar-handle app-sidebar-close d-md-none shadow-sm"
-            type="button"
-            data-bs-dismiss="offcanvas"
-            data-bs-target="#billingSidebar"
-            aria-label="Close billing sidebar"
-          >
-            <span aria-hidden="true">&lsaquo;</span>
-          </button>
-
           <div class="offcanvas-body d-block app-sidebar-content px-3">
             <section class="app-sidebar-section" aria-labelledby="billing-invoices-heading">
               <h2 id="billing-invoices-heading" class="h3 app-sidebar-title text-center">Invoices</h2>
@@ -434,13 +412,14 @@
           </div>
         </aside>
 
-        <section class="col-12 col-md app-workspace d-none" data-app-view="billing" aria-labelledby="billing-main-heading">
+        <section class="col-12 col-xl app-workspace d-none" data-app-view="billing" aria-labelledby="billing-main-heading">
           <button
-            class="btn btn-primary app-sidebar-handle app-sidebar-toggle d-md-none shadow-sm"
+            class="btn btn-primary app-sidebar-handle app-sidebar-toggle d-xl-none shadow-sm"
             type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#billingSidebar"
             aria-controls="billingSidebar"
+            aria-expanded="false"
             aria-label="Open billing sidebar"
           >
             <span aria-hidden="true">&rsaquo;</span>
@@ -457,7 +436,7 @@
               </div>
               <div class="card-body">
                 <p class="mb-2">No account selected.</p>
-                <p class="mb-0 text-body-secondary app-detail-note">
+                <p class="mb-0">
                   Any Owner, Manager, or Tenant may use their own billing profile to pay for service.
                 </p>
               </div>
@@ -469,7 +448,7 @@
               </div>
               <div class="card-body">
                 <p class="mb-2">No location selected.</p>
-                <p class="mb-0 text-body-secondary app-detail-note">
+                <p class="mb-0">
                   The service location is recorded separately from the account responsible for payment.
                 </p>
               </div>

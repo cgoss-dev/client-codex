@@ -31,6 +31,8 @@ body > main {
   background-color: var(--bs-primary);
   color: var(--bs-white);
   padding-inline: 1rem;
+  position: relative;
+  z-index: 1030;
 }
 
 .app-header-title {
@@ -204,7 +206,7 @@ body > main {
   align-items: center;
   display: flex;
   font-family: inherit;
-  font-size: var(--app-control-font-size);
+  font-size: 1rem;
   height: var(--app-control-height);
   justify-content: center;
   padding-block: 0;
@@ -229,21 +231,17 @@ body > main {
   background-color: var(--bs-light);
 }
 
+.app-detail-card .card-body {
+  min-height: 0;
+  overflow: auto;
+}
+
 .app-detail-heading {
   font-weight: 800;
   margin: 0;
 }
 
-.app-detail-list,
-.app-detail-note {
-  font-size: var(--app-control-font-size);
-}
-
-.app-detail-list dt {
-  font-weight: 800;
-}
-
-@media (min-width: 992px) {
+@media (min-width: 768px) {
   .app-detail-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -392,7 +390,8 @@ body > main {
 
 .schedule-time-toggle-icon {
   display: block;
-  line-height: 1;
+  height: 1em;
+  width: 1em;
 }
 
 .schedule-time-cell {
@@ -451,7 +450,7 @@ body > main {
   top: 50%;
   transform: translateY(-50%);
   width: 2rem;
-  height: var(--app-control-height);
+  height: 4rem;
   padding: 0;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
@@ -462,10 +461,15 @@ body > main {
 .app-sidebar-toggle {
   position: fixed;
   left: 0;
-  z-index: 1030;
+  transition:
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
+    color 0.15s ease-in-out,
+    left 0.3s ease-in-out;
+  z-index: 1050;
 }
 
-.app-sidebar-close {
+.app-sidebar-toggle.is-open {
   --bs-btn-color: var(--bs-dark);
   --bs-btn-bg: var(--bs-white);
   --bs-btn-border-color: var(--bs-border-color);
@@ -473,13 +477,10 @@ body > main {
   --bs-btn-hover-bg: var(--bs-tertiary-bg);
   --bs-btn-hover-border-color: var(--bs-border-color);
 
-  position: absolute;
-  right: 0;
-  z-index: 1;
-  transform: translate(100%, -50%);
+  left: 15rem;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1200px) {
   .app-sidebar {
     width: clamp(12rem, 25vw, 15rem);
   }
@@ -488,6 +489,36 @@ body > main {
 .app-nav {
   --bs-nav-pills-link-active-bg: var(--bs-orange);
   --bs-nav-pills-link-active-color: var(--bs-black);
+}
+
+@media (max-width: 991.98px) {
+  .app-nav-backdrop:not([hidden]) {
+    background-color: rgba(0, 0, 0, 0.5);
+    display: block;
+    inset: 0;
+    position: fixed;
+    z-index: 1020;
+  }
+
+  #primaryNavigation {
+    background-color: var(--bs-primary);
+    border: var(--bs-border-width) solid rgba(255, 255, 255, 0.35);
+    border-radius: var(--bs-border-radius);
+    box-shadow: var(--bs-box-shadow);
+    max-width: calc(100vw - 2rem);
+    position: absolute;
+    right: 1rem;
+    top: 100%;
+    width: 15rem;
+  }
+
+  #primaryNavigation .app-nav {
+    padding: 0.5rem !important;
+  }
+}
+
+.app-nav-backdrop {
+  display: none;
 }
 
 .app-nav .nav-link {
@@ -501,13 +532,29 @@ body > main {
 }
 
 .navbar-toggler {
+  border-color: var(--bs-white);
+  border-width: 2px;
+  color: var(--bs-white);
   height: var(--app-control-height);
   padding-block: 0;
 }
 
-.navbar-toggler-icon {
-  height: 1.5rem;
-  width: 1.5rem;
+.app-hamburger-icon {
+  height: 1.75rem;
+  width: 1.75rem;
+}
+
+.navbar-toggler:focus:not(:focus-visible) {
+  box-shadow: none;
+}
+
+.navbar-toggler:hover,
+.navbar-toggler:focus-visible {
+  box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.55);
+}
+
+.navbar-toggler[aria-expanded="true"] {
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
 .app-nav .nav-link:not(.active) {
@@ -525,7 +572,7 @@ body > main {
   color: var(--bs-black);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .app-nav .nav-link {
     min-width: 6rem;
     white-space: nowrap;
