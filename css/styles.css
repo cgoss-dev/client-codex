@@ -206,7 +206,7 @@ body > main {
   align-items: center;
   display: flex;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: var(--app-control-font-size);
   height: var(--app-control-height);
   justify-content: center;
   padding-block: 0;
@@ -574,9 +574,9 @@ body > main {
 
 @media (min-width: 992px) {
   .app-nav .nav-link {
-    min-width: 6rem;
+    min-width: 7.5rem;
     white-space: nowrap;
-    width: 6rem;
+    width: 7.5rem;
   }
 }
 

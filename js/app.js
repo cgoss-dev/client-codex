@@ -2,6 +2,8 @@ const weekStartToggle = document.querySelector("#weekStartToggle");
 const scheduleNavLink = document.querySelector("#scheduleNavLink");
 const accountsNavLink = document.querySelector("#accountsNavLink");
 const billingNavLink = document.querySelector("#billingNavLink");
+const operationsNavLink = document.querySelector("#operationsNavLink");
+const preferencesNavLink = document.querySelector("#preferencesNavLink");
 const primaryNavigation = document.querySelector("#primaryNavigation");
 const primaryNavigationBackdrop = document.querySelector("#primaryNavigationBackdrop");
 const appViewElements = document.querySelectorAll("[data-app-view]");
@@ -39,7 +41,7 @@ const showAppView = (viewName) => {
     element.classList.toggle("d-none", element.dataset.appView !== viewName);
   });
 
-  [scheduleNavLink, accountsNavLink, billingNavLink].forEach((link) => {
+  [scheduleNavLink, accountsNavLink, billingNavLink, operationsNavLink, preferencesNavLink].forEach((link) => {
     const isActive = link?.getAttribute("href") === `#${viewName}`;
     link?.classList.toggle("active", isActive);
 
@@ -53,7 +55,8 @@ const showAppView = (viewName) => {
 
 const showViewFromHash = () => {
   const requestedView = window.location.hash.slice(1);
-  showAppView(["accounts", "billing"].includes(requestedView) ? requestedView : "schedule");
+  const availableViews = ["schedule", "accounts", "billing", "operations", "preferences"];
+  showAppView(availableViews.includes(requestedView) ? requestedView : "schedule");
 };
 
 window.addEventListener("hashchange", showViewFromHash);

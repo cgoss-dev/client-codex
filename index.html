@@ -59,10 +59,10 @@
                 <a class="nav-link btn btn-light" id="billingNavLink" href="#billing">Billing</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link btn btn-light" href="#">Company</a>
+                <a class="nav-link btn btn-light" id="operationsNavLink" href="#operations">Operations</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link btn btn-light" href="#">Settings</a>
+                <a class="nav-link btn btn-light" id="preferencesNavLink" href="#preferences">Preferences</a>
               </li>
             </ul>
           </div>
@@ -139,10 +139,8 @@
 
               <div class="card app-sidebar-card">
                 <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Appointment actions">
-                  <button class="btn btn-light app-sidebar-action" type="button">Create New Appt</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Lookup by Acct #</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Lookup by Client</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Lookup by Location</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Create</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Lookup</button>
                 </div>
               </div>
             </section>
@@ -263,21 +261,20 @@
 
               <div class="card app-sidebar-card">
                 <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Create account records">
-                  <button class="btn btn-light app-sidebar-action" type="button">New Account</button>
                   <button class="btn btn-light app-sidebar-action" type="button">New Client</button>
                   <button class="btn btn-light app-sidebar-action" type="button">New Location</button>
                 </div>
               </div>
             </section>
 
-            <section class="app-sidebar-section" aria-labelledby="account-lookup-heading">
-              <h2 id="account-lookup-heading" class="h3 app-sidebar-title text-center">Lookup</h2>
+            <section class="app-sidebar-section" aria-labelledby="account-location-types-heading">
+              <h2 id="account-location-types-heading" class="h3 app-sidebar-title text-center">Locations</h2>
 
               <div class="card app-sidebar-card">
-                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Look up account records">
-                  <button class="btn btn-light app-sidebar-action" type="button">Account #</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Client</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Location</button>
+                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Filter accounts by location type">
+                  <button class="btn btn-light app-sidebar-action" type="button">Residences</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Rentals</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Commercial</button>
                 </div>
               </div>
             </section>
@@ -471,6 +468,122 @@
                 <p class="mb-0">No payments recorded.</p>
               </div>
             </section>
+          </div>
+        </section>
+
+        <aside
+          class="offcanvas-xl offcanvas-start col-xl-auto app-sidebar px-0 d-none"
+          data-app-view="operations"
+          tabindex="-1"
+          id="operationsSidebar"
+          aria-label="Operations sidebar"
+        >
+          <div class="offcanvas-body d-block app-sidebar-content px-3">
+            <section class="app-sidebar-section" aria-labelledby="operations-employees-heading">
+              <h2 id="operations-employees-heading" class="h3 app-sidebar-title text-center">Employees</h2>
+
+              <div class="card app-sidebar-card">
+                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Employee sections">
+                  <button class="btn btn-light app-sidebar-action" type="button">Technicians</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Administration</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="app-sidebar-section" aria-labelledby="operations-company-heading">
+              <h2 id="operations-company-heading" class="h3 app-sidebar-title text-center">Company</h2>
+
+              <div class="card app-sidebar-card">
+                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Company sections">
+                  <button class="btn btn-light app-sidebar-action" type="button">Policies</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Licenses</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Vendors</button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </aside>
+
+        <section class="col-12 col-xl app-workspace d-none" data-app-view="operations" aria-labelledby="operations-main-heading">
+          <button
+            class="btn btn-primary app-sidebar-handle app-sidebar-toggle d-xl-none shadow-sm"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#operationsSidebar"
+            aria-controls="operationsSidebar"
+            aria-expanded="false"
+            aria-label="Open operations sidebar"
+          >
+            <span aria-hidden="true">&rsaquo;</span>
+          </button>
+
+          <div class="app-main-heading-row">
+            <h1 class="h3 app-main-title" id="operations-main-heading">Operations</h1>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <p class="mb-0">Shared business information and operational settings will go here.</p>
+            </div>
+          </div>
+        </section>
+
+        <aside
+          class="offcanvas-xl offcanvas-start col-xl-auto app-sidebar px-0 d-none"
+          data-app-view="preferences"
+          tabindex="-1"
+          id="preferencesSidebar"
+          aria-label="Preferences sidebar"
+        >
+          <div class="offcanvas-body d-block app-sidebar-content px-3">
+            <section class="app-sidebar-section" aria-labelledby="preferences-saved-heading">
+              <h2 id="preferences-saved-heading" class="h3 app-sidebar-title text-center">Saved for Later</h2>
+
+              <div class="card app-sidebar-card">
+                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Saved for later sections">
+                  <button class="btn btn-light app-sidebar-action" type="button">Notes</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Appointments</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Invoices</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Clients</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="app-sidebar-section" aria-labelledby="preferences-default-view-heading">
+              <h2 id="preferences-default-view-heading" class="h3 app-sidebar-title text-center">Default View</h2>
+
+              <div class="card app-sidebar-card">
+                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Default view sections">
+                  <button class="btn btn-light app-sidebar-action" type="button">Font Size/Color</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Day/Night Mode</button>
+                  <button class="btn btn-light app-sidebar-action" type="button">Date/Time Format</button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </aside>
+
+        <section class="col-12 col-xl app-workspace d-none" data-app-view="preferences" aria-labelledby="preferences-main-heading">
+          <button
+            class="btn btn-primary app-sidebar-handle app-sidebar-toggle d-xl-none shadow-sm"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#preferencesSidebar"
+            aria-controls="preferencesSidebar"
+            aria-expanded="false"
+            aria-label="Open preferences sidebar"
+          >
+            <span aria-hidden="true">&rsaquo;</span>
+          </button>
+
+          <div class="app-main-heading-row">
+            <h1 class="h3 app-main-title" id="preferences-main-heading">Preferences</h1>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <p class="mb-0">Private user preferences, saved documents, and reminders will go here.</p>
+            </div>
           </div>
         </section>
       </div>
