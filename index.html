@@ -25,7 +25,16 @@
           <a class="navbar-brand h3 app-header-title mb-0" href="#">Client Codex</a>
 
           <button
-            class="navbar-toggler"
+            class="btn btn-light app-header-control app-global-new-button d-none d-md-inline-flex"
+            data-new-button
+            type="button"
+            aria-controls="newPanel"
+          >
+            New
+          </button>
+
+          <button
+            class="navbar-toggler btn btn-light app-header-control"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#primaryNavigation"
@@ -33,22 +42,21 @@
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            <svg
-              class="bi bi-list app-hamburger-icon"
-              aria-hidden="true"
-              fill="currentColor"
-              viewBox="0 0 16 16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
-              />
-            </svg>
+            Menu
           </button>
 
           <div class="collapse navbar-collapse" id="primaryNavigation">
             <ul class="navbar-nav nav nav-pills app-nav ms-lg-auto gap-2 py-3 py-lg-0">
+              <li class="nav-item d-md-none">
+                <button
+                  class="nav-link btn btn-light app-global-new-button"
+                  data-new-button
+                  type="button"
+                  aria-controls="newPanel"
+                >
+                  New
+                </button>
+              </li>
               <li class="nav-item">
                 <a class="nav-link btn btn-light active" id="scheduleNavLink" href="#schedule" aria-current="page">Schedule</a>
               </li>
@@ -256,17 +264,6 @@
           aria-label="Accounts sidebar"
         >
           <div class="offcanvas-body d-block app-sidebar-content px-3">
-            <section class="app-sidebar-section" aria-labelledby="account-create-heading">
-              <h2 id="account-create-heading" class="h3 app-sidebar-title text-center">Create</h2>
-
-              <div class="card app-sidebar-card">
-                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Create account records">
-                  <button class="btn btn-light app-sidebar-action" type="button">New Client</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">New Location</button>
-                </div>
-              </div>
-            </section>
-
             <section class="app-sidebar-section" aria-labelledby="account-location-types-heading">
               <h2 id="account-location-types-heading" class="h3 app-sidebar-title text-center">Locations</h2>
 
@@ -306,59 +303,170 @@
             <span aria-hidden="true">&rsaquo;</span>
           </button>
 
-          <div class="app-main-heading-row">
-            <h1 class="h3 app-main-title" id="accounts-main-heading">Accounts</h1>
+          <div class="app-view-panel" id="accountsOverview">
+            <div class="app-main-heading-row">
+              <h1 class="h3 app-main-title" id="accounts-main-heading">Accounts</h1>
+            </div>
+
+            <div class="app-detail-grid">
+              <section class="card app-detail-card" aria-labelledby="account-contact-heading">
+                <div class="card-header">
+                  <h2 class="h5 app-detail-heading" id="account-contact-heading">Contact Information</h2>
+                </div>
+                <div class="card-body">
+                  <p class="mb-0">Account Type: &mdash;</p>
+                  <p class="mb-0">Account Name: &mdash;</p>
+                  <p class="mb-0">Primary Contact: &mdash;</p>
+                  <p class="mb-0">Phone: &mdash;</p>
+                  <p class="mb-0">Email: &mdash;</p>
+                </div>
+              </section>
+
+              <section class="card app-detail-card" aria-labelledby="account-roles-heading">
+                <div class="card-header">
+                  <h2 class="h5 app-detail-heading" id="account-roles-heading">Client Roles</h2>
+                </div>
+                <div class="card-body">
+                  <p class="mb-2">No client roles assigned.</p>
+                  <p class="mb-0">
+                    Clients may be Owners, Managers, or Tenants.
+                  </p>
+                </div>
+              </section>
+
+              <section class="card app-detail-card" aria-labelledby="account-locations-heading">
+                <div class="card-header">
+                  <h2 class="h5 app-detail-heading" id="account-locations-heading">Linked Locations</h2>
+                </div>
+                <div class="card-body">
+                  <p class="mb-2">No locations linked.</p>
+                  <p class="mb-0">
+                    Locations are Residences or Rentals. Rentals are marked Vacant or Occupied and must have an Owner or Manager.
+                  </p>
+                </div>
+              </section>
+
+              <section class="card app-detail-card" aria-labelledby="account-billing-heading">
+                <div class="card-header">
+                  <h2 class="h5 app-detail-heading" id="account-billing-heading">Billing Profiles</h2>
+                </div>
+                <div class="card-body">
+                  <p class="mb-2">No billing profiles added.</p>
+                  <p class="mb-0">
+                    Billing profiles belong to the account and can pay for service at a linked location.
+                  </p>
+                </div>
+              </section>
+            </div>
           </div>
 
-          <div class="app-detail-grid">
-            <section class="card app-detail-card" aria-labelledby="account-contact-heading">
-              <div class="card-header">
-                <h2 class="h5 app-detail-heading" id="account-contact-heading">Contact Information</h2>
-              </div>
-              <div class="card-body">
-                <p class="mb-0">Account Type: &mdash;</p>
-                <p class="mb-0">Account Name: &mdash;</p>
-                <p class="mb-0">Primary Contact: &mdash;</p>
-                <p class="mb-0">Phone: &mdash;</p>
-                <p class="mb-0">Email: &mdash;</p>
-              </div>
-            </section>
+        </section>
 
-            <section class="card app-detail-card" aria-labelledby="account-roles-heading">
-              <div class="card-header">
-                <h2 class="h5 app-detail-heading" id="account-roles-heading">Client Roles</h2>
-              </div>
-              <div class="card-body">
-                <p class="mb-2">No client roles assigned.</p>
-                <p class="mb-0">
-                  Clients may be Owners, Managers, or Tenants.
-                </p>
-              </div>
-            </section>
+        <section class="col-12 app-workspace d-none" data-app-view="new" aria-labelledby="new-heading">
+          <div class="app-view-panel overflow-auto" id="newPanel">
+            <div class="app-main-heading-row">
+              <h1 class="h3 app-main-title" id="new-heading">New</h1>
+            </div>
 
-            <section class="card app-detail-card" aria-labelledby="account-locations-heading">
-              <div class="card-header">
-                <h2 class="h5 app-detail-heading" id="account-locations-heading">Linked Locations</h2>
-              </div>
+            <form class="card" aria-labelledby="new-heading">
               <div class="card-body">
-                <p class="mb-2">No locations linked.</p>
-                <p class="mb-0">
-                  Locations are Residences or Rentals. Rentals are marked Vacant or Occupied and must have an Owner or Manager.
-                </p>
-              </div>
-            </section>
+                <div class="row g-3">
 
-            <section class="card app-detail-card" aria-labelledby="account-billing-heading">
-              <div class="card-header">
-                <h2 class="h5 app-detail-heading" id="account-billing-heading">Billing Profiles</h2>
+                  <div class="col-12 col-md-6">
+                    <label class="form-label" for="streetAddress">Street</label>
+                    <input class="form-control" id="streetAddress" name="streetAddress" type="text" />
+                  </div>
+
+                  <div class="col-6 col-md-3">
+                    <label class="form-label" for="unitNumber">Unit</label>
+                    <input class="form-control" id="unitNumber" name="unitNumber" type="text" />
+                  </div>
+
+                  <div class="col-6 col-md-3">
+                    <label class="form-label" for="locationType">Type</label>
+                    <select class="form-select" id="locationType" name="locationType">
+                      <option selected value=""></option>
+                      <option value="residence">Residence</option>
+                      <option value="rental">Rental</option>
+                      <option value="commercial">Commercial</option>
+                    </select>
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label" for="city">City</label>
+                    <input class="form-control" id="city" name="city" type="text" />
+                  </div>
+
+                  <div class="col-6 col-md-3">
+                    <label class="form-label" for="postalCode">ZIP</label>
+                    <input class="form-control" id="postalCode" inputmode="numeric" name="postalCode" type="text" />
+                  </div>
+
+                  <div class="col-6 col-md-3">
+                    <label class="form-label" for="state">State</label>
+                    <select class="form-select" id="state" name="state">
+                      <option selected value=""></option>
+                      <option value="AL">AL</option>
+                      <option value="AK">AK</option>
+                      <option value="AZ">AZ</option>
+                      <option value="AR">AR</option>
+                      <option value="CA">CA</option>
+                      <option value="CO">CO</option>
+                      <option value="CT">CT</option>
+                      <option value="DE">DE</option>
+                      <option value="DC">DC</option>
+                      <option value="FL">FL</option>
+                      <option value="GA">GA</option>
+                      <option value="HI">HI</option>
+                      <option value="ID">ID</option>
+                      <option value="IL">IL</option>
+                      <option value="IN">IN</option>
+                      <option value="IA">IA</option>
+                      <option value="KS">KS</option>
+                      <option value="KY">KY</option>
+                      <option value="LA">LA</option>
+                      <option value="ME">ME</option>
+                      <option value="MD">MD</option>
+                      <option value="MA">MA</option>
+                      <option value="MI">MI</option>
+                      <option value="MN">MN</option>
+                      <option value="MS">MS</option>
+                      <option value="MO">MO</option>
+                      <option value="MT">MT</option>
+                      <option value="NE">NE</option>
+                      <option value="NV">NV</option>
+                      <option value="NH">NH</option>
+                      <option value="NJ">NJ</option>
+                      <option value="NM">NM</option>
+                      <option value="NY">NY</option>
+                      <option value="NC">NC</option>
+                      <option value="ND">ND</option>
+                      <option value="OH">OH</option>
+                      <option value="OK">OK</option>
+                      <option value="OR">OR</option>
+                      <option value="PA">PA</option>
+                      <option value="RI">RI</option>
+                      <option value="SC">SC</option>
+                      <option value="SD">SD</option>
+                      <option value="TN">TN</option>
+                      <option value="TX">TX</option>
+                      <option value="UT">UT</option>
+                      <option value="VT">VT</option>
+                      <option value="VA">VA</option>
+                      <option value="WA">WA</option>
+                      <option value="WV">WV</option>
+                      <option value="WI">WI</option>
+                      <option value="WY">WY</option>
+                    </select>
+                  </div>
+                </div>
               </div>
-              <div class="card-body">
-                <p class="mb-2">No billing profiles added.</p>
-                <p class="mb-0">
-                  Billing profiles belong to the account and can pay for service at a linked location.
-                </p>
+
+              <div class="card-footer d-flex justify-content-end gap-2">
+                <button class="btn btn-light" id="cancelNewButton" type="button">Cancel</button>
+                <button class="btn btn-primary" type="submit" disabled>Save</button>
               </div>
-            </section>
+            </form>
           </div>
         </section>
 

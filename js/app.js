@@ -4,7 +4,10 @@ const accountsNavLink = document.querySelector("#accountsNavLink");
 const billingNavLink = document.querySelector("#billingNavLink");
 const operationsNavLink = document.querySelector("#operationsNavLink");
 const preferencesNavLink = document.querySelector("#preferencesNavLink");
+const newButtons = document.querySelectorAll("[data-new-button]");
+const cancelNewButton = document.querySelector("#cancelNewButton");
 const primaryNavigation = document.querySelector("#primaryNavigation");
+const menuButton = document.querySelector(".navbar-toggler");
 const primaryNavigationBackdrop = document.querySelector("#primaryNavigationBackdrop");
 const appViewElements = document.querySelectorAll("[data-app-view]");
 const calendarDates = document.querySelector(".calendar-dates");
@@ -35,6 +38,7 @@ const appointmentInfo3Button = document.querySelector("#appointmentInfo3Button")
 const appointmentInfo5Button = document.querySelector("#appointmentInfo5Button");
 const weekendsOffButton = document.querySelector("#weekendsOffButton");
 const weekendsOnButton = document.querySelector("#weekendsOnButton");
+let previousView = "schedule";
 
 const showAppView = (viewName) => {
   appViewElements.forEach((element) => {
@@ -51,16 +55,61 @@ const showAppView = (viewName) => {
       link?.removeAttribute("aria-current");
     }
   });
+
+  const isNewView = viewName === "new";
+  newButtons.forEach((button) => {
+    button.classList.toggle("active", isNewView);
+
+    if (isNewView) {
+      button.setAttribute("aria-current", "page");
+    } else {
+      button.removeAttribute("aria-current");
+    }
+  });
 };
 
 const showViewFromHash = () => {
   const requestedView = window.location.hash.slice(1);
-  const availableViews = ["schedule", "accounts", "billing", "operations", "preferences"];
+  const availableViews = ["schedule", "accounts", "billing", "operations", "preferences", "new"];
   showAppView(availableViews.includes(requestedView) ? requestedView : "schedule");
 };
 
 window.addEventListener("hashchange", showViewFromHash);
 showViewFromHash();
+
+let activeNewButton;
+
+newButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const currentView = window.location.hash.slice(1);
+
+    if (currentView && currentView !== "new") {
+      previousView = currentView;
+    }
+
+    activeNewButton = button;
+    window.location.hash = "new";
+    showAppView("new");
+    window.bootstrap?.Collapse.getOrCreateInstance(primaryNavigation, { toggle: false }).hide();
+
+    document.querySelectorAll(".app-sidebar.show, .app-sidebar.showing").forEach((sidebar) => {
+      window.bootstrap?.Offcanvas.getOrCreateInstance(sidebar).hide();
+    });
+
+    document.querySelector("#streetAddress")?.focus();
+  });
+});
+
+cancelNewButton?.addEventListener("click", () => {
+  window.location.hash = previousView;
+  showAppView(previousView);
+
+  if (activeNewButton?.offsetParent) {
+    activeNewButton.focus();
+  } else {
+    menuButton?.focus();
+  }
+});
 
 primaryNavigation?.addEventListener("click", (event) => {
   if (!event.target.closest(".nav-link") || window.matchMedia("(min-width: 992px)").matches) {

@@ -10,6 +10,8 @@
   --bs-body-font-family: "Annotation Mono", var(--bs-font-monospace);
   --app-control-font-size: 0.75rem;
   --app-control-height: 2rem;
+  --app-light-button-bg: var(--bs-gray-100);
+  --app-light-button-color: var(--bs-gray-900);
   --app-main-spacing: 1rem;
   --app-title-bottom-spacing: 0.5rem;
   --app-weekday-row-bg: #d3d4d5;
@@ -40,6 +42,54 @@ body > main {
   font-weight: 800;
 }
 
+.app-header-control {
+  --bs-btn-bg: var(--app-light-button-bg);
+  --bs-btn-color: var(--app-light-button-color);
+  --bs-btn-hover-bg: var(--app-light-button-bg);
+  --bs-btn-hover-color: var(--app-light-button-color);
+
+  align-items: center;
+  background-color: var(--app-light-button-bg);
+  border: 0;
+  color: var(--app-light-button-color);
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: 400;
+  height: var(--app-control-height);
+  justify-content: center;
+  width: 7.5rem;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.8) !important;
+  filter: brightness(0.9);
+}
+
+.btn:focus:not(:focus-visible) {
+  box-shadow: none;
+}
+
+.app-global-new-button {
+  line-height: 1;
+  padding-block: 0;
+}
+
+.app-header > .container-fluid > .app-global-new-button {
+  margin-left: auto;
+  margin-right: 0.5rem;
+}
+
+.app-global-new-button.active {
+  background-color: var(--bs-orange);
+  color: var(--bs-black);
+}
+
+.navbar-toggler[aria-expanded="true"] {
+  background-color: var(--bs-gray-300);
+  color: var(--app-light-button-color);
+}
+
 .app-sidebar {
   --bs-offcanvas-width: 15rem;
 
@@ -57,6 +107,13 @@ body > main {
   min-width: 0;
   overflow: hidden;
   padding: var(--app-main-spacing);
+}
+
+.app-view-panel {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .app-main-heading-row {
@@ -203,6 +260,11 @@ body > main {
 }
 
 .app-sidebar-action {
+  --bs-btn-bg: var(--app-light-button-bg);
+  --bs-btn-color: var(--app-light-button-color);
+  --bs-btn-hover-bg: var(--app-light-button-bg);
+  --bs-btn-hover-color: var(--app-light-button-color);
+
   align-items: center;
   display: flex;
   font-family: inherit;
@@ -489,6 +551,8 @@ body > main {
 .app-nav {
   --bs-nav-pills-link-active-bg: var(--bs-orange);
   --bs-nav-pills-link-active-color: var(--bs-black);
+
+  align-items: flex-end;
 }
 
 @media (max-width: 991.98px) {
@@ -507,9 +571,10 @@ body > main {
     box-shadow: var(--bs-box-shadow);
     max-width: calc(100vw - 2rem);
     position: absolute;
-    right: 1rem;
+    right: 4.75rem;
     top: 100%;
-    width: 15rem;
+    transform: translateX(50%);
+    width: fit-content;
   }
 
   #primaryNavigation .app-nav {
@@ -523,49 +588,36 @@ body > main {
 
 .app-nav .nav-link {
   align-items: center;
+  border: 0;
   display: flex;
   height: var(--app-control-height);
   justify-content: center;
+  min-width: 7.5rem;
   padding-block: 0;
   text-align: center;
-  width: 100%;
+  width: 7.5rem;
 }
 
 .navbar-toggler {
-  border-color: var(--bs-white);
-  border-width: 2px;
-  color: var(--bs-white);
   height: var(--app-control-height);
-  padding-block: 0;
-}
-
-.app-hamburger-icon {
-  height: 1.75rem;
-  width: 1.75rem;
-}
-
-.navbar-toggler:focus:not(:focus-visible) {
-  box-shadow: none;
-}
-
-.navbar-toggler:hover,
-.navbar-toggler:focus-visible {
-  box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.55);
-}
-
-.navbar-toggler[aria-expanded="true"] {
-  background-color: rgba(255, 255, 255, 0.15);
+  padding: 0;
+  width: 7.5rem;
 }
 
 .app-nav .nav-link:not(.active) {
-  background-color: var(--bs-light);
-  color: var(--bs-dark);
+  --bs-btn-bg: var(--app-light-button-bg);
+  --bs-btn-color: var(--app-light-button-color);
+  --bs-btn-hover-bg: var(--app-light-button-bg);
+  --bs-btn-hover-color: var(--app-light-button-color);
+
+  background-color: var(--app-light-button-bg);
+  color: var(--app-light-button-color);
 }
 
 .app-nav .nav-link:not(.active):hover,
 .app-nav .nav-link:not(.active):focus-visible {
-  background-color: var(--bs-btn-hover-bg);
-  color: var(--bs-btn-hover-color);
+  background-color: var(--app-light-button-bg);
+  color: var(--app-light-button-color);
 }
 
 .app-nav .nav-link.active {
@@ -573,14 +625,20 @@ body > main {
 }
 
 @media (min-width: 992px) {
+  #primaryNavigation {
+    flex-grow: 0;
+  }
+
   .app-nav .nav-link {
-    min-width: 7.5rem;
     white-space: nowrap;
-    width: 7.5rem;
   }
 }
 
 .technician-button {
+  --bs-btn-bg: var(--app-light-button-bg);
+  --bs-btn-color: var(--app-light-button-color);
+  --bs-btn-hover-bg: var(--app-light-button-bg);
+  --bs-btn-hover-color: var(--app-light-button-color);
   --bs-btn-active-bg: var(--bs-orange);
   --bs-btn-active-border-color: var(--bs-orange);
   --bs-btn-active-color: var(--bs-black);
