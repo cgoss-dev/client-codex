@@ -45,6 +45,8 @@ const accountLocationDetailOccupancy = document.querySelector("#accountLocationD
 const accountLocationDetailCity = document.querySelector("#accountLocationDetailCity");
 const accountLocationDetailState = document.querySelector("#accountLocationDetailState");
 const accountLocationDetailPostalCode = document.querySelector("#accountLocationDetailPostalCode");
+const accountClientRolesStatus = document.querySelector("#accountClientRolesStatus");
+const accountClientRolesList = document.querySelector("#accountClientRolesList");
 const newSidebar = document.querySelector("#newSidebar");
 const primaryNavigation = document.querySelector("#primaryNavigation");
 const menuButton = document.querySelector(".navbar-toggler");
@@ -1124,6 +1126,16 @@ const loadAccountLocations = async (locationIdToSelect) => {
     accountLocationDetails.hidden = true;
   }
 
+  if (accountClientRolesStatus) {
+    accountClientRolesStatus.textContent =
+      "Select a Location to view its Client roles.";
+  }
+
+  if (accountClientRolesList) {
+    accountClientRolesList.replaceChildren();
+    accountClientRolesList.hidden = true;
+  }
+
   try {
     const response = await fetch("/api/locations");
     const result = await response.json();
@@ -1221,6 +1233,83 @@ const loadAccountLocationDetails = async (locationId) => {
   }
 };
 
+const loadAccountLocationClients = async (locationId) => {
+  if (!accountClientRolesStatus || !accountClientRolesList) {
+    return;
+  }
+
+  accountClientRolesStatus.textContent =
+    `Loading Client roles for Location #${locationId}…`;
+  accountClientRolesList.replaceChildren();
+  accountClientRolesList.hidden = true;
+
+  try {
+    const response = await fetch(`/api/locations/${locationId}/clients`);
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error || "Python could not retrieve the Location's Clients.",
+      );
+    }
+
+    if (selectedAccountLocationId !== locationId) {
+      return;
+    }
+
+    if (!result.clients.length) {
+      accountClientRolesStatus.textContent = "No client roles assigned.";
+      return;
+    }
+
+    result.clients.forEach(({ client, link }) => {
+      const clientRole = document.createElement("div");
+      const roleLine = document.createElement("p");
+      const nameLine = document.createElement("p");
+      const contactLine = document.createElement("p");
+      const contactMethods = [
+        client.email ? `Email: ${client.email}` : null,
+        client.mobile ? `Mobile: ${client.mobile}` : null,
+      ].filter(Boolean);
+
+      clientRole.className = "border rounded p-2";
+      roleLine.className = "mb-1";
+      roleLine.textContent =
+        `${capitalize(link.priority)} ${capitalize(link.role)}`;
+      nameLine.className = "mb-1";
+      nameLine.textContent = `${client.firstName} ${client.lastName}`;
+      contactLine.className = "mb-0";
+      contactLine.textContent = contactMethods.join(" — ");
+
+      clientRole.append(roleLine);
+
+      if (client.organization) {
+        const organizationLine = document.createElement("p");
+
+        organizationLine.className = "mb-1";
+        organizationLine.textContent = client.organization;
+        clientRole.append(organizationLine);
+      }
+
+      clientRole.append(nameLine, contactLine);
+      accountClientRolesList.append(clientRole);
+    });
+
+    accountClientRolesStatus.textContent =
+      `${result.count} linked ${result.count === 1 ? "Client" : "Clients"}.`;
+    accountClientRolesList.hidden = false;
+  } catch (error) {
+    if (selectedAccountLocationId !== locationId) {
+      return;
+    }
+
+    accountClientRolesStatus.textContent =
+      error instanceof Error
+        ? error.message
+        : "Python could not retrieve the Location's Clients.";
+  }
+};
+
 accountLocationsList?.addEventListener("click", (event) => {
   const selectedLocation = event.target.closest("[data-location-id]");
 
@@ -1243,6 +1332,7 @@ accountLocationsList?.addEventListener("click", (event) => {
   }
 
   loadAccountLocationDetails(selectedAccountLocationId);
+  loadAccountLocationClients(selectedAccountLocationId);
 });
 
 const showAppView = (viewName) => {
