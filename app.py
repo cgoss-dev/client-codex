@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 
 from flask import Flask, jsonify, request, send_from_directory
-from sqlalchemy import create_engine, func, select
+from sqlalchemy import create_engine, event, func, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -16,6 +16,15 @@ database_path = instance_folder / "client-codex.sqlite3"
 
 instance_folder.mkdir(exist_ok=True)
 database_engine = create_engine(f"sqlite:///{database_path}")
+
+
+@event.listens_for(database_engine, "connect")
+def enable_sqlite_foreign_keys(dbapi_connection, _connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
+
+
 Base.metadata.create_all(database_engine)
 email_address_pattern = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]{2,}$")
 
