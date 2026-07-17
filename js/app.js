@@ -32,6 +32,8 @@ const newLocationReviewHeading = document.querySelector("#new-location-review-he
 const newLocationReviewData = document.querySelector("#newLocationReviewData");
 const confirmLocationSaveButton = document.querySelector("#confirmLocationSaveButton");
 const locationApiStatus = document.querySelector("#locationApiStatus");
+const accountLocationsStatus = document.querySelector("#accountLocationsStatus");
+const accountLocationsList = document.querySelector("#accountLocationsList");
 const newSidebar = document.querySelector("#newSidebar");
 const primaryNavigation = document.querySelector("#primaryNavigation");
 const menuButton = document.querySelector(".navbar-toggler");
@@ -1035,6 +1037,54 @@ confirmLocationSaveButton?.addEventListener("click", async () => {
   }
 });
 
+const loadAccountLocations = async () => {
+  if (!accountLocationsStatus || !accountLocationsList) {
+    return;
+  }
+
+  accountLocationsStatus.textContent = "Loading Locations…";
+  accountLocationsList.hidden = true;
+  accountLocationsList.replaceChildren();
+
+  try {
+    const response = await fetch("/api/locations");
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || "Python could not retrieve Locations.");
+    }
+
+    if (!result.locations.length) {
+      accountLocationsStatus.textContent = "No Locations yet.";
+      return;
+    }
+
+    result.locations.forEach((location) => {
+      const listItem = document.createElement("li");
+      const unit = location.unit ? `, Unit ${location.unit}` : "";
+      const occupancy = location.occupancy
+        ? `, ${capitalize(location.occupancy)}`
+        : "";
+
+      listItem.className = "list-group-item";
+      listItem.textContent =
+        `#${location.id} — ${location.street}${unit}, ` +
+        `${location.city}, ${location.state} ${location.postalCode} — ` +
+        `${capitalize(location.type)}${occupancy}`;
+      accountLocationsList.append(listItem);
+    });
+
+    accountLocationsStatus.textContent =
+      `${result.count} ${result.count === 1 ? "Location" : "Locations"}.`;
+    accountLocationsList.hidden = false;
+  } catch (error) {
+    accountLocationsStatus.textContent =
+      error instanceof Error
+        ? error.message
+        : "Python could not retrieve Locations.";
+  }
+};
+
 const showAppView = (viewName) => {
   appViewElements.forEach((element) => {
     element.classList.toggle("d-none", element.dataset.appView !== viewName);
@@ -1061,6 +1111,10 @@ const showAppView = (viewName) => {
       button.removeAttribute("aria-current");
     }
   });
+
+  if (viewName === "accounts") {
+    loadAccountLocations();
+  }
 };
 
 const showViewFromHash = () => {

@@ -336,13 +336,11 @@
 
               <section class="card app-detail-card" aria-labelledby="account-locations-heading">
                 <div class="card-header">
-                  <h2 class="h5 app-detail-heading" id="account-locations-heading">Linked Locations</h2>
+                  <h2 class="h5 app-detail-heading" id="account-locations-heading">Locations</h2>
                 </div>
                 <div class="card-body">
-                  <p class="mb-2">No locations linked.</p>
-                  <p class="mb-0">
-                    Locations are Residences or Rentals. Rentals are marked Vacant or Occupied and must have an Owner or Manager.
-                  </p>
+                  <p class="mb-2" id="accountLocationsStatus" aria-live="polite">Loading Locations…</p>
+                  <ul class="list-group" id="accountLocationsList" aria-label="Saved Locations" hidden></ul>
                 </div>
               </section>
 
