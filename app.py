@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 from flask import Flask, jsonify, request, send_from_directory
@@ -5,7 +6,7 @@ from sqlalchemy import create_engine, func, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from models import Base, Location
+from models import Base, Client, Location
 
 
 app = Flask(__name__)
@@ -16,6 +17,7 @@ database_path = instance_folder / "client-codex.sqlite3"
 instance_folder.mkdir(exist_ok=True)
 database_engine = create_engine(f"sqlite:///{database_path}")
 Base.metadata.create_all(database_engine)
+email_address_pattern = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]{2,}$")
 
 
 def location_to_dict(location):
@@ -31,8 +33,34 @@ def location_to_dict(location):
     }
 
 
+def client_to_dict(client):
+    return {
+        "id": client.id,
+        "organization": client.organization,
+        "firstName": client.first_name,
+        "lastName": client.last_name,
+        "email": client.email,
+        "mobile": client.mobile,
+    }
+
+
 def normalize_text(value):
     return " ".join(str(value or "").split())
+
+
+def normalize_mobile(value):
+    digits = re.sub(r"\D", "", str(value or ""))
+
+    if len(digits) == 11 and digits.startswith("1"):
+        digits = digits[1:]
+
+    if not digits:
+        return None
+
+    if len(digits) != 10:
+        raise ValueError("Enter a 10-digit mobile number.")
+
+    return f"({digits[:3]}){digits[3:6]}-{digits[6:]}"
 
 
 @app.get("/")
@@ -201,6 +229,83 @@ def create_location():
             id=location_record.id,
             location=normalized_location,
             message="Location saved.",
+            saved=True,
+        ),
+        201,
+    )
+
+
+@app.post("/api/clients")
+def create_client():
+    client = request.get_json(silent=True)
+
+    if not isinstance(client, dict):
+        return jsonify(error="Send the client as a JSON object.", saved=False), 400
+
+    try:
+        mobile = normalize_mobile(client.get("mobile"))
+    except ValueError as error:
+        return jsonify(error=str(error), saved=False), 400
+
+    normalized_client = {
+        "organization": normalize_text(client.get("organization")) or None,
+        "firstName": normalize_text(client.get("firstName")),
+        "lastName": normalize_text(client.get("lastName")),
+        "email": normalize_text(client.get("email")).lower() or None,
+        "mobile": mobile,
+    }
+    missing_names = [
+        field
+        for field in ["firstName", "lastName"]
+        if not normalized_client[field]
+    ]
+
+    if missing_names:
+        return (
+            jsonify(
+                error=f"Complete required fields: {', '.join(missing_names)}.",
+                saved=False,
+            ),
+            400,
+        )
+
+    if not normalized_client["email"] and not normalized_client["mobile"]:
+        return jsonify(error="Enter an email address or mobile number.", saved=False), 400
+
+    if (
+        normalized_client["email"]
+        and not email_address_pattern.fullmatch(normalized_client["email"])
+    ):
+        return (
+            jsonify(
+                error="Enter a complete email address, such as name@example.com.",
+                saved=False,
+            ),
+            400,
+        )
+
+    client_record = Client(
+        organization=normalized_client["organization"],
+        first_name=normalized_client["firstName"],
+        last_name=normalized_client["lastName"],
+        email=normalized_client["email"],
+        mobile=normalized_client["mobile"],
+    )
+
+    try:
+        with Session(database_engine) as session:
+            session.add(client_record)
+            session.commit()
+            session.refresh(client_record)
+    except SQLAlchemyError:
+        app.logger.exception("Could not save the Client.")
+        return jsonify(error="Python could not save the Client.", saved=False), 500
+
+    return (
+        jsonify(
+            client=client_to_dict(client_record),
+            id=client_record.id,
+            message="Client saved.",
             saved=True,
         ),
         201,
