@@ -253,6 +253,23 @@ def get_clients():
     return jsonify(clients=clients, count=len(clients))
 
 
+@app.get("/api/clients/<int:client_id>")
+def get_client(client_id):
+    try:
+        with Session(database_engine) as session:
+            client_record = session.get(Client, client_id)
+
+            if client_record is None:
+                return jsonify(error="Client not found."), 404
+
+            client = client_to_dict(client_record)
+    except SQLAlchemyError:
+        app.logger.exception("Could not retrieve the Client.")
+        return jsonify(error="Python could not retrieve the Client."), 500
+
+    return jsonify(client=client)
+
+
 @app.post("/api/clients")
 def create_client():
     client = request.get_json(silent=True)
