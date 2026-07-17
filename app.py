@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from flask import Flask, jsonify, request, send_from_directory
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -16,6 +16,19 @@ database_path = instance_folder / "client-codex.sqlite3"
 instance_folder.mkdir(exist_ok=True)
 database_engine = create_engine(f"sqlite:///{database_path}")
 Base.metadata.create_all(database_engine)
+
+
+def location_to_dict(location):
+    return {
+        "id": location.id,
+        "street": location.street,
+        "unit": location.unit,
+        "type": location.location_type,
+        "occupancy": location.occupancy,
+        "city": location.city,
+        "state": location.state,
+        "postalCode": location.postal_code,
+    }
 
 
 @app.get("/")
@@ -46,6 +59,24 @@ def font_asset(filename):
 @app.get("/api/health")
 def health():
     return jsonify(status="ok")
+
+
+@app.get("/api/locations")
+def get_locations():
+    try:
+        with Session(database_engine) as session:
+            location_records = session.scalars(
+                select(Location).order_by(Location.id)
+            ).all()
+            locations = [
+                location_to_dict(location_record)
+                for location_record in location_records
+            ]
+    except SQLAlchemyError:
+        app.logger.exception("Could not retrieve Locations.")
+        return jsonify(error="Python could not retrieve Locations."), 500
+
+    return jsonify(count=len(locations), locations=locations)
 
 
 @app.post("/api/locations")
