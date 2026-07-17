@@ -10,6 +10,7 @@
   --bs-body-font-family: "Annotation Mono", var(--bs-font-monospace);
   --app-control-font-size: 0.75rem;
   --app-control-height: 2rem;
+  --app-focus-color: #86b7fe;
   --app-light-button-bg: var(--bs-gray-100);
   --app-light-button-color: var(--bs-gray-900);
   --app-main-spacing: 1rem;
@@ -50,7 +51,7 @@ body > main {
 
   align-items: center;
   background-color: var(--app-light-button-bg);
-  border: 0;
+  border: var(--bs-border-width) solid var(--bs-border-color);
   color: var(--app-light-button-color);
   display: inline-flex;
   font-size: 1rem;
@@ -62,8 +63,13 @@ body > main {
 
 .btn:hover,
 .btn:focus-visible {
-  box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 0 0 0.25rem var(--app-focus-color) !important;
   filter: brightness(0.9);
+}
+
+.btn-light,
+.app-card-toggle {
+  border-color: var(--bs-border-color);
 }
 
 .btn:focus:not(:focus-visible) {
@@ -409,7 +415,34 @@ body > main {
 
 .form-floating > label {
   color: var(--bs-secondary-color);
+  transition: none;
   transform: scale(0.75) translateY(-0.5rem) translateX(0.15rem);
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-control-plaintext ~ label,
+.form-floating > .form-select ~ label {
+  transform: scale(0.75) translateY(-0.5rem) translateX(0.15rem);
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  border-color: var(--app-focus-color) !important;
+  box-shadow: 0 0 0 0.25rem var(--app-focus-color) !important;
+}
+
+.form-floating > .form-control[data-mobile-input],
+.form-floating > .form-control[data-mobile-input]:focus,
+.form-floating > .form-control[data-mobile-input]:not(:placeholder-shown) {
+  padding-bottom: 0.25rem;
+  padding-top: 1.875rem;
+}
+
+.form-floating > [data-mobile-input]::placeholder {
+  color: var(--bs-secondary-color);
+  opacity: 0.65;
 }
 
 @media (min-width: 768px) {
@@ -417,16 +450,6 @@ body > main {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .app-role-contacts-paired {
-    display: grid;
-    gap: var(--app-main-spacing);
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .app-role-contacts-paired > [data-client-contact] > .card {
-    height: 100%;
-    margin-bottom: 0 !important;
-  }
 }
 
 @media (min-width: 1200px) {
@@ -635,13 +658,6 @@ body > main {
   font-size: var(--app-control-font-size);
 }
 
-#newSidebar .app-sidebar-option-title {
-  float: none;
-  font-size: var(--app-control-font-size);
-  line-height: inherit;
-  margin-bottom: 0;
-}
-
 .app-sidebar-handle {
   display: inline-flex;
   align-items: center;
@@ -725,7 +741,7 @@ body > main {
 
 .app-nav .nav-link {
   align-items: center;
-  border: 0;
+  border: var(--bs-border-width) solid var(--bs-border-color);
   display: flex;
   height: var(--app-control-height);
   justify-content: center;
@@ -791,7 +807,7 @@ body > main {
 .calendar-weekdays {
   align-items: center;
   background-color: var(--app-weekday-row-bg);
-  border: 0;
+  border: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: var(--bs-border-radius-sm);
   color: inherit;
   display: grid;
@@ -854,7 +870,7 @@ body > main {
   align-items: center;
   appearance: none;
   background-color: var(--bs-white);
-  border: 0;
+  border: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: var(--bs-border-radius-sm);
   color: inherit;
   cursor: pointer;
@@ -874,7 +890,7 @@ body > main {
 }
 
 .calendar-day:focus-visible {
-  outline: 2px solid var(--bs-primary);
+  outline: 0.25rem solid var(--app-focus-color);
   outline-offset: 1px;
   position: relative;
   z-index: 1;

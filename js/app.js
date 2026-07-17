@@ -19,9 +19,11 @@ const clientContacts = document.querySelector("#clientContacts");
 const clientRoleCards = document.querySelectorAll("[data-client-role-card]");
 const clientRoleOptions = document.querySelector("[data-client-role-options]");
 const clientRoleToggles = document.querySelectorAll("[data-client-role-toggle]");
+const clientPriorityToggles = document.querySelectorAll("[data-client-priority-toggle]");
 const clientSourceToggles = document.querySelectorAll("[data-client-source-toggle]");
 const newForm = document.querySelector("#newForm");
 const newFormStatus = document.querySelector("#newFormStatus");
+const newFormSaveButton = document.querySelector("#newFormSaveButton");
 const newSidebar = document.querySelector("#newSidebar");
 const primaryNavigation = document.querySelector("#primaryNavigation");
 const menuButton = document.querySelector(".navbar-toggler");
@@ -59,6 +61,7 @@ let previousView = "schedule";
 
 const getClientContactCards = () => Array.from(document.querySelectorAll("[data-client-contact]"));
 const clientRoles = ["owner", "manager", "tenant"];
+const emailAddressPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 const capitalize = (value) => value.charAt(0).toUpperCase() + value.slice(1);
 
@@ -132,29 +135,41 @@ const updateClientFields = () => {
     if (sourceOptions) {
       sourceOptions.hidden = !shouldShowSourceOptions;
       sourceOptions.classList.toggle("d-none", !shouldShowSourceOptions);
-      sourceOptions.classList.toggle("d-grid", shouldShowSourceOptions);
     }
     toggle.setAttribute("aria-expanded", String(shouldShowSourceOptions));
   });
 
   clientSourceToggles.forEach((toggle) => {
     const roleToggle = document.querySelector(`[data-client-role-toggle="${toggle.dataset.role}"]`);
-    const primarySource = document.querySelector(
-      `[data-client-source-toggle][data-role="${toggle.dataset.role}"][data-priority="primary"]:checked`,
+    const priorityToggle = document.querySelector(
+      `[data-client-priority-toggle][data-role="${toggle.dataset.role}"][data-priority="${toggle.dataset.priority}"]`,
     );
-    const needsPrimary = toggle.dataset.priority === "secondary";
-    toggle.disabled = !shouldShowClient || !roleToggle?.checked || (needsPrimary && !primarySource);
+    toggle.disabled = !shouldShowClient || !roleToggle?.checked || !priorityToggle?.checked;
   });
 
-  clientRoles.forEach((role) => {
-    const secondaryOptions = document.querySelector(`[data-client-secondary-options="${role}"]`);
-    const primarySource = document.querySelector(
-      `[data-client-source-toggle][data-role="${role}"][data-priority="primary"]:checked`,
+  clientPriorityToggles.forEach((toggle) => {
+    const roleToggle = document.querySelector(`[data-client-role-toggle="${toggle.dataset.role}"]`);
+    const priorityOptions = document.querySelector(
+      `[data-client-priority-options="${toggle.dataset.role}"]`,
     );
+    const shouldShowPriorityOptions = shouldShowClient && roleToggle?.checked;
 
-    if (secondaryOptions) {
-      secondaryOptions.disabled = !shouldShowClient || !primarySource;
+    if (priorityOptions) {
+      priorityOptions.hidden = !shouldShowPriorityOptions;
+      priorityOptions.classList.toggle("d-none", !shouldShowPriorityOptions);
+      priorityOptions.classList.toggle("d-grid", shouldShowPriorityOptions);
     }
+    toggle.disabled = !shouldShowPriorityOptions;
+  });
+
+  document.querySelectorAll("[data-client-priority-panel]").forEach((priorityPanel) => {
+    const priorityToggle = document.querySelector(
+      `[data-client-priority-toggle][data-role="${priorityPanel.dataset.role}"][data-priority="${priorityPanel.dataset.priority}"]`,
+    );
+    const shouldShowPriorityPanel = shouldShowClient && priorityToggle?.checked;
+
+    priorityPanel.hidden = !shouldShowPriorityPanel;
+    setControlsDisabled(priorityPanel, !shouldShowPriorityPanel);
   });
 
   const ownerPrimarySource = document.querySelector(
@@ -184,6 +199,13 @@ includeClient?.addEventListener("change", () => {
     });
     clientSourceToggles.forEach((toggle) => {
       toggle.checked = false;
+    });
+    clientPriorityToggles.forEach((toggle) => {
+      toggle.checked = false;
+    });
+    document.querySelectorAll('input[name="tenantType"]').forEach((tenantType) => {
+      tenantType.checked = false;
+      tenantType.setAttribute("aria-expanded", "false");
     });
     getClientContactCards().forEach((card) => {
       card.hidden = true;
@@ -241,6 +263,7 @@ const updateClientContactDetails = (card, shouldFocusDetails = false) => {
   const rolePicker = card.querySelector(":scope > fieldset");
   const contactCard = card.querySelector(":scope > section");
   const details = card.querySelector("[data-contact-details]");
+  const organizationField = card.querySelector("[data-contact-organization]");
 
   if (!rolePicker || !contactCard || !details) {
     return;
@@ -250,6 +273,15 @@ const updateClientContactDetails = (card, shouldFocusDetails = false) => {
   contactCard.hidden = !selectedRole;
   details.hidden = !selectedRole;
   setControlsDisabled(details, !selectedRole);
+
+  if (organizationField) {
+    const tenantType = document.querySelector('input[name="tenantType"]:checked')?.value;
+    const shouldShowOrganization = selectedRole?.value !== "tenant" || tenantType === "commercial";
+
+    organizationField.hidden = !shouldShowOrganization;
+    setControlsDisabled(organizationField, !shouldShowOrganization);
+  }
+
   card.querySelectorAll('input[type="radio"][name$="Role"]').forEach((input) => {
     input.setAttribute("aria-expanded", String(Boolean(selectedRole)));
   });
@@ -265,21 +297,40 @@ const updateClientContactModel = () => {
   clientRoles.forEach((role) => {
     const roleContacts = activeContacts.filter((card) => card.dataset.role === role);
     const roleCard = document.querySelector(`[data-client-role-card="${role}"]`);
-    const roleContactContainer = document.querySelector(`[data-role-contacts="${role}"]`);
+    const roleContactContainers = document.querySelectorAll(`[data-role-contacts="${role}"]`);
     const roleLookups = document.querySelectorAll(`[data-client-role-lookup="${role}"]`);
     const roleToggle = document.querySelector(`[data-client-role-toggle="${role}"]`);
     const selectedSources = document.querySelectorAll(
       `[data-client-source-toggle][data-role="${role}"]:checked`,
     );
     const swapButton = document.querySelector(`[data-swap-role-priority="${role}"]`);
+    const tenantType = role === "tenant" ? document.querySelector("[data-tenant-type]") : null;
+    const selectedTenantType = tenantType?.querySelector("input:checked")?.value;
+    const primaryTenantSource = role === "tenant"
+      ? document.querySelector(
+          '[data-client-source-toggle][data-role="tenant"][data-priority="primary"]:checked',
+        )
+      : null;
+    const needsTenantType = primaryTenantSource?.value === "new";
+    const tenantDetailsReady = role !== "tenant" || !needsTenantType || Boolean(selectedTenantType);
 
     roleContacts
       .sort((first, second) => (first.dataset.priority === "primary" ? -1 : 1))
       .forEach((contact) => {
-        roleContactContainer?.append(contact);
+        const contactContainer = document.querySelector(
+          `[data-role-contacts="${role}"][data-priority="${contact.dataset.priority}"]`,
+        );
+
+        contactContainer?.append(contact);
         const heading = contact.querySelector(":scope > section .app-detail-heading");
         const purposeOptions = contact.querySelector("[data-contact-purpose]");
         const shouldShowPurposeOptions = roleContacts.length === 2;
+
+        setControlsDisabled(contact, !tenantDetailsReady);
+
+        if (tenantDetailsReady) {
+          updateClientContactDetails(contact);
+        }
 
         if (heading) {
           heading.textContent = capitalize(contact.dataset.priority);
@@ -295,6 +346,12 @@ const updateClientContactModel = () => {
       roleCard.hidden = !roleToggle?.checked || selectedSources.length === 0;
     }
 
+    if (tenantType) {
+      const shouldShowTenantType = needsTenantType;
+      tenantType.hidden = !shouldShowTenantType;
+      setControlsDisabled(tenantType, !shouldShowTenantType);
+    }
+
     roleLookups.forEach((roleLookup) => {
       const selectedSource = document.querySelector(
         `[data-client-source-toggle][data-role="${role}"][data-priority="${roleLookup.dataset.priority}"]:checked`,
@@ -305,22 +362,23 @@ const updateClientContactModel = () => {
       setControlsDisabled(roleLookup, !shouldShowLookup);
     });
 
-    if (roleContactContainer) {
-      const shouldShowNewContacts = roleContacts.length > 0;
-      roleContactContainer.hidden = !shouldShowNewContacts;
-      roleContactContainer.classList.toggle("d-none", !shouldShowNewContacts);
-      roleContactContainer.classList.toggle(
-        "app-role-contacts-paired",
-        shouldShowNewContacts && roleContacts.length === 2,
-      );
-    }
+    roleContactContainers.forEach((contactContainer) => {
+      const shouldShowNewContact =
+        tenantDetailsReady &&
+        roleContacts.some((contact) => contact.dataset.priority === contactContainer.dataset.priority);
+
+      contactContainer.hidden = !shouldShowNewContact;
+      contactContainer.classList.toggle("d-none", !shouldShowNewContact);
+    });
 
     if (swapButton) {
       const shouldShowSwap = roleContacts.length === 2;
-      const primaryContact = roleContacts.find((contact) => contact.dataset.priority === "primary");
-      const primaryHeader = primaryContact?.querySelector(":scope > section > .card-header");
+      const primarySourceRow = document.querySelector(
+        `[data-client-source-group][data-role="${role}"][data-priority="primary"] [data-client-source-row]`,
+      );
 
-      primaryHeader?.append(swapButton);
+      primarySourceRow?.append(swapButton);
+      swapButton.classList.toggle("ms-auto", shouldShowSwap);
       swapButton.hidden = !shouldShowSwap;
       swapButton.disabled = !shouldShowSwap;
     }
@@ -337,6 +395,16 @@ const updateClientContactModel = () => {
   });
 
 };
+
+document.querySelectorAll('input[name="tenantType"]').forEach((tenantType) => {
+  tenantType.addEventListener("change", () => {
+    updateClientContactModel();
+    document.querySelectorAll('input[name="tenantType"]').forEach((input) => {
+      input.setAttribute("aria-expanded", String(input.checked));
+    });
+    focusClientContact("tenant", "primary");
+  });
+});
 
 const initializeClientContact = (card) => {
   if (card.dataset.initialized === "true") {
@@ -357,7 +425,9 @@ const initializeClientContact = (card) => {
       );
 
       card.dataset.priority = sameRoleContacts.length === 0 ? "primary" : "secondary";
-      document.querySelector(`[data-role-contacts="${input.value}"]`)?.append(card);
+      document
+        .querySelector(`[data-role-contacts="${input.value}"][data-priority="${card.dataset.priority}"]`)
+        ?.append(card);
       updateClientContactDetails(card, true);
       updateClientContactModel();
       animateCardEntrance(card.querySelector(":scope > section"));
@@ -457,7 +527,9 @@ const showClientContact = (role, priority) => {
   contact.hidden = false;
   contact.querySelector(":scope > fieldset").hidden = true;
   contact.querySelector(`input[type="radio"][name$="Role"][value="${role}"]`).checked = true;
-  document.querySelector(`[data-role-contacts="${role}"]`)?.append(contact);
+  document
+    .querySelector(`[data-role-contacts="${role}"][data-priority="${priority}"]`)
+    ?.append(contact);
   initializeClientContact(contact);
   setControlsDisabled(contact, false);
   updateClientContactDetails(contact);
@@ -494,6 +566,18 @@ const moveNewSidebarAside = (focusTarget) => {
   window.bootstrap?.Offcanvas.getOrCreateInstance(newSidebar).hide();
 };
 
+const focusNewClientDetails = (role, priority) => {
+  moveNewSidebarAside(() => {
+    const tenantType = document.querySelector("[data-tenant-type]");
+
+    if (role === "tenant" && !tenantType?.hidden && !tenantType.querySelector("input:checked")) {
+      tenantType?.querySelector("input:not(:disabled)")?.focus();
+    } else {
+      focusClientContact(role, priority);
+    }
+  });
+};
+
 const hideClientContact = (role, priority) => {
   const contact = getClientContactCards().find(
     (card) => !card.hidden && card.dataset.role === role && card.dataset.priority === priority,
@@ -513,13 +597,91 @@ clientRoleToggles.forEach((roleToggle) => {
   roleToggle.addEventListener("change", () => {
     const role = roleToggle.dataset.clientRoleToggle;
     const sourceToggles = document.querySelectorAll(`[data-client-source-toggle][data-role="${role}"]`);
+    const priorityToggles = document.querySelectorAll(`[data-client-priority-toggle][data-role="${role}"]`);
+    const primaryPriority = document.querySelector(
+      `[data-client-priority-toggle][data-role="${role}"][data-priority="primary"]`,
+    );
 
-    if (!roleToggle.checked) {
+    if (roleToggle.checked) {
+      const primaryNew = document.querySelector(
+        `[data-client-source-toggle][data-role="${role}"][data-priority="primary"][value="new"]`,
+      );
+
+      primaryPriority.checked = true;
+      primaryNew.checked = true;
+      showClientContact(role, "primary");
+      updateClientFields();
+      focusNewClientDetails(role, "primary");
+      return;
+    } else {
       sourceToggles.forEach((toggle) => {
         toggle.checked = false;
       });
+      priorityToggles.forEach((toggle) => {
+        toggle.checked = false;
+      });
+      if (role === "tenant") {
+        document.querySelectorAll('input[name="tenantType"]').forEach((tenantType) => {
+          tenantType.checked = false;
+          tenantType.setAttribute("aria-expanded", "false");
+        });
+      }
       hideClientContact(role, "secondary");
       hideClientContact(role, "primary");
+    }
+
+    updateClientFields();
+  });
+});
+
+clientPriorityToggles.forEach((priorityToggle) => {
+  priorityToggle.addEventListener("change", () => {
+    const { role, priority } = priorityToggle.dataset;
+    const roleToggle = document.querySelector(`[data-client-role-toggle="${role}"]`);
+    const sourceToggles = document.querySelectorAll(
+      `[data-client-source-toggle][data-role="${role}"][data-priority="${priority}"]`,
+    );
+
+    if (priorityToggle.checked) {
+      roleToggle.checked = true;
+      const selectedSource = Array.from(sourceToggles).find((source) => source.checked);
+      const newSource = Array.from(sourceToggles).find((source) => source.value === "new");
+
+      if (!selectedSource) {
+        newSource.checked = true;
+      }
+
+      showClientContact(role, priority);
+      updateClientFields();
+      focusNewClientDetails(role, priority);
+      return;
+    }
+
+    sourceToggles.forEach((source) => {
+      source.checked = false;
+    });
+    hideClientContact(role, priority);
+
+    if (priority === "primary") {
+      const secondaryPriority = document.querySelector(
+        `[data-client-priority-toggle][data-role="${role}"][data-priority="secondary"]`,
+      );
+      const secondarySources = document.querySelectorAll(
+        `[data-client-source-toggle][data-role="${role}"][data-priority="secondary"]`,
+      );
+
+      roleToggle.checked = false;
+      secondaryPriority.checked = false;
+      secondarySources.forEach((source) => {
+        source.checked = false;
+      });
+      if (role === "tenant") {
+        document.querySelectorAll('input[name="tenantType"]').forEach((tenantType) => {
+          tenantType.checked = false;
+          tenantType.setAttribute("aria-expanded", "false");
+        });
+      }
+      hideClientContact(role, "secondary");
     }
 
     updateClientFields();
@@ -540,7 +702,7 @@ clientSourceToggles.forEach((sourceToggle) => {
     updateClientFields();
 
     if (sourceToggle.value === "new") {
-      moveNewSidebarAside(() => focusClientContact(role, priority));
+      focusNewClientDetails(role, priority);
     } else if (sourceToggle.value === "find") {
       moveNewSidebarAside(() => {
         document
@@ -564,6 +726,18 @@ const validateNewFormRules = () => {
   const activeContacts = includeClient?.checked
     ? getClientContactCards().filter((card) => !card.hidden)
     : [];
+  const hasSelectedDetails =
+    (includeLocation?.checked ?? false) ||
+    (includeClient?.checked ?? false) ||
+    (includeAppointment?.checked ?? false);
+  const hasSelectedClientRole = Array.from(clientRoleToggles).some((toggle) => toggle.checked);
+
+  includeLocation?.setCustomValidity(hasSelectedDetails ? "" : "Select at least one detail to add.");
+  includeClient?.setCustomValidity(
+    includeClient.checked && !hasSelectedClientRole
+      ? "Select at least one client role."
+      : "",
+  );
 
   activeContacts.forEach((card) => {
     card.querySelectorAll("input").forEach((input) => input.setCustomValidity(""));
@@ -588,7 +762,12 @@ const validateNewFormRules = () => {
       'input[name$="Purpose"][value="billing"]:checked, input[name$="Purpose"][value="both"]:checked',
     );
 
-    if (email && mobile && !email.value.trim() && !mobile.value.trim()) {
+    const emailValue = email?.value.trim() ?? "";
+    const mobileValue = mobile?.value.trim() ?? "";
+
+    if (emailValue && !emailAddressPattern.test(emailValue)) {
+      email.setCustomValidity("Enter a complete email address, such as name@example.com.");
+    } else if (email && mobile && !emailValue && !mobileValue) {
       email.setCustomValidity("Enter an email address or mobile number.");
     }
 
@@ -624,12 +803,66 @@ const validateNewFormRules = () => {
   }
 };
 
-newForm?.addEventListener("input", validateNewFormRules);
-newForm?.addEventListener("change", validateNewFormRules);
+const updateNewFormSaveState = () => {
+  if (!newForm || !newFormSaveButton) {
+    return;
+  }
+
+  validateNewFormRules();
+  newFormSaveButton.disabled = !newForm.checkValidity();
+};
+
+const formatMobileNumber = (value) => {
+  let digits = value.replace(/\D/g, "");
+
+  if (digits.length === 11 && digits.startsWith("1")) {
+    digits = digits.slice(1);
+  }
+
+  digits = digits.slice(0, 10);
+
+  if (digits.length <= 3) {
+    return digits ? `(${digits}` : "";
+  }
+
+  if (digits.length <= 6) {
+    return `(${digits.slice(0, 3)})${digits.slice(3)}`;
+  }
+
+  return `(${digits.slice(0, 3)})${digits.slice(3, 6)}-${digits.slice(6)}`;
+};
+
+newForm?.addEventListener("input", (event) => {
+  const mobileInput = event.target.closest("[data-mobile-input]");
+
+  if (!mobileInput) {
+    return;
+  }
+
+  mobileInput.value = formatMobileNumber(mobileInput.value);
+});
+
+document.addEventListener("input", (event) => {
+  if (event.target.form === newForm || newForm?.contains(event.target)) {
+    updateNewFormSaveState();
+  }
+});
+
+document.addEventListener("change", (event) => {
+  const isClientStructureControl = event.target.matches(
+    "[data-client-role-toggle], [data-client-priority-toggle], [data-client-source-toggle]",
+  );
+
+  if (event.target.form === newForm || newForm?.contains(event.target) || isClientStructureControl) {
+    updateNewFormSaveState();
+  }
+});
+
+updateNewFormSaveState();
 
 newForm?.addEventListener("submit", (event) => {
   event.preventDefault();
-  validateNewFormRules();
+  updateNewFormSaveState();
   newForm.classList.add("was-validated");
 
   if (!newForm.checkValidity()) {

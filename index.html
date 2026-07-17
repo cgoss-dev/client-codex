@@ -419,80 +419,18 @@
                         <label class="form-check-label" for="includeOwner">Owner</label>
                       </div>
 
-                      <div class="d-none gap-2 ms-3" id="ownerSourceOptions" data-client-source-options="owner" hidden>
-                        <fieldset class="d-grid gap-1">
-                          <legend class="app-sidebar-option-title">Primary</legend>
-                          <div class="d-flex gap-3">
-                            <div class="form-check">
-                              <input
-                                class="form-check-input"
-                                id="newOwnerPrimary"
-                                name="ownerPrimarySource"
-                                type="radio"
-                                value="new"
-                                data-client-source-toggle
-                                data-role="owner"
-                                data-priority="primary"
-                                form="newForm"
-                                required
-                                disabled
-                              />
-                              <label class="form-check-label" for="newOwnerPrimary">New</label>
-                            </div>
-                            <div class="form-check">
-                              <input
-                                class="form-check-input"
-                                id="findOwnerPrimary"
-                                name="ownerPrimarySource"
-                                type="radio"
-                                value="find"
-                                data-client-source-toggle
-                                data-role="owner"
-                                data-priority="primary"
-                                form="newForm"
-                                disabled
-                              />
-                              <label class="form-check-label" for="findOwnerPrimary">Find</label>
-                            </div>
-                          </div>
-                        </fieldset>
-
-                        <fieldset class="d-grid gap-1" data-client-secondary-options="owner" disabled>
-                          <legend class="app-sidebar-option-title">Secondary</legend>
-                          <div class="d-flex gap-3">
-                            <div class="form-check">
-                              <input
-                                class="form-check-input"
-                                id="newOwnerSecondary"
-                                name="ownerSecondarySource"
-                                type="radio"
-                                value="new"
-                                data-client-source-toggle
-                                data-role="owner"
-                                data-priority="secondary"
-                                form="newForm"
-                              />
-                              <label class="form-check-label" for="newOwnerSecondary">New</label>
-                            </div>
-                            <div class="form-check">
-                              <input
-                                class="form-check-input"
-                                id="findOwnerSecondary"
-                                name="ownerSecondarySource"
-                                type="radio"
-                                value="find"
-                                data-client-source-toggle
-                                data-role="owner"
-                                data-priority="secondary"
-                                form="newForm"
-                              />
-                              <label class="form-check-label" for="findOwnerSecondary">Find</label>
-                            </div>
-                          </div>
-                        </fieldset>
+                      <div class="d-none gap-1 ms-3" data-client-priority-options="owner" hidden>
+                        <div class="form-check">
+                          <input class="form-check-input" id="includeOwnerPrimary" type="checkbox" data-client-priority-toggle data-role="owner" data-priority="primary" disabled />
+                          <label class="form-check-label" for="includeOwnerPrimary">Primary</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" id="includeOwnerSecondary" type="checkbox" data-client-priority-toggle data-role="owner" data-priority="secondary" disabled />
+                          <label class="form-check-label" for="includeOwnerSecondary">Secondary</label>
+                        </div>
                       </div>
 
-                      <div class="form-check d-none ms-4" id="includeLinkOption">
+                      <div class="form-check d-none ms-3" id="includeLinkOption">
                         <input
                           class="form-check-input"
                           id="includeLinks"
@@ -519,34 +457,17 @@
                         <label class="form-check-label" for="includeManager">Manager</label>
                       </div>
 
-                      <div class="d-none gap-2 ms-3" id="managerSourceOptions" data-client-source-options="manager" hidden>
-                        <fieldset class="d-grid gap-1">
-                          <legend class="app-sidebar-option-title">Primary</legend>
-                          <div class="d-flex gap-3">
-                            <div class="form-check">
-                              <input class="form-check-input" id="newManagerPrimary" name="managerPrimarySource" type="radio" value="new" data-client-source-toggle data-role="manager" data-priority="primary" form="newForm" required disabled />
-                              <label class="form-check-label" for="newManagerPrimary">New</label>
-                            </div>
-                            <div class="form-check">
-                              <input class="form-check-input" id="findManagerPrimary" name="managerPrimarySource" type="radio" value="find" data-client-source-toggle data-role="manager" data-priority="primary" form="newForm" disabled />
-                              <label class="form-check-label" for="findManagerPrimary">Find</label>
-                            </div>
-                          </div>
-                        </fieldset>
-                        <fieldset class="d-grid gap-1" data-client-secondary-options="manager" disabled>
-                          <legend class="app-sidebar-option-title">Secondary</legend>
-                          <div class="d-flex gap-3">
-                            <div class="form-check">
-                              <input class="form-check-input" id="newManagerSecondary" name="managerSecondarySource" type="radio" value="new" data-client-source-toggle data-role="manager" data-priority="secondary" form="newForm" />
-                              <label class="form-check-label" for="newManagerSecondary">New</label>
-                            </div>
-                            <div class="form-check">
-                              <input class="form-check-input" id="findManagerSecondary" name="managerSecondarySource" type="radio" value="find" data-client-source-toggle data-role="manager" data-priority="secondary" form="newForm" />
-                              <label class="form-check-label" for="findManagerSecondary">Find</label>
-                            </div>
-                          </div>
-                        </fieldset>
+                      <div class="d-none gap-1 ms-3" data-client-priority-options="manager" hidden>
+                        <div class="form-check">
+                          <input class="form-check-input" id="includeManagerPrimary" type="checkbox" data-client-priority-toggle data-role="manager" data-priority="primary" disabled />
+                          <label class="form-check-label" for="includeManagerPrimary">Primary</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" id="includeManagerSecondary" type="checkbox" data-client-priority-toggle data-role="manager" data-priority="secondary" disabled />
+                          <label class="form-check-label" for="includeManagerSecondary">Secondary</label>
+                        </div>
                       </div>
+
                     </div>
 
                     <div class="d-grid gap-1">
@@ -563,34 +484,17 @@
                         <label class="form-check-label" for="includeTenant">Tenant</label>
                       </div>
 
-                      <div class="d-none gap-2 ms-3" id="tenantSourceOptions" data-client-source-options="tenant" hidden>
-                        <fieldset class="d-grid gap-1">
-                          <legend class="app-sidebar-option-title">Primary</legend>
-                          <div class="d-flex gap-3">
-                            <div class="form-check">
-                              <input class="form-check-input" id="newTenantPrimary" name="tenantPrimarySource" type="radio" value="new" data-client-source-toggle data-role="tenant" data-priority="primary" form="newForm" required disabled />
-                              <label class="form-check-label" for="newTenantPrimary">New</label>
-                            </div>
-                            <div class="form-check">
-                              <input class="form-check-input" id="findTenantPrimary" name="tenantPrimarySource" type="radio" value="find" data-client-source-toggle data-role="tenant" data-priority="primary" form="newForm" disabled />
-                              <label class="form-check-label" for="findTenantPrimary">Find</label>
-                            </div>
-                          </div>
-                        </fieldset>
-                        <fieldset class="d-grid gap-1" data-client-secondary-options="tenant" disabled>
-                          <legend class="app-sidebar-option-title">Secondary</legend>
-                          <div class="d-flex gap-3">
-                            <div class="form-check">
-                              <input class="form-check-input" id="newTenantSecondary" name="tenantSecondarySource" type="radio" value="new" data-client-source-toggle data-role="tenant" data-priority="secondary" form="newForm" />
-                              <label class="form-check-label" for="newTenantSecondary">New</label>
-                            </div>
-                            <div class="form-check">
-                              <input class="form-check-input" id="findTenantSecondary" name="tenantSecondarySource" type="radio" value="find" data-client-source-toggle data-role="tenant" data-priority="secondary" form="newForm" />
-                              <label class="form-check-label" for="findTenantSecondary">Find</label>
-                            </div>
-                          </div>
-                        </fieldset>
+                      <div class="d-none gap-1 ms-3" data-client-priority-options="tenant" hidden>
+                        <div class="form-check">
+                          <input class="form-check-input" id="includeTenantPrimary" type="checkbox" data-client-priority-toggle data-role="tenant" data-priority="primary" disabled />
+                          <label class="form-check-label" for="includeTenantPrimary">Primary</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" id="includeTenantSecondary" type="checkbox" data-client-priority-toggle data-role="tenant" data-priority="secondary" disabled />
+                          <label class="form-check-label" for="includeTenantSecondary">Secondary</label>
+                        </div>
                       </div>
+
                     </div>
                   </fieldset>
 
@@ -613,7 +517,7 @@
                   <button class="btn btn-light w-100" id="cancelNewButton" type="button">Cancel</button>
                 </div>
                 <div class="col-6">
-                  <button class="btn btn-primary w-100" type="submit" form="newForm">Save</button>
+                  <button class="btn btn-primary w-100" id="newFormSaveButton" type="submit" form="newForm" disabled>Save</button>
                 </div>
                 <span class="visually-hidden" id="newFormStatus" aria-live="polite"></span>
               </div>
@@ -798,8 +702,8 @@
                           >
                             <div class="card-header align-items-center d-flex justify-content-between gap-2">
                               <h3 class="h5 app-detail-heading" id="client-owner-heading">Owner</h3>
-                              <button class="btn btn-light" data-swap-role-priority="owner" type="button" hidden>
-                                Swap Priority
+                              <button class="btn btn-light" data-swap-role-priority="owner" type="button" aria-label="Swap Priority" hidden>
+                                Swap<span class="d-none d-lg-inline"> Priority</span>
                               </button>
                               <button
                                 class="btn btn-light app-card-toggle"
@@ -813,31 +717,58 @@
                               </button>
                             </div>
                             <div class="card-body" id="clientOwnerBody">
-                              <div class="form-floating mb-3" data-client-role-lookup="owner" data-priority="primary" hidden>
-                                <input
-                                  class="form-control"
-                                  id="ownerPrimaryLookup"
-                                  name="ownerPrimaryLookup"
-                                  type="search"
-                                  placeholder="Find primary owner"
-                                  form="newForm"
-                                  required
-                                />
-                                <label for="ownerPrimaryLookup">Find Primary Owner</label>
+                              <div class="row g-3" id="ownerSourceOptions" data-client-source-options="owner">
+                                <div class="col-12 col-md-6" data-client-priority-panel data-role="owner" data-priority="primary">
+                                  <section class="card bg-white h-100">
+                                    <div class="card-body p-2 p-md-3">
+                                      <fieldset class="mb-2" data-client-source-group data-role="owner" data-priority="primary">
+                                        <legend class="visually-hidden">Primary owner source</legend>
+                                        <div class="align-items-center d-flex flex-wrap gap-1 gap-lg-3" data-client-source-row>
+                                          <span class="h5 mb-0" aria-hidden="true">Primary</span>
+                                          <div class="form-check">
+                                            <input class="form-check-input" id="newOwnerPrimary" name="ownerPrimarySource" type="radio" value="new" data-client-source-toggle data-role="owner" data-priority="primary" form="newForm" required />
+                                            <label class="form-check-label" for="newOwnerPrimary">New</label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" id="findOwnerPrimary" name="ownerPrimarySource" type="radio" value="find" data-client-source-toggle data-role="owner" data-priority="primary" form="newForm" />
+                                            <label class="form-check-label" for="findOwnerPrimary">Find</label>
+                                          </div>
+                                        </div>
+                                      </fieldset>
+                                      <div class="form-floating" data-client-role-lookup="owner" data-priority="primary" hidden>
+                                        <input class="form-control" id="ownerPrimaryLookup" name="ownerPrimaryLookup" type="search" placeholder="Find primary owner" form="newForm" required />
+                                        <label for="ownerPrimaryLookup">Find Primary Owner</label>
+                                      </div>
+                                      <div data-role-contacts="owner" data-priority="primary"></div>
+                                    </div>
+                                  </section>
+                                </div>
+                                <div class="col-12 col-md-6" data-client-priority-panel data-role="owner" data-priority="secondary" hidden>
+                                  <section class="card bg-white h-100">
+                                    <div class="card-body p-2 p-md-3">
+                                      <fieldset class="mb-2" data-client-source-group data-role="owner" data-priority="secondary">
+                                        <legend class="visually-hidden">Secondary owner source</legend>
+                                        <div class="align-items-center d-flex flex-wrap gap-1 gap-lg-3" data-client-source-row>
+                                          <span class="h5 mb-0" aria-hidden="true">Secondary</span>
+                                          <div class="form-check">
+                                            <input class="form-check-input" id="newOwnerSecondary" name="ownerSecondarySource" type="radio" value="new" data-client-source-toggle data-role="owner" data-priority="secondary" form="newForm" />
+                                            <label class="form-check-label" for="newOwnerSecondary">New</label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" id="findOwnerSecondary" name="ownerSecondarySource" type="radio" value="find" data-client-source-toggle data-role="owner" data-priority="secondary" form="newForm" />
+                                            <label class="form-check-label" for="findOwnerSecondary">Find</label>
+                                          </div>
+                                        </div>
+                                      </fieldset>
+                                      <div class="form-floating" data-client-role-lookup="owner" data-priority="secondary" hidden>
+                                        <input class="form-control" id="ownerSecondaryLookup" name="ownerSecondaryLookup" type="search" placeholder="Find secondary owner" form="newForm" required />
+                                        <label for="ownerSecondaryLookup">Find Secondary Owner</label>
+                                      </div>
+                                      <div data-role-contacts="owner" data-priority="secondary"></div>
+                                    </div>
+                                  </section>
+                                </div>
                               </div>
-                              <div class="form-floating mb-3" data-client-role-lookup="owner" data-priority="secondary" hidden>
-                                <input
-                                  class="form-control"
-                                  id="ownerSecondaryLookup"
-                                  name="ownerSecondaryLookup"
-                                  type="search"
-                                  placeholder="Find secondary owner"
-                                  form="newForm"
-                                  required
-                                />
-                                <label for="ownerSecondaryLookup">Find Secondary Owner</label>
-                              </div>
-                              <div data-role-contacts="owner"></div>
 
                               <div id="linkFields" class="mt-3" hidden>
                                 <section class="card bg-white" aria-labelledby="link-fields-heading">
@@ -909,8 +840,8 @@
                           >
                             <div class="card-header align-items-center d-flex justify-content-between gap-2">
                               <h3 class="h5 app-detail-heading" id="client-manager-heading">Manager</h3>
-                              <button class="btn btn-light" data-swap-role-priority="manager" type="button" hidden>
-                                Swap Priority
+                              <button class="btn btn-light" data-swap-role-priority="manager" type="button" aria-label="Swap Priority" hidden>
+                                Swap<span class="d-none d-lg-inline"> Priority</span>
                               </button>
                               <button
                                 class="btn btn-light app-card-toggle"
@@ -924,31 +855,58 @@
                               </button>
                             </div>
                             <div class="card-body" id="clientManagerBody">
-                              <div class="form-floating mb-3" data-client-role-lookup="manager" data-priority="primary" hidden>
-                                <input
-                                  class="form-control"
-                                  id="managerPrimaryLookup"
-                                  name="managerPrimaryLookup"
-                                  type="search"
-                                  placeholder="Find primary manager"
-                                  form="newForm"
-                                  required
-                                />
-                                <label for="managerPrimaryLookup">Find Primary Manager</label>
+                              <div class="row g-3" id="managerSourceOptions" data-client-source-options="manager">
+                                <div class="col-12 col-md-6" data-client-priority-panel data-role="manager" data-priority="primary">
+                                  <section class="card bg-white h-100">
+                                    <div class="card-body p-2 p-md-3">
+                                      <fieldset class="mb-2" data-client-source-group data-role="manager" data-priority="primary">
+                                        <legend class="visually-hidden">Primary manager source</legend>
+                                        <div class="align-items-center d-flex flex-wrap gap-1 gap-lg-3" data-client-source-row>
+                                          <span class="h5 mb-0" aria-hidden="true">Primary</span>
+                                          <div class="form-check">
+                                            <input class="form-check-input" id="newManagerPrimary" name="managerPrimarySource" type="radio" value="new" data-client-source-toggle data-role="manager" data-priority="primary" form="newForm" required />
+                                            <label class="form-check-label" for="newManagerPrimary">New</label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" id="findManagerPrimary" name="managerPrimarySource" type="radio" value="find" data-client-source-toggle data-role="manager" data-priority="primary" form="newForm" />
+                                            <label class="form-check-label" for="findManagerPrimary">Find</label>
+                                          </div>
+                                        </div>
+                                      </fieldset>
+                                      <div class="form-floating" data-client-role-lookup="manager" data-priority="primary" hidden>
+                                        <input class="form-control" id="managerPrimaryLookup" name="managerPrimaryLookup" type="search" placeholder="Find primary manager" form="newForm" required />
+                                        <label for="managerPrimaryLookup">Find Primary Manager</label>
+                                      </div>
+                                      <div data-role-contacts="manager" data-priority="primary"></div>
+                                    </div>
+                                  </section>
+                                </div>
+                                <div class="col-12 col-md-6" data-client-priority-panel data-role="manager" data-priority="secondary" hidden>
+                                  <section class="card bg-white h-100">
+                                    <div class="card-body p-2 p-md-3">
+                                      <fieldset class="mb-2" data-client-source-group data-role="manager" data-priority="secondary">
+                                        <legend class="visually-hidden">Secondary manager source</legend>
+                                        <div class="align-items-center d-flex flex-wrap gap-1 gap-lg-3" data-client-source-row>
+                                          <span class="h5 mb-0" aria-hidden="true">Secondary</span>
+                                          <div class="form-check">
+                                            <input class="form-check-input" id="newManagerSecondary" name="managerSecondarySource" type="radio" value="new" data-client-source-toggle data-role="manager" data-priority="secondary" form="newForm" />
+                                            <label class="form-check-label" for="newManagerSecondary">New</label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" id="findManagerSecondary" name="managerSecondarySource" type="radio" value="find" data-client-source-toggle data-role="manager" data-priority="secondary" form="newForm" />
+                                            <label class="form-check-label" for="findManagerSecondary">Find</label>
+                                          </div>
+                                        </div>
+                                      </fieldset>
+                                      <div class="form-floating" data-client-role-lookup="manager" data-priority="secondary" hidden>
+                                        <input class="form-control" id="managerSecondaryLookup" name="managerSecondaryLookup" type="search" placeholder="Find secondary manager" form="newForm" required />
+                                        <label for="managerSecondaryLookup">Find Secondary Manager</label>
+                                      </div>
+                                      <div data-role-contacts="manager" data-priority="secondary"></div>
+                                    </div>
+                                  </section>
+                                </div>
                               </div>
-                              <div class="form-floating mb-3" data-client-role-lookup="manager" data-priority="secondary" hidden>
-                                <input
-                                  class="form-control"
-                                  id="managerSecondaryLookup"
-                                  name="managerSecondaryLookup"
-                                  type="search"
-                                  placeholder="Find secondary manager"
-                                  form="newForm"
-                                  required
-                                />
-                                <label for="managerSecondaryLookup">Find Secondary Manager</label>
-                              </div>
-                              <div data-role-contacts="manager"></div>
                             </div>
                           </section>
 
@@ -960,8 +918,8 @@
                           >
                             <div class="card-header align-items-center d-flex justify-content-between gap-2">
                               <h3 class="h5 app-detail-heading" id="client-tenant-heading">Tenant</h3>
-                              <button class="btn btn-light" data-swap-role-priority="tenant" type="button" hidden>
-                                Swap Priority
+                              <button class="btn btn-light" data-swap-role-priority="tenant" type="button" aria-label="Swap Priority" hidden>
+                                Swap<span class="d-none d-lg-inline"> Priority</span>
                               </button>
                               <button
                                 class="btn btn-light app-card-toggle"
@@ -975,31 +933,71 @@
                               </button>
                             </div>
                             <div class="card-body" id="clientTenantBody">
-                              <div class="form-floating mb-3" data-client-role-lookup="tenant" data-priority="primary" hidden>
-                                <input
-                                  class="form-control"
-                                  id="tenantPrimaryLookup"
-                                  name="tenantPrimaryLookup"
-                                  type="search"
-                                  placeholder="Find primary tenant"
-                                  form="newForm"
-                                  required
-                                />
-                                <label for="tenantPrimaryLookup">Find Primary Tenant</label>
+                              <div class="row g-3" id="tenantSourceOptions" data-client-source-options="tenant">
+                                <div class="col-12 col-md-6" data-client-priority-panel data-role="tenant" data-priority="primary">
+                                  <section class="card bg-white h-100">
+                                    <div class="card-body p-2 p-md-3">
+                                      <fieldset class="mb-2" data-client-source-group data-role="tenant" data-priority="primary">
+                                        <legend class="visually-hidden">Primary tenant source</legend>
+                                        <div class="align-items-center d-flex flex-wrap gap-1 gap-lg-3" data-client-source-row>
+                                          <span class="h5 mb-0" aria-hidden="true">Primary</span>
+                                          <div class="form-check">
+                                            <input class="form-check-input" id="newTenantPrimary" name="tenantPrimarySource" type="radio" value="new" data-client-source-toggle data-role="tenant" data-priority="primary" form="newForm" required />
+                                            <label class="form-check-label" for="newTenantPrimary">New</label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" id="findTenantPrimary" name="tenantPrimarySource" type="radio" value="find" data-client-source-toggle data-role="tenant" data-priority="primary" form="newForm" />
+                                            <label class="form-check-label" for="findTenantPrimary">Find</label>
+                                          </div>
+                                        </div>
+                                      </fieldset>
+                                      <fieldset class="mb-3" data-tenant-type hidden>
+                                        <legend class="visually-hidden">Tenant type</legend>
+                                        <div class="d-flex flex-wrap gap-3">
+                                          <div class="form-check">
+                                            <input class="form-check-input" id="tenantTypeResident" name="tenantType" type="radio" value="resident" aria-controls="tenantPrimaryContacts" aria-expanded="false" form="newForm" required />
+                                            <label class="form-check-label" for="tenantTypeResident">Resident</label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" id="tenantTypeCommercial" name="tenantType" type="radio" value="commercial" aria-controls="tenantPrimaryContacts" aria-expanded="false" form="newForm" />
+                                            <label class="form-check-label" for="tenantTypeCommercial">Commercial</label>
+                                          </div>
+                                        </div>
+                                      </fieldset>
+                                      <div class="form-floating" data-client-role-lookup="tenant" data-priority="primary" hidden>
+                                        <input class="form-control" id="tenantPrimaryLookup" name="tenantPrimaryLookup" type="search" placeholder="Find primary tenant" form="newForm" required />
+                                        <label for="tenantPrimaryLookup">Find Primary Tenant</label>
+                                      </div>
+                                      <div id="tenantPrimaryContacts" data-role-contacts="tenant" data-priority="primary"></div>
+                                    </div>
+                                  </section>
+                                </div>
+                                <div class="col-12 col-md-6" data-client-priority-panel data-role="tenant" data-priority="secondary" hidden>
+                                  <section class="card bg-white h-100">
+                                    <div class="card-body p-2 p-md-3">
+                                      <fieldset class="mb-2" data-client-source-group data-role="tenant" data-priority="secondary">
+                                        <legend class="visually-hidden">Secondary tenant source</legend>
+                                        <div class="align-items-center d-flex flex-wrap gap-1 gap-lg-3" data-client-source-row>
+                                          <span class="h5 mb-0" aria-hidden="true">Secondary</span>
+                                          <div class="form-check">
+                                            <input class="form-check-input" id="newTenantSecondary" name="tenantSecondarySource" type="radio" value="new" data-client-source-toggle data-role="tenant" data-priority="secondary" form="newForm" />
+                                            <label class="form-check-label" for="newTenantSecondary">New</label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" id="findTenantSecondary" name="tenantSecondarySource" type="radio" value="find" data-client-source-toggle data-role="tenant" data-priority="secondary" form="newForm" />
+                                            <label class="form-check-label" for="findTenantSecondary">Find</label>
+                                          </div>
+                                        </div>
+                                      </fieldset>
+                                      <div class="form-floating" data-client-role-lookup="tenant" data-priority="secondary" hidden>
+                                        <input class="form-control" id="tenantSecondaryLookup" name="tenantSecondaryLookup" type="search" placeholder="Find secondary tenant" form="newForm" required />
+                                        <label for="tenantSecondaryLookup">Find Secondary Tenant</label>
+                                      </div>
+                                      <div data-role-contacts="tenant" data-priority="secondary"></div>
+                                    </div>
+                                  </section>
+                                </div>
                               </div>
-                              <div class="form-floating mb-3" data-client-role-lookup="tenant" data-priority="secondary" hidden>
-                                <input
-                                  class="form-control"
-                                  id="tenantSecondaryLookup"
-                                  name="tenantSecondaryLookup"
-                                  type="search"
-                                  placeholder="Find secondary tenant"
-                                  form="newForm"
-                                  required
-                                />
-                                <label for="tenantSecondaryLookup">Find Secondary Tenant</label>
-                              </div>
-                              <div data-role-contacts="tenant"></div>
                             </div>
                           </section>
                         </div>
@@ -1054,18 +1052,17 @@
                           </fieldset>
 
                           <section
-                            class="card app-section-card mb-3"
                             aria-labelledby="client-contact-a-heading"
                             hidden
                           >
-                          <div class="card-header align-items-center d-flex justify-content-between gap-2">
-                            <h4 class="h5 app-detail-heading" id="client-contact-a-heading">Primary</h4>
+                          <div class="card-header align-items-center d-none justify-content-between gap-2">
+                            <h4 class="visually-hidden app-detail-heading" id="client-contact-a-heading">Primary</h4>
                           </div>
 
-                          <div class="card-body">
+                          <div>
                             <div id="clientContactADetails" data-contact-details hidden>
                               <div class="row g-3">
-                                <div class="col-12 form-floating">
+                                <div class="col-12 form-floating" data-contact-organization>
                                   <input
                                     class="form-control"
                                     id="clientContactAOrganization"
@@ -1110,7 +1107,9 @@
                                     name="clientContactAEmail"
                                     type="email"
                                     autocomplete="email"
+                                    pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
                                     placeholder="Email"
+                                    title="Enter a complete email address, such as name@example.com."
                                   />
                                   <label for="clientContactAEmail">Email</label>
                                 </div>
@@ -1122,7 +1121,11 @@
                                     name="clientContactAMobile"
                                     type="tel"
                                     autocomplete="tel"
-                                    placeholder="Mobile"
+                                    inputmode="numeric"
+                                    pattern="\([0-9]{3}\)[0-9]{3}-[0-9]{4}"
+                                    placeholder="(XXX)XXX-XXXX"
+                                    title="Enter a 10-digit mobile number."
+                                    data-mobile-input
                                   />
                                   <label for="clientContactAMobile">Mobile</label>
                                 </div>
@@ -1221,18 +1224,17 @@
                           </fieldset>
 
                           <section
-                            class="card app-section-card mb-3"
                             aria-labelledby="client-contact-b-heading"
                             hidden
                           >
-                          <div class="card-header align-items-center d-flex justify-content-between gap-2">
-                            <h4 class="h5 app-detail-heading" id="client-contact-b-heading">Secondary</h4>
+                          <div class="card-header align-items-center d-none justify-content-between gap-2">
+                            <h4 class="visually-hidden app-detail-heading" id="client-contact-b-heading">Secondary</h4>
                           </div>
 
-                          <div class="card-body">
+                          <div>
                             <div id="clientContactBDetails" data-contact-details hidden>
                               <div class="row g-3">
-                                <div class="col-12 form-floating">
+                                <div class="col-12 form-floating" data-contact-organization>
                                   <input
                                     class="form-control"
                                     id="clientContactBOrganization"
@@ -1277,7 +1279,9 @@
                                     name="clientContactBEmail"
                                     type="email"
                                     autocomplete="email"
+                                    pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
                                     placeholder="Email"
+                                    title="Enter a complete email address, such as name@example.com."
                                   />
                                   <label for="clientContactBEmail">Email</label>
                                 </div>
@@ -1289,7 +1293,11 @@
                                     name="clientContactBMobile"
                                     type="tel"
                                     autocomplete="tel"
-                                    placeholder="Mobile"
+                                    inputmode="numeric"
+                                    pattern="\([0-9]{3}\)[0-9]{3}-[0-9]{4}"
+                                    placeholder="(XXX)XXX-XXXX"
+                                    title="Enter a 10-digit mobile number."
+                                    data-mobile-input
                                   />
                                   <label for="clientContactBMobile">Mobile</label>
                                 </div>
