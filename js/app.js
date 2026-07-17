@@ -8,6 +8,9 @@ const newButtons = document.querySelectorAll("[data-new-button]");
 const cancelNewButton = document.querySelector("#cancelNewButton");
 const includeLocation = document.querySelector("#includeLocation");
 const locationFields = document.querySelector("#locationFields");
+const locationType = document.querySelector("#locationType");
+const locationOccupancyField = document.querySelector("#locationOccupancyField");
+const locationOccupancy = document.querySelector("#locationOccupancy");
 const includeClient = document.querySelector("#includeClient");
 const clientFields = document.querySelector("#clientFields");
 const includeAppointment = document.querySelector("#includeAppointment");
@@ -24,6 +27,9 @@ const clientSourceToggles = document.querySelectorAll("[data-client-source-toggl
 const newForm = document.querySelector("#newForm");
 const newFormStatus = document.querySelector("#newFormStatus");
 const newFormSaveButton = document.querySelector("#newFormSaveButton");
+const newLocationReview = document.querySelector("#newLocationReview");
+const newLocationReviewHeading = document.querySelector("#new-location-review-heading");
+const newLocationReviewData = document.querySelector("#newLocationReviewData");
 const newSidebar = document.querySelector("#newSidebar");
 const primaryNavigation = document.querySelector("#primaryNavigation");
 const menuButton = document.querySelector(".navbar-toggler");
@@ -81,6 +87,26 @@ const animateCardEntrance = (card) => {
   card.addEventListener("animationend", () => card.classList.remove("app-card-enter"), { once: true });
 };
 
+const updateLocationOccupancy = () => {
+  const shouldShowOccupancy =
+    (includeLocation?.checked ?? false) && locationType?.value === "rental";
+
+  if (locationOccupancyField) {
+    locationOccupancyField.hidden = !shouldShowOccupancy;
+  }
+
+  if (locationOccupancy) {
+    locationOccupancy.disabled = !shouldShowOccupancy;
+    locationOccupancy.required = shouldShowOccupancy;
+
+    if (!shouldShowOccupancy) {
+      locationOccupancy.value = "";
+    }
+  }
+
+  locationType?.setAttribute("aria-expanded", String(shouldShowOccupancy));
+};
+
 const updateLocationFields = () => {
   const shouldShowLocation = includeLocation?.checked ?? false;
 
@@ -92,9 +118,12 @@ const updateLocationFields = () => {
     locationFields.hidden = !shouldShowLocation;
     setControlsDisabled(locationFields, !shouldShowLocation);
   }
+
+  updateLocationOccupancy();
 };
 
 includeLocation?.addEventListener("change", updateLocationFields);
+locationType?.addEventListener("change", updateLocationOccupancy);
 updateLocationFields();
 
 const updateClientFields = () => {
@@ -810,6 +839,61 @@ const updateNewFormSaveState = () => {
 
   validateNewFormRules();
   newFormSaveButton.disabled = !newForm.checkValidity();
+  newLocationReview?.setAttribute("hidden", "");
+
+  if (!newFormStatus) {
+    return;
+  }
+
+  const hasSelectedDetails =
+    (includeLocation?.checked ?? false) ||
+    (includeClient?.checked ?? false) ||
+    (includeAppointment?.checked ?? false);
+  const hasSelectedClientRole = Array.from(clientRoleToggles).some((toggle) => toggle.checked);
+
+  if (!hasSelectedDetails) {
+    newFormStatus.textContent = "Select at least one detail to add.";
+    return;
+  }
+
+  if (includeClient?.checked && !hasSelectedClientRole) {
+    newFormStatus.textContent = "Select at least one client role.";
+    return;
+  }
+
+  const incompleteLabels = Array.from(newForm.elements)
+    .filter((control) => !control.disabled && !control.validity.valid)
+    .map((control) => {
+      if (control.name.endsWith("Email") && !control.value.trim()) {
+        return "Email or Mobile";
+      }
+
+      return document.querySelector(`label[for="${control.id}"]`)?.textContent.trim();
+    })
+    .filter(Boolean)
+    .filter((label, index, labels) => labels.indexOf(label) === index);
+
+  newFormStatus.textContent = incompleteLabels.length
+    ? `Complete required: ${incompleteLabels.join(", ")}.`
+    : "Ready to save.";
+};
+
+const buildLocationReviewData = () => {
+  const formData = new FormData(newForm);
+  const locationTypeValue = formData.get("locationType");
+
+  return {
+    street: formData.get("streetAddress")?.trim() || null,
+    unit: formData.get("unitNumber")?.trim() || null,
+    type: locationTypeValue || null,
+    occupancy:
+      locationTypeValue === "rental"
+        ? formData.get("locationOccupancy")?.trim() || null
+        : null,
+    city: formData.get("city")?.trim() || null,
+    state: formData.get("state") || null,
+    postalCode: formData.get("postalCode")?.trim() || null,
+  };
 };
 
 const formatMobileNumber = (value) => {
@@ -875,8 +959,17 @@ newForm?.addEventListener("submit", (event) => {
     return;
   }
 
+  if (includeLocation?.checked && newLocationReview && newLocationReviewData) {
+    newLocationReviewData.textContent = JSON.stringify(buildLocationReviewData(), null, 2);
+    newLocationReview.hidden = false;
+    animateCardEntrance(newLocationReview);
+    newLocationReviewHeading?.focus();
+  }
+
   if (newFormStatus) {
-    newFormStatus.textContent = "The form is valid and ready to save.";
+    newFormStatus.textContent = includeLocation?.checked
+      ? "Location preview generated. Nothing has been saved yet."
+      : "The form is valid. Location preview is available when Location is included.";
   }
 });
 

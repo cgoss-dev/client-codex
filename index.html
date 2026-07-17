@@ -519,7 +519,9 @@
                 <div class="col-6">
                   <button class="btn btn-primary w-100" id="newFormSaveButton" type="submit" form="newForm" disabled>Save</button>
                 </div>
-                <span class="visually-hidden" id="newFormStatus" aria-live="polite"></span>
+                <p class="col-12 mb-0 text-body-secondary text-center" id="newFormStatus" aria-live="polite">
+                  Select at least one detail to add.
+                </p>
               </div>
             </section>
           </div>
@@ -587,7 +589,14 @@
                         </div>
 
                         <div class="col-6 col-md-3 form-floating">
-                          <select class="form-select" id="locationType" name="locationType" required>
+                          <select
+                            class="form-select"
+                            id="locationType"
+                            name="locationType"
+                            aria-controls="locationOccupancyField"
+                            aria-expanded="false"
+                            required
+                          >
                             <option selected value=""></option>
                             <option value="residence">Residence</option>
                             <option value="rental">Rental</option>
@@ -596,7 +605,21 @@
                           <label for="locationType">Type</label>
                         </div>
 
-                        <div class="col-12 col-md-6 form-floating">
+                        <div class="col-6 col-md-3 form-floating" id="locationOccupancyField" hidden>
+                          <select
+                            class="form-select"
+                            id="locationOccupancy"
+                            name="locationOccupancy"
+                            disabled
+                          >
+                            <option selected value=""></option>
+                            <option value="vacant">Vacant</option>
+                            <option value="occupied">Occupied</option>
+                          </select>
+                          <label for="locationOccupancy">Occupancy</label>
+                        </div>
+
+                        <div class="col-12 col-md form-floating">
                           <input class="form-control" id="city" name="city" type="text" placeholder="City" required />
                           <label for="city">City</label>
                         </div>
@@ -1373,6 +1396,19 @@
                     </div>
                   </section>
                 </div>
+
+                <section
+                  class="card mb-3"
+                  id="newLocationReview"
+                  aria-labelledby="new-location-review-heading"
+                  hidden
+                >
+                  <div class="card-body">
+                    <h2 class="h5 mb-2" id="new-location-review-heading" tabindex="-1">Location Review</h2>
+                    <p class="mb-2">Temporary preview only. This has not been saved to Python or SQLite.</p>
+                    <pre class="bg-body-tertiary border rounded fs-6 mb-0 overflow-auto p-2"><code id="newLocationReviewData"></code></pre>
+                  </div>
+                </section>
 
               </div>
 
