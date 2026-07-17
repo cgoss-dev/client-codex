@@ -26,7 +26,7 @@ const clientPriorityToggles = document.querySelectorAll("[data-client-priority-t
 const clientSourceToggles = document.querySelectorAll("[data-client-source-toggle]");
 const newForm = document.querySelector("#newForm");
 const newFormStatus = document.querySelector("#newFormStatus");
-const newFormSaveButton = document.querySelector("#newFormSaveButton");
+const newFormReviewButton = document.querySelector("#newFormReviewButton");
 const newLocationReview = document.querySelector("#newLocationReview");
 const newLocationReviewHeading = document.querySelector("#new-location-review-heading");
 const newLocationReviewData = document.querySelector("#newLocationReviewData");
@@ -832,13 +832,13 @@ const validateNewFormRules = () => {
   }
 };
 
-const updateNewFormSaveState = () => {
-  if (!newForm || !newFormSaveButton) {
+const updateNewFormReviewState = () => {
+  if (!newForm || !newFormReviewButton) {
     return;
   }
 
   validateNewFormRules();
-  newFormSaveButton.disabled = !newForm.checkValidity();
+  newFormReviewButton.disabled = !newForm.checkValidity();
   newLocationReview?.setAttribute("hidden", "");
 
   if (!newFormStatus) {
@@ -875,7 +875,7 @@ const updateNewFormSaveState = () => {
 
   newFormStatus.textContent = incompleteLabels.length
     ? `Complete required: ${incompleteLabels.join(", ")}.`
-    : "Ready to save.";
+    : "Ready to review.";
 };
 
 const buildLocationReviewData = () => {
@@ -928,7 +928,7 @@ newForm?.addEventListener("input", (event) => {
 
 document.addEventListener("input", (event) => {
   if (event.target.form === newForm || newForm?.contains(event.target)) {
-    updateNewFormSaveState();
+    updateNewFormReviewState();
   }
 });
 
@@ -938,15 +938,15 @@ document.addEventListener("change", (event) => {
   );
 
   if (event.target.form === newForm || newForm?.contains(event.target) || isClientStructureControl) {
-    updateNewFormSaveState();
+    updateNewFormReviewState();
   }
 });
 
-updateNewFormSaveState();
+updateNewFormReviewState();
 
 newForm?.addEventListener("submit", (event) => {
   event.preventDefault();
-  updateNewFormSaveState();
+  updateNewFormReviewState();
   newForm.classList.add("was-validated");
 
   if (!newForm.checkValidity()) {

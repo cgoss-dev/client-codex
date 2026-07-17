@@ -517,7 +517,7 @@
                   <button class="btn btn-light w-100" id="cancelNewButton" type="button">Cancel</button>
                 </div>
                 <div class="col-6">
-                  <button class="btn btn-primary w-100" id="newFormSaveButton" type="submit" form="newForm" disabled>Save</button>
+                  <button class="btn btn-primary w-100" id="newFormReviewButton" type="submit" form="newForm" disabled>Review</button>
                 </div>
                 <p class="col-12 mb-0 text-body-secondary text-center" id="newFormStatus" aria-live="polite">
                   Select at least one detail to add.
@@ -1405,8 +1405,21 @@
                 >
                   <div class="card-body">
                     <h2 class="h5 mb-2" id="new-location-review-heading" tabindex="-1">Location Review</h2>
-                    <p class="mb-2">Temporary preview only. This has not been saved to Python or SQLite.</p>
+                    <p class="mb-2" id="confirm-location-save-help">
+                      Temporary preview only. Confirm Save will become available after Python is connected.
+                    </p>
                     <pre class="bg-body-tertiary border rounded fs-6 mb-0 overflow-auto p-2"><code id="newLocationReviewData"></code></pre>
+                    <div class="d-flex justify-content-end mt-3">
+                      <button
+                        class="btn btn-primary"
+                        id="confirmLocationSaveButton"
+                        type="button"
+                        aria-describedby="confirm-location-save-help"
+                        disabled
+                      >
+                        Confirm Save
+                      </button>
+                    </div>
                   </div>
                 </section>
 
