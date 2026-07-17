@@ -30,6 +30,8 @@ const newFormReviewButton = document.querySelector("#newFormReviewButton");
 const newLocationReview = document.querySelector("#newLocationReview");
 const newLocationReviewHeading = document.querySelector("#new-location-review-heading");
 const newLocationReviewData = document.querySelector("#newLocationReviewData");
+const confirmLocationSaveButton = document.querySelector("#confirmLocationSaveButton");
+const locationApiStatus = document.querySelector("#locationApiStatus");
 const newSidebar = document.querySelector("#newSidebar");
 const primaryNavigation = document.querySelector("#primaryNavigation");
 const menuButton = document.querySelector(".navbar-toggler");
@@ -841,6 +843,15 @@ const updateNewFormReviewState = () => {
   newFormReviewButton.disabled = !newForm.checkValidity();
   newLocationReview?.setAttribute("hidden", "");
 
+  if (confirmLocationSaveButton) {
+    confirmLocationSaveButton.disabled = true;
+    confirmLocationSaveButton.textContent = "Confirm Save";
+  }
+
+  if (locationApiStatus) {
+    locationApiStatus.textContent = "Not sent to Python yet.";
+  }
+
   if (!newFormStatus) {
     return;
   }
@@ -962,6 +973,12 @@ newForm?.addEventListener("submit", (event) => {
   if (includeLocation?.checked && newLocationReview && newLocationReviewData) {
     newLocationReviewData.textContent = JSON.stringify(buildLocationReviewData(), null, 2);
     newLocationReview.hidden = false;
+    confirmLocationSaveButton?.removeAttribute("disabled");
+
+    if (locationApiStatus) {
+      locationApiStatus.textContent = "Ready to send to Python.";
+    }
+
     animateCardEntrance(newLocationReview);
     newLocationReviewHeading?.focus();
   }
@@ -970,6 +987,51 @@ newForm?.addEventListener("submit", (event) => {
     newFormStatus.textContent = includeLocation?.checked
       ? "Location preview generated. Nothing has been saved yet."
       : "The form is valid. Location preview is available when Location is included.";
+  }
+});
+
+confirmLocationSaveButton?.addEventListener("click", async () => {
+  confirmLocationSaveButton.disabled = true;
+  confirmLocationSaveButton.textContent = "Checking…";
+  confirmLocationSaveButton.setAttribute("aria-busy", "true");
+
+  if (locationApiStatus) {
+    locationApiStatus.textContent = "Python is validating the Location.";
+  }
+
+  try {
+    const response = await fetch("/api/locations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(buildLocationReviewData()),
+    });
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || "Python could not validate the Location.");
+    }
+
+    confirmLocationSaveButton.textContent = result.saved ? "Saved" : "Validated";
+
+    if (locationApiStatus) {
+      locationApiStatus.textContent = result.saved
+        ? `${result.message} Location #${result.id}.`
+        : `${result.message} Nothing has been saved yet.`;
+    }
+  } catch (error) {
+    confirmLocationSaveButton.disabled = false;
+    confirmLocationSaveButton.textContent = "Try Again";
+
+    if (locationApiStatus) {
+      locationApiStatus.textContent =
+        error instanceof Error
+          ? error.message
+          : "Python could not validate the Location.";
+    }
+  } finally {
+    confirmLocationSaveButton.removeAttribute("aria-busy");
   }
 });
 

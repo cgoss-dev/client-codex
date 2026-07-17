@@ -1,10 +1,21 @@
 from pathlib import Path
 
 from flask import Flask, jsonify, request, send_from_directory
+from sqlalchemy import create_engine
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
+
+from models import Base, Location
 
 
 app = Flask(__name__)
 project_folder = Path(__file__).resolve().parent
+instance_folder = project_folder / "instance"
+database_path = instance_folder / "client-codex.sqlite3"
+
+instance_folder.mkdir(exist_ok=True)
+database_engine = create_engine(f"sqlite:///{database_path}")
+Base.metadata.create_all(database_engine)
 
 
 @app.get("/")
@@ -38,17 +49,26 @@ def health():
 
 
 @app.post("/api/locations")
-def validate_location():
+def create_location():
     location = request.get_json(silent=True)
 
     if not isinstance(location, dict):
         return jsonify(error="Send the location as a JSON object.", saved=False), 400
 
+    normalized_location = {
+        "street": str(location.get("street") or "").strip(),
+        "unit": str(location.get("unit") or "").strip() or None,
+        "type": str(location.get("type") or "").strip().lower(),
+        "occupancy": str(location.get("occupancy") or "").strip().lower() or None,
+        "city": str(location.get("city") or "").strip(),
+        "state": str(location.get("state") or "").strip().upper(),
+        "postalCode": str(location.get("postalCode") or "").strip(),
+    }
     required_fields = ["street", "type", "city", "state", "postalCode"]
     missing_fields = [
         field
         for field in required_fields
-        if not str(location.get(field) or "").strip()
+        if not normalized_location[field]
     ]
 
     if missing_fields:
@@ -62,19 +82,45 @@ def validate_location():
 
     valid_location_types = {"residence", "rental", "commercial"}
 
-    if location["type"] not in valid_location_types:
+    if normalized_location["type"] not in valid_location_types:
         return jsonify(error="Choose a valid location type.", saved=False), 400
 
-    if location["type"] == "rental" and location.get("occupancy") not in {
+    if normalized_location["type"] == "rental" and normalized_location["occupancy"] not in {
         "vacant",
         "occupied",
     }:
         return jsonify(error="Choose Vacant or Occupied for a rental.", saved=False), 400
 
-    return jsonify(
-        location=location,
-        message="Location data is valid.",
-        saved=False,
+    if normalized_location["type"] != "rental":
+        normalized_location["occupancy"] = None
+
+    location_record = Location(
+        street=normalized_location["street"],
+        unit=normalized_location["unit"],
+        location_type=normalized_location["type"],
+        occupancy=normalized_location["occupancy"],
+        city=normalized_location["city"],
+        state=normalized_location["state"],
+        postal_code=normalized_location["postalCode"],
+    )
+
+    try:
+        with Session(database_engine) as session:
+            session.add(location_record)
+            session.commit()
+            session.refresh(location_record)
+    except SQLAlchemyError:
+        app.logger.exception("Could not save the Location.")
+        return jsonify(error="Python could not save the Location.", saved=False), 500
+
+    return (
+        jsonify(
+            id=location_record.id,
+            location=normalized_location,
+            message="Location saved.",
+            saved=True,
+        ),
+        201,
     )
 
 
