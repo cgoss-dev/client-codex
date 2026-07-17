@@ -6,7 +6,7 @@ from sqlalchemy import create_engine, event, func, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from models import Base, Client, Location
+from models import Base, Client, Location, LocationClient
 
 
 app = Flask(__name__)
@@ -50,6 +50,16 @@ def client_to_dict(client):
         "lastName": client.last_name,
         "email": client.email,
         "mobile": client.mobile,
+    }
+
+
+def location_client_to_dict(location_client):
+    return {
+        "id": location_client.id,
+        "locationId": location_client.location_id,
+        "clientId": location_client.client_id,
+        "role": location_client.role,
+        "priority": location_client.priority,
     }
 
 
@@ -135,6 +145,48 @@ def get_location(location_id):
         return jsonify(error="Python could not retrieve the Location."), 500
 
     return jsonify(location=location)
+
+
+@app.get("/api/locations/<int:location_id>/clients")
+def get_location_clients(location_id):
+    try:
+        with Session(database_engine) as session:
+            if session.get(Location, location_id) is None:
+                return jsonify(error="Location not found."), 404
+
+            linked_client_rows = session.execute(
+                select(LocationClient, Client)
+                .join(Client, LocationClient.client_id == Client.id)
+                .where(LocationClient.location_id == location_id)
+            ).all()
+            linked_clients = [
+                {
+                    "link": location_client_to_dict(link_record),
+                    "client": client_to_dict(client_record),
+                }
+                for link_record, client_record in linked_client_rows
+            ]
+    except SQLAlchemyError:
+        app.logger.exception("Could not retrieve the Location's Clients.")
+        return (
+            jsonify(error="Python could not retrieve the Location's Clients."),
+            500,
+        )
+
+    role_order = {"owner": 0, "manager": 1, "tenant": 2}
+    priority_order = {"primary": 0, "secondary": 1}
+    linked_clients.sort(
+        key=lambda item: (
+            role_order[item["link"]["role"]],
+            priority_order[item["link"]["priority"]],
+        )
+    )
+
+    return jsonify(
+        clients=linked_clients,
+        count=len(linked_clients),
+        locationId=location_id,
+    )
 
 
 @app.post("/api/locations")
@@ -350,6 +402,121 @@ def create_client():
             client=client_to_dict(client_record),
             id=client_record.id,
             message="Client saved.",
+            saved=True,
+        ),
+        201,
+    )
+
+
+@app.post("/api/location-clients")
+def create_location_client():
+    location_client = request.get_json(silent=True)
+
+    if not isinstance(location_client, dict):
+        return jsonify(error="Send the link as a JSON object.", saved=False), 400
+
+    location_id = location_client.get("locationId")
+    client_id = location_client.get("clientId")
+    role = normalize_text(location_client.get("role")).lower()
+    priority = normalize_text(location_client.get("priority")).lower()
+
+    if (
+        not isinstance(location_id, int)
+        or isinstance(location_id, bool)
+        or location_id < 1
+        or not isinstance(client_id, int)
+        or isinstance(client_id, bool)
+        or client_id < 1
+    ):
+        return (
+            jsonify(
+                error="Choose a valid Location and Client.",
+                saved=False,
+            ),
+            400,
+        )
+
+    if role not in {"owner", "manager", "tenant"}:
+        return jsonify(error="Choose Owner, Manager, or Tenant.", saved=False), 400
+
+    if priority not in {"primary", "secondary"}:
+        return jsonify(error="Choose Primary or Secondary.", saved=False), 400
+
+    try:
+        with Session(database_engine) as session:
+            if session.get(Location, location_id) is None:
+                return jsonify(error="Location not found.", saved=False), 404
+
+            if session.get(Client, client_id) is None:
+                return jsonify(error="Client not found.", saved=False), 404
+
+            duplicate_link = session.scalar(
+                select(LocationClient)
+                .where(
+                    LocationClient.location_id == location_id,
+                    LocationClient.client_id == client_id,
+                )
+                .limit(1)
+            )
+
+            if duplicate_link is not None:
+                return (
+                    jsonify(
+                        duplicate=True,
+                        error="That Client is already linked to this Location.",
+                        id=duplicate_link.id,
+                        link=location_client_to_dict(duplicate_link),
+                        saved=False,
+                    ),
+                    409,
+                )
+
+            occupied_slot = session.scalar(
+                select(LocationClient)
+                .where(
+                    LocationClient.location_id == location_id,
+                    LocationClient.role == role,
+                    LocationClient.priority == priority,
+                )
+                .limit(1)
+            )
+
+            if occupied_slot is not None:
+                return (
+                    jsonify(
+                        error=(
+                            f"This Location already has a "
+                            f"{priority.title()} {role.title()}."
+                        ),
+                        saved=False,
+                    ),
+                    409,
+                )
+
+            link_record = LocationClient(
+                location_id=location_id,
+                client_id=client_id,
+                role=role,
+                priority=priority,
+            )
+            session.add(link_record)
+            session.commit()
+            session.refresh(link_record)
+    except SQLAlchemyError:
+        app.logger.exception("Could not link the Client and Location.")
+        return (
+            jsonify(
+                error="Python could not link the Client and Location.",
+                saved=False,
+            ),
+            500,
+        )
+
+    return (
+        jsonify(
+            id=link_record.id,
+            link=location_client_to_dict(link_record),
+            message="Client linked to Location.",
             saved=True,
         ),
         201,
