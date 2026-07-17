@@ -1,7 +1,35 @@
-from flask import Flask, jsonify, request
+from pathlib import Path
+
+from flask import Flask, jsonify, request, send_from_directory
 
 
 app = Flask(__name__)
+project_folder = Path(__file__).resolve().parent
+
+
+@app.get("/")
+def index():
+    return send_from_directory(project_folder, "index.html")
+
+
+@app.get("/css/<path:filename>")
+def css_asset(filename):
+    return send_from_directory(project_folder / "css", filename)
+
+
+@app.get("/js/<path:filename>")
+def javascript_asset(filename):
+    return send_from_directory(project_folder / "js", filename)
+
+
+@app.get("/images/<path:filename>")
+def image_asset(filename):
+    return send_from_directory(project_folder / "images", filename)
+
+
+@app.get("/fonts/<path:filename>")
+def font_asset(filename):
+    return send_from_directory(project_folder / "fonts", filename)
 
 
 @app.get("/api/health")

@@ -25,7 +25,9 @@ source .venv/bin/activate
 python app.py
 ```
 
-Then open <http://127.0.0.1:5000/api/health>.
+Then open <http://127.0.0.1:5000>.
+
+The server health check is available at <http://127.0.0.1:5000/api/health>.
 
 Press `Control-C` in the terminal to stop the server.
 
