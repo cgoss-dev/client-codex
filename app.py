@@ -79,6 +79,23 @@ def get_locations():
     return jsonify(count=len(locations), locations=locations)
 
 
+@app.get("/api/locations/<int:location_id>")
+def get_location(location_id):
+    try:
+        with Session(database_engine) as session:
+            location_record = session.get(Location, location_id)
+
+            if location_record is None:
+                return jsonify(error="Location not found."), 404
+
+            location = location_to_dict(location_record)
+    except SQLAlchemyError:
+        app.logger.exception("Could not retrieve the Location.")
+        return jsonify(error="Python could not retrieve the Location."), 500
+
+    return jsonify(location=location)
+
+
 @app.post("/api/locations")
 def create_location():
     location = request.get_json(silent=True)

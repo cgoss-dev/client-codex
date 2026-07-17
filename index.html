@@ -309,16 +309,24 @@
             </div>
 
             <div class="app-detail-grid">
-              <section class="card app-detail-card" aria-labelledby="account-contact-heading">
+              <section class="card app-detail-card" aria-labelledby="account-location-detail-heading">
                 <div class="card-header">
-                  <h2 class="h5 app-detail-heading" id="account-contact-heading">Contact Information</h2>
+                  <h2 class="h5 app-detail-heading" id="account-location-detail-heading">Location Details</h2>
                 </div>
                 <div class="card-body">
-                  <p class="mb-0">Account Type: &mdash;</p>
-                  <p class="mb-0">Account Name: &mdash;</p>
-                  <p class="mb-0">Primary Contact: &mdash;</p>
-                  <p class="mb-0">Phone: &mdash;</p>
-                  <p class="mb-0">Email: &mdash;</p>
+                  <p class="mb-0" id="accountLocationDetailStatus" aria-live="polite">
+                    Select a Location to view its details.
+                  </p>
+                  <div id="accountLocationDetails" hidden>
+                    <p class="mb-0">Location #: <span id="accountLocationDetailId">&mdash;</span></p>
+                    <p class="mb-0">Street: <span id="accountLocationDetailStreet">&mdash;</span></p>
+                    <p class="mb-0">Unit: <span id="accountLocationDetailUnit">&mdash;</span></p>
+                    <p class="mb-0">Type: <span id="accountLocationDetailType">&mdash;</span></p>
+                    <p class="mb-0">Occupancy: <span id="accountLocationDetailOccupancy">&mdash;</span></p>
+                    <p class="mb-0">City: <span id="accountLocationDetailCity">&mdash;</span></p>
+                    <p class="mb-0">State: <span id="accountLocationDetailState">&mdash;</span></p>
+                    <p class="mb-0">ZIP: <span id="accountLocationDetailPostalCode">&mdash;</span></p>
+                  </div>
                 </div>
               </section>
 
@@ -340,7 +348,7 @@
                 </div>
                 <div class="card-body">
                   <p class="mb-2" id="accountLocationsStatus" aria-live="polite">Loading Locations…</p>
-                  <ul class="list-group" id="accountLocationsList" aria-label="Saved Locations" hidden></ul>
+                  <div class="list-group" id="accountLocationsList" aria-label="Saved Locations" hidden></div>
                 </div>
               </section>
 

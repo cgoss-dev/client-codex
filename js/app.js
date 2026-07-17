@@ -34,6 +34,16 @@ const confirmLocationSaveButton = document.querySelector("#confirmLocationSaveBu
 const locationApiStatus = document.querySelector("#locationApiStatus");
 const accountLocationsStatus = document.querySelector("#accountLocationsStatus");
 const accountLocationsList = document.querySelector("#accountLocationsList");
+const accountLocationDetailStatus = document.querySelector("#accountLocationDetailStatus");
+const accountLocationDetails = document.querySelector("#accountLocationDetails");
+const accountLocationDetailId = document.querySelector("#accountLocationDetailId");
+const accountLocationDetailStreet = document.querySelector("#accountLocationDetailStreet");
+const accountLocationDetailUnit = document.querySelector("#accountLocationDetailUnit");
+const accountLocationDetailType = document.querySelector("#accountLocationDetailType");
+const accountLocationDetailOccupancy = document.querySelector("#accountLocationDetailOccupancy");
+const accountLocationDetailCity = document.querySelector("#accountLocationDetailCity");
+const accountLocationDetailState = document.querySelector("#accountLocationDetailState");
+const accountLocationDetailPostalCode = document.querySelector("#accountLocationDetailPostalCode");
 const newSidebar = document.querySelector("#newSidebar");
 const primaryNavigation = document.querySelector("#primaryNavigation");
 const menuButton = document.querySelector(".navbar-toggler");
@@ -68,6 +78,7 @@ const appointmentInfo5Button = document.querySelector("#appointmentInfo5Button")
 const weekendsOffButton = document.querySelector("#weekendsOffButton");
 const weekendsOnButton = document.querySelector("#weekendsOnButton");
 let previousView = "schedule";
+let selectedAccountLocationId;
 
 const getClientContactCards = () => Array.from(document.querySelectorAll("[data-client-contact]"));
 const clientRoles = ["owner", "manager", "tenant"];
@@ -1045,6 +1056,16 @@ const loadAccountLocations = async () => {
   accountLocationsStatus.textContent = "Loading Locations…";
   accountLocationsList.hidden = true;
   accountLocationsList.replaceChildren();
+  selectedAccountLocationId = undefined;
+
+  if (accountLocationDetailStatus) {
+    accountLocationDetailStatus.textContent =
+      "Select a Location to view its details.";
+  }
+
+  if (accountLocationDetails) {
+    accountLocationDetails.hidden = true;
+  }
 
   try {
     const response = await fetch("/api/locations");
@@ -1060,13 +1081,16 @@ const loadAccountLocations = async () => {
     }
 
     result.locations.forEach((location) => {
-      const listItem = document.createElement("li");
+      const listItem = document.createElement("button");
       const unit = location.unit ? `, Unit ${location.unit}` : "";
       const occupancy = location.occupancy
         ? `, ${capitalize(location.occupancy)}`
         : "";
 
-      listItem.className = "list-group-item";
+      listItem.className = "list-group-item list-group-item-action";
+      listItem.type = "button";
+      listItem.dataset.locationId = String(location.id);
+      listItem.setAttribute("aria-pressed", "false");
       listItem.textContent =
         `#${location.id} — ${location.street}${unit}, ` +
         `${location.city}, ${location.state} ${location.postalCode} — ` +
@@ -1084,6 +1108,76 @@ const loadAccountLocations = async () => {
         : "Python could not retrieve Locations.";
   }
 };
+
+const loadAccountLocationDetails = async (locationId) => {
+  if (!accountLocationDetailStatus || !accountLocationDetails) {
+    return;
+  }
+
+  accountLocationDetailStatus.textContent = `Loading Location #${locationId}…`;
+  accountLocationDetails.hidden = true;
+
+  try {
+    const response = await fetch(`/api/locations/${locationId}`);
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || "Python could not retrieve the Location.");
+    }
+
+    if (selectedAccountLocationId !== locationId) {
+      return;
+    }
+
+    const location = result.location;
+
+    accountLocationDetailId.textContent = location.id;
+    accountLocationDetailStreet.textContent = location.street;
+    accountLocationDetailUnit.textContent = location.unit || "—";
+    accountLocationDetailType.textContent = capitalize(location.type);
+    accountLocationDetailOccupancy.textContent = location.occupancy
+      ? capitalize(location.occupancy)
+      : "—";
+    accountLocationDetailCity.textContent = location.city;
+    accountLocationDetailState.textContent = location.state;
+    accountLocationDetailPostalCode.textContent = location.postalCode;
+    accountLocationDetailStatus.textContent = `Location #${location.id}.`;
+    accountLocationDetails.hidden = false;
+  } catch (error) {
+    if (selectedAccountLocationId !== locationId) {
+      return;
+    }
+
+    accountLocationDetailStatus.textContent =
+      error instanceof Error
+        ? error.message
+        : "Python could not retrieve the Location.";
+  }
+};
+
+accountLocationsList?.addEventListener("click", (event) => {
+  const selectedLocation = event.target.closest("[data-location-id]");
+
+  if (!selectedLocation || !accountLocationsList.contains(selectedLocation)) {
+    return;
+  }
+
+  selectedAccountLocationId = Number(selectedLocation.dataset.locationId);
+
+  accountLocationsList.querySelectorAll("[data-location-id]").forEach((locationButton) => {
+    const isSelected = locationButton === selectedLocation;
+
+    locationButton.classList.toggle("active", isSelected);
+    locationButton.setAttribute("aria-pressed", String(isSelected));
+  });
+
+  if (accountLocationsStatus) {
+    accountLocationsStatus.textContent =
+      `Location #${selectedLocation.dataset.locationId} selected.`;
+  }
+
+  loadAccountLocationDetails(selectedAccountLocationId);
+});
 
 const showAppView = (viewName) => {
   appViewElements.forEach((element) => {
