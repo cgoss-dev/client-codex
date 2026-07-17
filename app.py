@@ -235,6 +235,24 @@ def create_location():
     )
 
 
+@app.get("/api/clients")
+def get_clients():
+    try:
+        with Session(database_engine) as session:
+            client_records = session.scalars(
+                select(Client).order_by(Client.id)
+            ).all()
+            clients = [
+                client_to_dict(client_record)
+                for client_record in client_records
+            ]
+    except SQLAlchemyError:
+        app.logger.exception("Could not retrieve Clients.")
+        return jsonify(error="Python could not retrieve Clients."), 500
+
+    return jsonify(clients=clients, count=len(clients))
+
+
 @app.post("/api/clients")
 def create_client():
     client = request.get_json(silent=True)
