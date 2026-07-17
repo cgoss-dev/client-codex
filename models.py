@@ -19,3 +19,14 @@ class Location(Base):
     city: Mapped[str] = mapped_column(String(100))
     state: Mapped[str] = mapped_column(String(2))
     postal_code: Mapped[str] = mapped_column(String(10))
+
+
+class Client(Base):
+    __tablename__ = "clients"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    organization: Mapped[Optional[str]] = mapped_column(String(200))
+    first_name: Mapped[str] = mapped_column(String(100))
+    last_name: Mapped[str] = mapped_column(String(100))
+    email: Mapped[Optional[str]] = mapped_column(String(254))
+    mobile: Mapped[Optional[str]] = mapped_column(String(14))
