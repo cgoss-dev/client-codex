@@ -16,6 +16,19 @@ Schedule view concept with a weekly calendar, technician selection, and map prev
 - Leaflet and OpenStreetMap
 - OSRM routing
 
+## Run the Python Server
+
+From the project folder:
+
+```bash
+source .venv/bin/activate
+python app.py
+```
+
+Then open <http://127.0.0.1:5000/api/health>.
+
+Press `Control-C` in the terminal to stop the server.
+
 ## Planned Features
 
 - Accounts and clients
