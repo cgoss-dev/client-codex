@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from flask import Flask, jsonify, request, send_from_directory
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, func, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -29,6 +29,10 @@ def location_to_dict(location):
         "state": location.state,
         "postalCode": location.postal_code,
     }
+
+
+def normalize_text(value):
+    return " ".join(str(value or "").split())
 
 
 @app.get("/")
@@ -104,13 +108,13 @@ def create_location():
         return jsonify(error="Send the location as a JSON object.", saved=False), 400
 
     normalized_location = {
-        "street": str(location.get("street") or "").strip(),
-        "unit": str(location.get("unit") or "").strip() or None,
-        "type": str(location.get("type") or "").strip().lower(),
-        "occupancy": str(location.get("occupancy") or "").strip().lower() or None,
-        "city": str(location.get("city") or "").strip(),
-        "state": str(location.get("state") or "").strip().upper(),
-        "postalCode": str(location.get("postalCode") or "").strip(),
+        "street": normalize_text(location.get("street")),
+        "unit": normalize_text(location.get("unit")) or None,
+        "type": normalize_text(location.get("type")).lower(),
+        "occupancy": normalize_text(location.get("occupancy")).lower() or None,
+        "city": normalize_text(location.get("city")),
+        "state": normalize_text(location.get("state")).upper(),
+        "postalCode": normalize_text(location.get("postalCode")),
     }
     required_fields = ["street", "type", "city", "state", "postalCode"]
     missing_fields = [
@@ -142,18 +146,49 @@ def create_location():
     if normalized_location["type"] != "rental":
         normalized_location["occupancy"] = None
 
-    location_record = Location(
-        street=normalized_location["street"],
-        unit=normalized_location["unit"],
-        location_type=normalized_location["type"],
-        occupancy=normalized_location["occupancy"],
-        city=normalized_location["city"],
-        state=normalized_location["state"],
-        postal_code=normalized_location["postalCode"],
-    )
-
     try:
         with Session(database_engine) as session:
+            duplicate_location = session.scalar(
+                select(Location)
+                .where(
+                    func.lower(func.trim(Location.street))
+                    == normalized_location["street"].lower(),
+                    func.lower(func.trim(func.coalesce(Location.unit, "")))
+                    == (normalized_location["unit"] or "").lower(),
+                    func.lower(func.trim(Location.city))
+                    == normalized_location["city"].lower(),
+                    func.upper(func.trim(Location.state))
+                    == normalized_location["state"],
+                    func.trim(Location.postal_code)
+                    == normalized_location["postalCode"],
+                )
+                .limit(1)
+            )
+
+            if duplicate_location is not None:
+                return (
+                    jsonify(
+                        duplicate=True,
+                        error=(
+                            "That address already exists as "
+                            f"Location #{duplicate_location.id}."
+                        ),
+                        id=duplicate_location.id,
+                        location=location_to_dict(duplicate_location),
+                        saved=False,
+                    ),
+                    409,
+                )
+
+            location_record = Location(
+                street=normalized_location["street"],
+                unit=normalized_location["unit"],
+                location_type=normalized_location["type"],
+                occupancy=normalized_location["occupancy"],
+                city=normalized_location["city"],
+                state=normalized_location["state"],
+                postal_code=normalized_location["postalCode"],
+            )
             session.add(location_record)
             session.commit()
             session.refresh(location_record)

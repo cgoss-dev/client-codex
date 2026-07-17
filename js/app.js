@@ -31,6 +31,7 @@ const newLocationReview = document.querySelector("#newLocationReview");
 const newLocationReviewHeading = document.querySelector("#new-location-review-heading");
 const newLocationReviewData = document.querySelector("#newLocationReviewData");
 const confirmLocationSaveButton = document.querySelector("#confirmLocationSaveButton");
+const addAnotherLocationButton = document.querySelector("#addAnotherLocationButton");
 const locationApiStatus = document.querySelector("#locationApiStatus");
 const accountLocationsStatus = document.querySelector("#accountLocationsStatus");
 const accountLocationsList = document.querySelector("#accountLocationsList");
@@ -79,6 +80,7 @@ const weekendsOffButton = document.querySelector("#weekendsOffButton");
 const weekendsOnButton = document.querySelector("#weekendsOnButton");
 let previousView = "schedule";
 let selectedAccountLocationId;
+let pendingAccountLocationId;
 
 const getClientContactCards = () => Array.from(document.querySelectorAll("[data-client-contact]"));
 const clientRoles = ["owner", "manager", "tenant"];
@@ -859,6 +861,11 @@ const updateNewFormReviewState = () => {
   if (confirmLocationSaveButton) {
     confirmLocationSaveButton.disabled = true;
     confirmLocationSaveButton.textContent = "Confirm Save";
+    delete confirmLocationSaveButton.dataset.savedLocationId;
+  }
+
+  if (addAnotherLocationButton) {
+    addAnotherLocationButton.hidden = true;
   }
 
   if (locationApiStatus) {
@@ -1004,6 +1011,16 @@ newForm?.addEventListener("submit", (event) => {
 });
 
 confirmLocationSaveButton?.addEventListener("click", async () => {
+  const savedLocationId = Number(
+    confirmLocationSaveButton.dataset.savedLocationId,
+  );
+
+  if (Number.isInteger(savedLocationId)) {
+    pendingAccountLocationId = savedLocationId;
+    window.location.hash = "accounts";
+    return;
+  }
+
   confirmLocationSaveButton.disabled = true;
   confirmLocationSaveButton.textContent = "Checking…";
   confirmLocationSaveButton.setAttribute("aria-busy", "true");
@@ -1022,11 +1039,31 @@ confirmLocationSaveButton?.addEventListener("click", async () => {
     });
     const result = await response.json();
 
+    if (response.status === 409 && result.duplicate) {
+      confirmLocationSaveButton.dataset.savedLocationId = String(result.id);
+      confirmLocationSaveButton.disabled = false;
+      confirmLocationSaveButton.textContent = "View Existing";
+      addAnotherLocationButton?.removeAttribute("hidden");
+
+      if (locationApiStatus) {
+        locationApiStatus.textContent = result.error;
+      }
+
+      return;
+    }
+
     if (!response.ok) {
       throw new Error(result.error || "Python could not validate the Location.");
     }
 
-    confirmLocationSaveButton.textContent = result.saved ? "Saved" : "Validated";
+    if (result.saved) {
+      confirmLocationSaveButton.dataset.savedLocationId = String(result.id);
+      confirmLocationSaveButton.disabled = false;
+      confirmLocationSaveButton.textContent = "View in Accounts";
+      addAnotherLocationButton?.removeAttribute("hidden");
+    } else {
+      confirmLocationSaveButton.textContent = "Validated";
+    }
 
     if (locationApiStatus) {
       locationApiStatus.textContent = result.saved
@@ -1048,7 +1085,27 @@ confirmLocationSaveButton?.addEventListener("click", async () => {
   }
 });
 
-const loadAccountLocations = async () => {
+addAnotherLocationButton?.addEventListener("click", () => {
+  newForm?.reset();
+  newForm?.classList.remove("was-validated");
+
+  if (includeLocation) {
+    includeLocation.checked = true;
+  }
+
+  updateLocationFields();
+  updateClientFields();
+  updateAppointmentFields();
+  updateLinkFields();
+  updateClientContactModel();
+  updateNewFormReviewState();
+
+  moveNewSidebarAside(() => {
+    document.querySelector("#streetAddress")?.focus();
+  });
+});
+
+const loadAccountLocations = async (locationIdToSelect) => {
   if (!accountLocationsStatus || !accountLocationsList) {
     return;
   }
@@ -1101,6 +1158,15 @@ const loadAccountLocations = async () => {
     accountLocationsStatus.textContent =
       `${result.count} ${result.count === 1 ? "Location" : "Locations"}.`;
     accountLocationsList.hidden = false;
+
+    if (Number.isInteger(locationIdToSelect)) {
+      const savedLocationButton = accountLocationsList.querySelector(
+        `[data-location-id="${locationIdToSelect}"]`,
+      );
+
+      savedLocationButton?.click();
+      savedLocationButton?.focus();
+    }
   } catch (error) {
     accountLocationsStatus.textContent =
       error instanceof Error
@@ -1207,7 +1273,10 @@ const showAppView = (viewName) => {
   });
 
   if (viewName === "accounts") {
-    loadAccountLocations();
+    const locationIdToSelect = pendingAccountLocationId;
+
+    pendingAccountLocationId = undefined;
+    loadAccountLocations(locationIdToSelect);
   }
 };
 

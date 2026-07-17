@@ -1412,20 +1412,30 @@
                   <div class="card-body">
                     <h2 class="h5 mb-2" id="new-location-review-heading" tabindex="-1">Location Review</h2>
                     <p class="mb-2" id="confirm-location-save-help">
-                      Confirm Save sends this Location to Python and saves it in SQLite.
+                      Confirm Save stores this Location in SQLite. Afterward, open the saved record or add another Location.
                     </p>
                     <pre class="bg-body-tertiary border rounded fs-6 mb-0 overflow-auto p-2"><code id="newLocationReviewData"></code></pre>
                     <div class="align-items-center d-flex flex-wrap gap-2 justify-content-between mt-3">
                       <p class="mb-0" id="locationApiStatus" aria-live="polite">Not sent to Python yet.</p>
-                      <button
-                        class="btn btn-primary"
-                        id="confirmLocationSaveButton"
-                        type="button"
-                        aria-describedby="confirm-location-save-help locationApiStatus"
-                        disabled
-                      >
-                        Confirm Save
-                      </button>
+                      <div class="d-flex flex-wrap gap-2">
+                        <button
+                          class="btn btn-light"
+                          id="addAnotherLocationButton"
+                          type="button"
+                          hidden
+                        >
+                          Add Another
+                        </button>
+                        <button
+                          class="btn btn-primary"
+                          id="confirmLocationSaveButton"
+                          type="button"
+                          aria-describedby="confirm-location-save-help locationApiStatus"
+                          disabled
+                        >
+                          Confirm Save
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </section>
