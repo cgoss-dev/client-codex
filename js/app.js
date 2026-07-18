@@ -929,6 +929,65 @@ const buildLocationReviewData = () => {
   };
 };
 
+const buildClientReviewData = () => Array.from(clientPriorityToggles)
+  .filter((priorityToggle) => priorityToggle.checked)
+  .map((priorityToggle) => {
+    const { role, priority } = priorityToggle.dataset;
+    const source = document.querySelector(
+      `[data-client-source-toggle][data-role="${role}"][data-priority="${priority}"]:checked`,
+    )?.value;
+    const client = {
+      role,
+      priority,
+      source: source || null,
+    };
+
+    if (source === "find") {
+      client.lookup = document
+        .querySelector(
+          `[data-client-role-lookup="${role}"][data-priority="${priority}"] input`,
+        )
+        ?.value.trim() || null;
+      return client;
+    }
+
+    const contact = getClientContactCards().find(
+      (card) =>
+        !card.hidden &&
+        card.dataset.role === role &&
+        card.dataset.priority === priority,
+    );
+
+    if (!contact) {
+      return client;
+    }
+
+    const fieldValue = (nameEnding) =>
+      contact.querySelector(`[name$="${nameEnding}"]`)?.value.trim() || null;
+    const responsibility = contact.querySelector(
+      'input[name$="Purpose"]:checked',
+    )?.value;
+
+    return {
+      ...client,
+      organization: fieldValue("Organization"),
+      firstName: fieldValue("FirstName"),
+      lastName: fieldValue("LastName"),
+      email: fieldValue("Email"),
+      mobile: fieldValue("Mobile"),
+      responsibility: responsibility || null,
+      tenantType:
+        role === "tenant"
+          ? document.querySelector('input[name="tenantType"]:checked')?.value || null
+          : null,
+    };
+  });
+
+const buildAddReviewData = () => ({
+  location: includeLocation?.checked ? buildLocationReviewData() : null,
+  clients: includeClient?.checked ? buildClientReviewData() : [],
+});
+
 const formatMobileNumber = (value) => {
   let digits = value.replace(/\D/g, "");
 
@@ -992,13 +1051,22 @@ newForm?.addEventListener("submit", (event) => {
     return;
   }
 
-  if (includeLocation?.checked && newLocationReview && newLocationReviewData) {
-    newLocationReviewData.textContent = JSON.stringify(buildLocationReviewData(), null, 2);
+  if (newLocationReview && newLocationReviewData) {
+    newLocationReviewData.textContent = JSON.stringify(buildAddReviewData(), null, 2);
     newLocationReview.hidden = false;
-    confirmLocationSaveButton?.removeAttribute("disabled");
+
+    if (includeLocation?.checked) {
+      confirmLocationSaveButton?.removeAttribute("disabled");
+      confirmLocationSaveButton?.removeAttribute("hidden");
+    } else if (confirmLocationSaveButton) {
+      confirmLocationSaveButton.disabled = true;
+      confirmLocationSaveButton.hidden = true;
+    }
 
     if (locationApiStatus) {
-      locationApiStatus.textContent = "Ready to send to Python.";
+      locationApiStatus.textContent = includeLocation?.checked
+        ? "The Location is ready to send to Python. Client saving is not connected yet."
+        : "Client preview only. Client saving is not connected yet.";
     }
 
     animateCardEntrance(newLocationReview);
@@ -1006,9 +1074,7 @@ newForm?.addEventListener("submit", (event) => {
   }
 
   if (newFormStatus) {
-    newFormStatus.textContent = includeLocation?.checked
-      ? "Location preview generated. Nothing has been saved yet."
-      : "The form is valid. Location preview is available when Location is included.";
+    newFormStatus.textContent = "Add preview generated. Nothing has been saved yet.";
   }
 });
 
