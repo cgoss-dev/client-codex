@@ -88,6 +88,15 @@ const operationsStaffButton = document.querySelector("#operationsStaffButton");
 const operationsTeamsButton = document.querySelector("#operationsTeamsButton");
 const operationsStaffPanel = document.querySelector("#operationsStaffPanel");
 const operationsTeamsPanel = document.querySelector("#operationsTeamsPanel");
+const operationsStaffSelect = document.querySelector("#operationsStaffSelect");
+const operationsStaffEmployeeNumber = document.querySelector("#operationsStaffEmployeeNumber");
+const operationsStaffName = document.querySelector("#operationsStaffName");
+const operationsStaffTeams = document.querySelector("#operationsStaffTeams");
+const operationsStaffAuthority = document.querySelector("#operationsStaffAuthority");
+const operationsStaffTrainingStatus = document.querySelector("#operationsStaffTrainingStatus");
+const operationsStaffStartDate = document.querySelector("#operationsStaffStartDate");
+const operationsStaffBirthDate = document.querySelector("#operationsStaffBirthDate");
+const operationsStaffStatus = document.querySelector("#operationsStaffStatus");
 const operationsTeamSelect = document.querySelector("#operationsTeamSelect");
 const operationsTeamName = document.querySelector("#operationsTeamName");
 const operationsTeamStaff = document.querySelector("#operationsTeamStaff");
@@ -106,29 +115,38 @@ const scheduleTeams = [
   { id: "team-3", name: "Team 3" },
 ];
 const scheduleStaff = [
-  { id: "staff-1", name: "Alex", startDate: "2024-04-12", birthDate: "1998-01-31", teamIds: ["team-1"] },
-  { id: "staff-2", name: "Blair", startDate: "2024-10-28", birthDate: "1996-01-24", teamIds: ["team-1", "team-2"] },
-  { id: "staff-3", name: "Cameron", startDate: "2025-01-27", birthDate: "1989-06-25", teamIds: ["team-1"] },
-  { id: "staff-4", name: "Drew", startDate: "2024-01-27", birthDate: "2002-04-24", teamIds: ["team-2"] },
-  { id: "staff-5", name: "Ellis", startDate: "2021-08-28", birthDate: "1992-09-08", teamIds: ["team-2", "team-3"] },
-  { id: "staff-6", name: "Frankie", startDate: "2023-03-02", birthDate: "1996-01-29", teamIds: ["team-2"] },
-  { id: "staff-7", name: "Hollis", startDate: "2025-05-05", birthDate: "1987-03-17", teamIds: ["team-3"] },
-  { id: "staff-8", name: "Jordan", startDate: "2025-02-12", birthDate: "2003-04-22", teamIds: ["team-3"] },
-  { id: "staff-9", name: "Kit", startDate: "2022-07-25", birthDate: "2002-01-01", teamIds: ["team-1", "team-3"] },
-  { id: "staff-10", name: "Morgan", startDate: "2023-05-23", birthDate: "1986-01-13", teamIds: ["team-1"] },
-  { id: "staff-11", name: "Quinn", startDate: "2026-02-25", birthDate: "1999-10-01", teamIds: ["team-2"] },
-  { id: "staff-12", name: "Robin", startDate: "2021-11-05", birthDate: "1998-01-30", teamIds: ["team-3"] },
-  { id: "staff-13", name: "Sam", startDate: "2022-02-06", birthDate: "2000-11-17", teamIds: [] },
-  { id: "staff-14", name: "Taylor", startDate: "2021-11-07", birthDate: "1994-12-05", teamIds: [] },
-  { id: "staff-17", name: "Van", startDate: "2026-03-31", birthDate: "2005-10-08", teamIds: [] },
-  { id: "staff-15", name: "Wren", startDate: "2023-01-12", birthDate: "1988-08-09", teamIds: [] },
-  { id: "staff-18", name: "Yuki", startDate: "2025-07-02", birthDate: "2000-02-01", teamIds: [] },
-  { id: "staff-16", name: "Zhen", startDate: "2023-10-13", birthDate: "1990-01-28", teamIds: [] },
+  { id: "staff-1", employeeNumber: 34, name: "Alex", authority: "Staff", trainingStatus: "None", startDate: "2024-04-12", birthDate: "1998-01-31", teamIds: ["team-1"] },
+  { id: "staff-2", employeeNumber: 35, name: "Blair", authority: "Staff", trainingStatus: "None", startDate: "2024-10-28", birthDate: "1996-01-24", teamIds: ["team-1", "team-2"] },
+  { id: "staff-3", employeeNumber: 38, name: "Cameron", authority: "Staff", trainingStatus: "None", startDate: "2025-01-27", birthDate: "1989-06-25", teamIds: ["team-1"] },
+  { id: "staff-4", employeeNumber: 32, name: "Drew", authority: "Staff", trainingStatus: "None", startDate: "2024-01-27", birthDate: "2002-04-24", teamIds: ["team-2"] },
+  { id: "staff-5", employeeNumber: 10, name: "Ellis", authority: "Lead", trainingStatus: "Trainer", startDate: "2021-08-28", birthDate: "1992-09-08", teamIds: ["team-2", "team-3"] },
+  { id: "staff-6", employeeNumber: 27, name: "Frankie", authority: "Staff", trainingStatus: "None", startDate: "2023-03-02", birthDate: "1996-01-29", teamIds: ["team-2"] },
+  { id: "staff-7", employeeNumber: 44, name: "Hollis", authority: "Staff", trainingStatus: "None", startDate: "2025-05-05", birthDate: "1987-03-17", teamIds: ["team-3"] },
+  { id: "staff-8", employeeNumber: 43, name: "Jordan", authority: "Staff", trainingStatus: "None", startDate: "2025-02-12", birthDate: "2003-04-22", teamIds: ["team-3"] },
+  { id: "staff-9", employeeNumber: 21, name: "Kit", authority: "Lead", trainingStatus: "Trainer", startDate: "2022-07-25", birthDate: "2002-01-01", teamIds: ["team-1", "team-3"] },
+  { id: "staff-10", employeeNumber: 28, name: "Morgan", authority: "Staff", trainingStatus: "None", startDate: "2023-05-23", birthDate: "1986-01-13", teamIds: ["team-1"] },
+  { id: "staff-11", employeeNumber: 46, name: "Quinn", authority: "Staff", trainingStatus: "Trainee", startDate: "2026-02-25", birthDate: "1999-10-01", teamIds: ["team-2"] },
+  { id: "staff-12", employeeNumber: 13, name: "Robin", authority: "Lead", trainingStatus: "Trainer", startDate: "2021-11-05", birthDate: "1998-01-30", teamIds: ["team-3"] },
+  { id: "staff-13", employeeNumber: 18, name: "Sam", authority: "Lead", trainingStatus: "None", startDate: "2022-02-06", birthDate: "2000-11-17", teamIds: [] },
+  { id: "staff-14", employeeNumber: 17, name: "Taylor", authority: "Lead", trainingStatus: "None", startDate: "2021-11-07", birthDate: "1994-12-05", teamIds: [] },
+  { id: "staff-17", employeeNumber: 48, name: "Van", authority: "Staff", trainingStatus: "Trainee", startDate: "2026-03-31", birthDate: "2005-10-08", teamIds: [] },
+  { id: "staff-15", employeeNumber: 26, name: "Wren", authority: "Staff", trainingStatus: "None", startDate: "2023-01-12", birthDate: "1988-08-09", teamIds: [] },
+  { id: "staff-18", employeeNumber: 45, name: "Yuki", authority: "Staff", trainingStatus: "Trainee", startDate: "2025-07-02", birthDate: "2000-02-01", teamIds: [] },
+  { id: "staff-16", employeeNumber: 30, name: "Zhen", authority: "Staff", trainingStatus: "None", startDate: "2023-10-13", birthDate: "1990-01-28", teamIds: [] },
 ];
 let selectedScheduleStaffId = "staff-2";
+let selectedOperationsStaffId = scheduleStaff[0].id;
 let selectedOperationsTeamId = scheduleTeams[0].id;
 
 const capitalize = (value) => value.charAt(0).toUpperCase() + value.slice(1);
+const staffDateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+const formatStaffDate = (date) => staffDateFormatter.format(new Date(`${date}T00:00:00Z`));
 
 const updateScheduleStaffFilters = () => {
   if (!scheduleTeamFilter || !scheduleStaffFilters) {
@@ -174,6 +192,53 @@ const updateScheduleStaffFilters = () => {
 
 scheduleTeamFilter?.addEventListener("change", updateScheduleStaffFilters);
 updateScheduleStaffFilters();
+
+const updateOperationsStaffProfile = () => {
+  if (
+    !operationsStaffSelect ||
+    !operationsStaffEmployeeNumber ||
+    !operationsStaffName ||
+    !operationsStaffTeams ||
+    !operationsStaffAuthority ||
+    !operationsStaffTrainingStatus ||
+    !operationsStaffStartDate ||
+    !operationsStaffBirthDate ||
+    !operationsStaffStatus
+  ) {
+    return;
+  }
+
+  const selectedStaff =
+    scheduleStaff.find((staff) => staff.id === selectedOperationsStaffId) ?? scheduleStaff[0];
+  const staffOptions = scheduleStaff.map((staff) => {
+    const option = document.createElement("option");
+
+    option.value = staff.id;
+    option.textContent = staff.name;
+    return option;
+  });
+  const teamNames = selectedStaff.teamIds.map(
+    (teamId) => scheduleTeams.find((team) => team.id === teamId)?.name,
+  );
+
+  selectedOperationsStaffId = selectedStaff.id;
+  operationsStaffSelect.replaceChildren(...staffOptions);
+  operationsStaffSelect.value = selectedStaff.id;
+  operationsStaffEmployeeNumber.value = selectedStaff.employeeNumber;
+  operationsStaffName.value = selectedStaff.name;
+  operationsStaffTeams.value = teamNames.filter(Boolean).join(", ") || "No Team";
+  operationsStaffAuthority.value = selectedStaff.authority;
+  operationsStaffTrainingStatus.value = selectedStaff.trainingStatus;
+  operationsStaffStartDate.value = formatStaffDate(selectedStaff.startDate);
+  operationsStaffBirthDate.value = formatStaffDate(selectedStaff.birthDate);
+  operationsStaffStatus.textContent = `Viewing ${selectedStaff.name}.`;
+};
+
+operationsStaffSelect?.addEventListener("change", () => {
+  selectedOperationsStaffId = operationsStaffSelect.value;
+  updateOperationsStaffProfile();
+});
+updateOperationsStaffProfile();
 
 const updateOperationsTeamEditor = (statusMessage) => {
   if (
