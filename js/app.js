@@ -81,6 +81,17 @@ const appointmentInfo3Button = document.querySelector("#appointmentInfo3Button")
 const appointmentInfo5Button = document.querySelector("#appointmentInfo5Button");
 const weekendsOffButton = document.querySelector("#weekendsOffButton");
 const weekendsOnButton = document.querySelector("#weekendsOnButton");
+const scheduleTeamFilter = document.querySelector("#scheduleTeamFilter");
+const scheduleStaffFilters = document.querySelector("#scheduleStaffFilters");
+const operationsSidebar = document.querySelector("#operationsSidebar");
+const operationsStaffButton = document.querySelector("#operationsStaffButton");
+const operationsTeamsButton = document.querySelector("#operationsTeamsButton");
+const operationsStaffPanel = document.querySelector("#operationsStaffPanel");
+const operationsTeamsPanel = document.querySelector("#operationsTeamsPanel");
+const operationsTeamSelect = document.querySelector("#operationsTeamSelect");
+const operationsTeamName = document.querySelector("#operationsTeamName");
+const operationsTeamStaff = document.querySelector("#operationsTeamStaff");
+const operationsTeamStatus = document.querySelector("#operationsTeamStatus");
 let previousView = "schedule";
 let selectedAccountLocationId;
 let pendingAccountLocationId;
@@ -89,8 +100,223 @@ let savedClientsPromise;
 const getClientContactCards = () => Array.from(document.querySelectorAll("[data-client-contact]"));
 const clientRoles = ["owner", "manager", "tenant"];
 const emailAddressPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const scheduleTeams = [
+  { id: "team-1", name: "Team 1" },
+  { id: "team-2", name: "Team 2" },
+  { id: "team-3", name: "Team 3" },
+];
+const scheduleStaff = [
+  { id: "staff-1", name: "Alex", startDate: "2024-04-12", birthDate: "1998-01-31", teamIds: ["team-1"] },
+  { id: "staff-2", name: "Blair", startDate: "2024-10-28", birthDate: "1996-01-24", teamIds: ["team-1", "team-2"] },
+  { id: "staff-3", name: "Cameron", startDate: "2025-01-27", birthDate: "1989-06-25", teamIds: ["team-1"] },
+  { id: "staff-4", name: "Drew", startDate: "2024-01-27", birthDate: "2002-04-24", teamIds: ["team-2"] },
+  { id: "staff-5", name: "Ellis", startDate: "2021-08-28", birthDate: "1992-09-08", teamIds: ["team-2", "team-3"] },
+  { id: "staff-6", name: "Frankie", startDate: "2023-03-02", birthDate: "1996-01-29", teamIds: ["team-2"] },
+  { id: "staff-7", name: "Hollis", startDate: "2025-05-05", birthDate: "1987-03-17", teamIds: ["team-3"] },
+  { id: "staff-8", name: "Jordan", startDate: "2025-02-12", birthDate: "2003-04-22", teamIds: ["team-3"] },
+  { id: "staff-9", name: "Kit", startDate: "2022-07-25", birthDate: "2002-01-01", teamIds: ["team-1", "team-3"] },
+  { id: "staff-10", name: "Morgan", startDate: "2023-05-23", birthDate: "1986-01-13", teamIds: ["team-1"] },
+  { id: "staff-11", name: "Quinn", startDate: "2026-02-25", birthDate: "1999-10-01", teamIds: ["team-2"] },
+  { id: "staff-12", name: "Robin", startDate: "2021-11-05", birthDate: "1998-01-30", teamIds: ["team-3"] },
+  { id: "staff-13", name: "Sam", startDate: "2022-02-06", birthDate: "2000-11-17", teamIds: [] },
+  { id: "staff-14", name: "Taylor", startDate: "2021-11-07", birthDate: "1994-12-05", teamIds: [] },
+  { id: "staff-17", name: "Van", startDate: "2026-03-31", birthDate: "2005-10-08", teamIds: [] },
+  { id: "staff-15", name: "Wren", startDate: "2023-01-12", birthDate: "1988-08-09", teamIds: [] },
+  { id: "staff-18", name: "Yuki", startDate: "2025-07-02", birthDate: "2000-02-01", teamIds: [] },
+  { id: "staff-16", name: "Zhen", startDate: "2023-10-13", birthDate: "1990-01-28", teamIds: [] },
+];
+let selectedScheduleStaffId = "staff-2";
+let selectedOperationsTeamId = scheduleTeams[0].id;
 
 const capitalize = (value) => value.charAt(0).toUpperCase() + value.slice(1);
+
+const updateScheduleStaffFilters = () => {
+  if (!scheduleTeamFilter || !scheduleStaffFilters) {
+    return;
+  }
+
+  const selectedTeamId = scheduleTeamFilter.value;
+  const visibleStaff = scheduleStaff.filter((staff) => {
+    if (selectedTeamId === "all") {
+      return true;
+    }
+
+    if (selectedTeamId === "unassigned") {
+      return staff.teamIds.length === 0;
+    }
+
+    return staff.teamIds.includes(selectedTeamId);
+  });
+
+  if (!visibleStaff.some((staff) => staff.id === selectedScheduleStaffId)) {
+    selectedScheduleStaffId = visibleStaff[0]?.id;
+  }
+
+  const staffButtons = visibleStaff.map((staff) => {
+    const button = document.createElement("button");
+    const isSelected = staff.id === selectedScheduleStaffId;
+
+    button.className = `btn btn-light border staff-button${isSelected ? " active" : ""}`;
+    button.type = "button";
+    button.dataset.staffId = staff.id;
+    button.textContent = staff.name;
+    button.setAttribute("aria-pressed", String(isSelected));
+    button.addEventListener("click", () => {
+      selectedScheduleStaffId = staff.id;
+      updateScheduleStaffFilters();
+    });
+
+    return button;
+  });
+
+  scheduleStaffFilters.replaceChildren(...staffButtons);
+};
+
+scheduleTeamFilter?.addEventListener("change", updateScheduleStaffFilters);
+updateScheduleStaffFilters();
+
+const updateOperationsTeamEditor = (statusMessage) => {
+  if (
+    !operationsTeamSelect ||
+    !operationsTeamName ||
+    !operationsTeamStaff ||
+    !operationsTeamStatus
+  ) {
+    return;
+  }
+
+  const selectedTeam =
+    scheduleTeams.find((team) => team.id === selectedOperationsTeamId) ??
+    scheduleTeams[0];
+
+  if (!selectedTeam) {
+    return;
+  }
+
+  selectedOperationsTeamId = selectedTeam.id;
+
+  const teamOptions = scheduleTeams.map((team) => {
+    const option = document.createElement("option");
+
+    option.value = team.id;
+    option.textContent = team.name;
+    return option;
+  });
+
+  operationsTeamSelect.replaceChildren(...teamOptions);
+  operationsTeamSelect.value = selectedTeam.id;
+  operationsTeamName.value = selectedTeam.name;
+
+  const staffAssignments = scheduleStaff.map((staff) => {
+    const formCheck = document.createElement("div");
+    const checkbox = document.createElement("input");
+    const label = document.createElement("label");
+    const checkboxId = `operations-${selectedTeam.id}-${staff.id}`;
+
+    formCheck.className = "form-check";
+    checkbox.className = "form-check-input";
+    checkbox.id = checkboxId;
+    checkbox.type = "checkbox";
+    checkbox.checked = staff.teamIds.includes(selectedTeam.id);
+    label.className = "form-check-label";
+    label.htmlFor = checkboxId;
+    label.textContent = staff.name;
+
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked) {
+        staff.teamIds = [...new Set([...staff.teamIds, selectedTeam.id])];
+      } else {
+        staff.teamIds = staff.teamIds.filter((teamId) => teamId !== selectedTeam.id);
+      }
+
+      operationsTeamStatus.textContent =
+        `${staff.name} ${checkbox.checked ? "assigned to" : "removed from"} ${selectedTeam.name}.`;
+      updateScheduleStaffFilters();
+    });
+
+    formCheck.append(checkbox, label);
+    return formCheck;
+  });
+
+  operationsTeamStaff.replaceChildren(...staffAssignments);
+  operationsTeamStatus.textContent = statusMessage ?? `Editing ${selectedTeam.name}.`;
+};
+
+const showOperationsWorkforcePanel = (panelName) => {
+  const showsTeams = panelName === "teams";
+
+  operationsStaffPanel?.toggleAttribute("hidden", showsTeams);
+  operationsTeamsPanel?.toggleAttribute("hidden", !showsTeams);
+  operationsStaffButton?.classList.toggle("active", !showsTeams);
+  operationsStaffButton?.setAttribute("aria-pressed", String(!showsTeams));
+  operationsTeamsButton?.classList.toggle("active", showsTeams);
+  operationsTeamsButton?.setAttribute("aria-pressed", String(showsTeams));
+
+  if (showsTeams) {
+    updateOperationsTeamEditor();
+  }
+
+  if (operationsSidebar && !window.matchMedia("(min-width: 1200px)").matches) {
+    window.bootstrap?.Offcanvas.getOrCreateInstance(operationsSidebar).hide();
+  }
+};
+
+operationsStaffButton?.addEventListener("click", () => {
+  showOperationsWorkforcePanel("staff");
+});
+
+operationsTeamsButton?.addEventListener("click", () => {
+  showOperationsWorkforcePanel("teams");
+});
+
+operationsTeamSelect?.addEventListener("change", () => {
+  selectedOperationsTeamId = operationsTeamSelect.value;
+  updateOperationsTeamEditor();
+});
+
+operationsTeamName?.addEventListener("input", () => {
+  const selectedTeam = scheduleTeams.find((team) => team.id === selectedOperationsTeamId);
+  const nextName = operationsTeamName.value.trim();
+
+  if (!selectedTeam) {
+    return;
+  }
+
+  if (!nextName) {
+    operationsTeamStatus.textContent = "Team name cannot be blank.";
+    return;
+  }
+
+  selectedTeam.name = nextName;
+
+  const scheduleOption = scheduleTeamFilter?.querySelector(
+    `option[value="${selectedTeam.id}"]`,
+  );
+
+  if (scheduleOption) {
+    scheduleOption.textContent = selectedTeam.name;
+  }
+
+  const operationsOption = operationsTeamSelect?.querySelector(
+    `option[value="${selectedTeam.id}"]`,
+  );
+
+  if (operationsOption) {
+    operationsOption.textContent = selectedTeam.name;
+  }
+
+  operationsTeamStatus.textContent = `Team name updated to ${selectedTeam.name}.`;
+});
+
+operationsTeamName?.addEventListener("change", () => {
+  const selectedTeam = scheduleTeams.find((team) => team.id === selectedOperationsTeamId);
+
+  if (selectedTeam && !operationsTeamName.value.trim()) {
+    operationsTeamName.value = selectedTeam.name;
+  }
+});
+
+updateOperationsTeamEditor();
 
 const setControlsDisabled = (container, disabled) => {
   container?.querySelectorAll("input, select, textarea, button").forEach((control) => {
@@ -671,7 +897,7 @@ const initializeClientLookup = (lookup) => {
   results.className = "list-group mt-2";
   results.id = resultsId;
   results.hidden = true;
-  status.className = "mb-0 mt-2 text-body-secondary";
+  status.className = "mb-0 mt-2 text-body-secondary app-control-text";
   status.setAttribute("aria-live", "polite");
   status.hidden = true;
   input.setAttribute("aria-autocomplete", "list");

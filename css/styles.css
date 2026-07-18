@@ -172,7 +172,7 @@ body > main {
   --bs-btn-active-color: var(--bs-black);
 
   font-family: inherit;
-  font-size: var(--app-control-font-size);
+  font-size: 1rem;
   height: var(--app-control-height);
   min-width: 6rem;
   padding-block: 0;
@@ -187,7 +187,7 @@ body > main {
 
 .app-schedule-step-button {
   font-family: inherit;
-  font-size: var(--app-control-font-size);
+  font-size: 1rem;
   height: var(--app-control-height);
   min-width: 3rem;
   padding-block: 0;
@@ -223,17 +223,11 @@ body > main {
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: var(--bs-border-radius);
   color: var(--bs-body-color);
-  font-size: var(--app-control-font-size);
+  font-size: 1rem;
   margin: 0;
   padding: 0.75rem;
   position: fixed;
   width: min(20rem, calc(100vw - 2rem));
-}
-
-.app-format-heading {
-  font-size: 1rem;
-  font-weight: 800;
-  margin: 0 0 0.75rem;
 }
 
 .app-format-row {
@@ -324,6 +318,22 @@ body > main {
 
 .app-section-card > .app-add-section-header + .card-body {
   padding: 0.5rem 1rem 1rem;
+}
+
+#operationsTeamsPanel {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+#operationsTeamsPanel[hidden] {
+  display: none;
+}
+
+#operationsTeamsPanel > .card-body {
+  min-height: 0;
+  overflow-y: auto;
 }
 
 [data-client-role-card] {
@@ -422,15 +432,16 @@ body > main {
 
 .form-floating > label {
   color: var(--bs-secondary-color);
+  font-size: var(--app-control-font-size);
   transition: none;
-  transform: scale(0.75) translateY(-0.5rem) translateX(0.15rem);
+  transform: translateY(-0.5rem) translateX(0.15rem);
 }
 
 .form-floating > .form-control:focus ~ label,
 .form-floating > .form-control:not(:placeholder-shown) ~ label,
 .form-floating > .form-control-plaintext ~ label,
 .form-floating > .form-select ~ label {
-  transform: scale(0.75) translateY(-0.5rem) translateX(0.15rem);
+  transform: translateY(-0.5rem) translateX(0.15rem);
 }
 
 .form-control:focus,
@@ -537,7 +548,7 @@ body > main {
   align-items: center;
   display: flex;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: var(--app-control-font-size);
   gap: 0.25rem;
   height: var(--app-control-height);
   justify-content: center;
@@ -841,7 +852,7 @@ body > main {
   border-radius: var(--bs-border-radius-sm);
   display: flex;
   font-family: var(--bs-body-font-family);
-  font-size: 1rem;
+  font-size: var(--app-control-font-size);
   font-weight: 400;
   justify-content: center;
   line-height: 1;
@@ -860,7 +871,7 @@ body > main {
   display: flex;
   flex: 0 0 2rem;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: var(--app-control-font-size);
   height: var(--app-control-height);
   justify-content: center;
   line-height: 1;
