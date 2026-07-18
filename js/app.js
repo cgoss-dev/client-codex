@@ -24,6 +24,7 @@ const clientRoleOptions = document.querySelector("[data-client-role-options]");
 const clientRoleToggles = document.querySelectorAll("[data-client-role-toggle]");
 const clientPriorityToggles = document.querySelectorAll("[data-client-priority-toggle]");
 const clientSourceToggles = document.querySelectorAll("[data-client-source-toggle]");
+const clientRoleLookups = document.querySelectorAll("[data-client-role-lookup]");
 const newForm = document.querySelector("#newForm");
 const newFormStatus = document.querySelector("#newFormStatus");
 const newFormReviewButton = document.querySelector("#newFormReviewButton");
@@ -83,6 +84,7 @@ const weekendsOnButton = document.querySelector("#weekendsOnButton");
 let previousView = "schedule";
 let selectedAccountLocationId;
 let pendingAccountLocationId;
+let savedClientsPromise;
 
 const getClientContactCards = () => Array.from(document.querySelectorAll("[data-client-contact]"));
 const clientRoles = ["owner", "manager", "tenant"];
@@ -405,9 +407,16 @@ const updateClientContactModel = () => {
         `[data-client-source-toggle][data-role="${role}"][data-priority="${roleLookup.dataset.priority}"]:checked`,
       );
       const shouldShowLookup = selectedSource?.value === "find";
+      const lookupInput = roleLookup.querySelector('input[type="search"]');
+      const lookupResults = roleLookup.querySelector(".list-group");
 
       roleLookup.hidden = !shouldShowLookup;
       setControlsDisabled(roleLookup, !shouldShowLookup);
+
+      if (!shouldShowLookup) {
+        lookupResults?.setAttribute("hidden", "");
+        lookupInput?.setAttribute("aria-expanded", "false");
+      }
     });
 
     roleContactContainers.forEach((contactContainer) => {
@@ -625,6 +634,158 @@ const focusNewClientDetails = (role, priority) => {
     }
   });
 };
+
+const loadSavedClients = () => {
+  if (!savedClientsPromise) {
+    savedClientsPromise = fetch("/api/clients")
+      .then(async (response) => {
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || "Python could not retrieve Clients.");
+        }
+
+        return result.clients;
+      })
+      .catch((error) => {
+        savedClientsPromise = undefined;
+        throw error;
+      });
+  }
+
+  return savedClientsPromise;
+};
+
+const initializeClientLookup = (lookup) => {
+  const input = lookup.querySelector('input[type="search"]');
+
+  if (!input || lookup.dataset.searchInitialized === "true") {
+    return;
+  }
+
+  lookup.dataset.searchInitialized = "true";
+  const results = document.createElement("div");
+  const status = document.createElement("p");
+  const resultsId = `${input.id}Results`;
+
+  results.className = "list-group mt-2";
+  results.id = resultsId;
+  results.hidden = true;
+  status.className = "mb-0 mt-2 text-body-secondary";
+  status.setAttribute("aria-live", "polite");
+  status.hidden = true;
+  input.setAttribute("aria-autocomplete", "list");
+  input.setAttribute("aria-controls", resultsId);
+  input.setAttribute("aria-expanded", "false");
+  lookup.append(results, status);
+
+  const hideResults = () => {
+    results.hidden = true;
+    input.setAttribute("aria-expanded", "false");
+  };
+
+  const renderResults = async () => {
+    const query = input.value.trim().toLowerCase();
+
+    delete input.dataset.selectedClientId;
+    status.hidden = false;
+    status.textContent = "Searching saved Clients…";
+    results.replaceChildren();
+    hideResults();
+
+    try {
+      const clients = await loadSavedClients();
+      const matches = clients
+        .filter((client) => {
+          const searchableText = [
+            client.id,
+            client.organization,
+            client.firstName,
+            client.lastName,
+            client.email,
+            client.mobile,
+          ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+
+          return !query || searchableText.includes(query);
+        })
+        .slice(0, 5);
+
+      if (!matches.length) {
+        status.textContent = query
+          ? "No saved Clients match this search."
+          : "No saved Clients yet.";
+        updateNewFormReviewState();
+        return;
+      }
+
+      matches.forEach((client) => {
+        const resultButton = document.createElement("button");
+        const organization = client.organization
+          ? ` — ${client.organization}`
+          : "";
+        const contact = client.email || client.mobile;
+
+        resultButton.className =
+          "list-group-item list-group-item-action";
+        resultButton.type = "button";
+        resultButton.dataset.clientId = String(client.id);
+        resultButton.textContent =
+          `#${client.id} — ${client.firstName} ${client.lastName}` +
+          `${organization} — ${contact}`;
+        results.append(resultButton);
+      });
+
+      status.textContent =
+        `${matches.length} ${matches.length === 1 ? "result" : "results"}.`;
+      results.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+      updateNewFormReviewState();
+    } catch (error) {
+      status.textContent =
+        error instanceof Error
+          ? error.message
+          : "Python could not retrieve Clients.";
+      updateNewFormReviewState();
+    }
+  };
+
+  input.addEventListener("input", renderResults);
+  input.addEventListener("focus", () => {
+    if (!input.dataset.selectedClientId) {
+      renderResults();
+    }
+  });
+
+  results.addEventListener("click", async (event) => {
+    const resultButton = event.target.closest("[data-client-id]");
+
+    if (!resultButton || !results.contains(resultButton)) {
+      return;
+    }
+
+    const clients = await loadSavedClients();
+    const clientId = Number(resultButton.dataset.clientId);
+    const client = clients.find((savedClient) => savedClient.id === clientId);
+
+    if (!client) {
+      return;
+    }
+
+    input.value = `#${client.id} — ${client.firstName} ${client.lastName}`;
+    input.dataset.selectedClientId = String(client.id);
+    status.hidden = false;
+    status.textContent =
+      `Selected Client #${client.id}: ${client.firstName} ${client.lastName}.`;
+    hideResults();
+    updateNewFormReviewState();
+    input.focus();
+  });
+};
+
+clientRoleLookups.forEach(initializeClientLookup);
 
 const hideClientContact = (role, priority) => {
   const contact = getClientContactCards().find(
@@ -944,11 +1105,15 @@ const buildClientReviewData = () => Array.from(clientPriorityToggles)
     };
 
     if (source === "find") {
-      client.lookup = document
-        .querySelector(
-          `[data-client-role-lookup="${role}"][data-priority="${priority}"] input`,
-        )
-        ?.value.trim() || null;
+      const lookupInput = document.querySelector(
+        `[data-client-role-lookup="${role}"][data-priority="${priority}"] input`,
+      );
+      const selectedClientId = Number(lookupInput?.dataset.selectedClientId);
+
+      client.lookup = lookupInput?.value.trim() || null;
+      client.clientId = Number.isInteger(selectedClientId)
+        ? selectedClientId
+        : null;
       return client;
     }
 
@@ -1156,6 +1321,10 @@ confirmLocationSaveButton?.addEventListener("click", async () => {
 
     if (result.saved) {
       const savedLocationId = savesBundle ? result.location.id : result.id;
+
+      if (savesBundle) {
+        savedClientsPromise = undefined;
+      }
 
       confirmLocationSaveButton.dataset.savedLocationId =
         String(savedLocationId);
