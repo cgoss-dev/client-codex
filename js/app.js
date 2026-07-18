@@ -88,14 +88,13 @@ const operationsStaffButton = document.querySelector("#operationsStaffButton");
 const operationsTeamsButton = document.querySelector("#operationsTeamsButton");
 const operationsStaffPanel = document.querySelector("#operationsStaffPanel");
 const operationsTeamsPanel = document.querySelector("#operationsTeamsPanel");
-const operationsStaffSelect = document.querySelector("#operationsStaffSelect");
-const operationsStaffEmployeeNumber = document.querySelector("#operationsStaffEmployeeNumber");
-const operationsStaffName = document.querySelector("#operationsStaffName");
-const operationsStaffTeams = document.querySelector("#operationsStaffTeams");
+const operationsStaffCards = document.querySelector("#operationsStaffCards");
+const operationsStaffEditFields = document.querySelector("#operationsStaffEditFields");
 const operationsStaffAuthority = document.querySelector("#operationsStaffAuthority");
 const operationsStaffTrainingStatus = document.querySelector("#operationsStaffTrainingStatus");
-const operationsStaffStartDate = document.querySelector("#operationsStaffStartDate");
-const operationsStaffBirthDate = document.querySelector("#operationsStaffBirthDate");
+const operationsStaffEditButton = document.querySelector("#operationsStaffEditButton");
+const operationsStaffCancelButton = document.querySelector("#operationsStaffCancelButton");
+const operationsStaffSaveButton = document.querySelector("#operationsStaffSaveButton");
 const operationsStaffStatus = document.querySelector("#operationsStaffStatus");
 const operationsTeamSelect = document.querySelector("#operationsTeamSelect");
 const operationsTeamName = document.querySelector("#operationsTeamName");
@@ -135,8 +134,11 @@ const scheduleStaff = [
   { id: "staff-16", employeeNumber: 30, name: "Zhen", authority: "Staff", trainingStatus: "None", startDate: "2023-10-13", birthDate: "1990-01-28", teamIds: [] },
 ];
 let selectedScheduleStaffId = "staff-2";
-let selectedOperationsStaffId = scheduleStaff[0].id;
+let selectedOperationsStaffId = [...scheduleStaff].sort(
+  (staffA, staffB) => staffA.employeeNumber - staffB.employeeNumber,
+)[0].id;
 let selectedOperationsTeamId = scheduleTeams[0].id;
+let isOperationsStaffEditing = false;
 
 const capitalize = (value) => value.charAt(0).toUpperCase() + value.slice(1);
 const staffDateFormatter = new Intl.DateTimeFormat("en-US", {
@@ -193,52 +195,153 @@ const updateScheduleStaffFilters = () => {
 scheduleTeamFilter?.addEventListener("change", updateScheduleStaffFilters);
 updateScheduleStaffFilters();
 
-const updateOperationsStaffProfile = () => {
+const setOperationsStaffEditing = (isEditing) => {
+  isOperationsStaffEditing = isEditing;
+
   if (
-    !operationsStaffSelect ||
-    !operationsStaffEmployeeNumber ||
-    !operationsStaffName ||
-    !operationsStaffTeams ||
+    !operationsStaffCards ||
+    !operationsStaffEditFields ||
     !operationsStaffAuthority ||
     !operationsStaffTrainingStatus ||
-    !operationsStaffStartDate ||
-    !operationsStaffBirthDate ||
+    !operationsStaffEditButton ||
+    !operationsStaffCancelButton ||
+    !operationsStaffSaveButton
+  ) {
+    return;
+  }
+
+  operationsStaffEditFields.hidden = !isEditing;
+  operationsStaffAuthority.disabled = !isEditing;
+  operationsStaffTrainingStatus.disabled = !isEditing;
+  operationsStaffEditButton.hidden = isEditing;
+  operationsStaffCancelButton.hidden = !isEditing;
+  operationsStaffSaveButton.hidden = !isEditing;
+  operationsStaffCards.querySelectorAll("button").forEach((button) => {
+    button.disabled = isEditing;
+  });
+};
+
+const createOperationsStaffCardField = (labelText, valueText, columnClass) => {
+  const field = document.createElement("span");
+  const label = document.createElement("span");
+  const value = document.createElement("span");
+
+  field.className = columnClass;
+  label.className = "d-block text-body-secondary app-control-text";
+  label.textContent = labelText;
+  value.className = "d-block";
+  value.textContent = valueText;
+  field.append(label, value);
+  return field;
+};
+
+const updateOperationsStaffProfile = () => {
+  if (
+    !operationsStaffCards ||
+    !operationsStaffEditFields ||
+    !operationsStaffAuthority ||
+    !operationsStaffTrainingStatus ||
+    !operationsStaffEditButton ||
+    !operationsStaffCancelButton ||
+    !operationsStaffSaveButton ||
     !operationsStaffStatus
   ) {
     return;
   }
 
   const selectedStaff =
-    scheduleStaff.find((staff) => staff.id === selectedOperationsStaffId) ?? scheduleStaff[0];
-  const staffOptions = scheduleStaff.map((staff) => {
-    const option = document.createElement("option");
-
-    option.value = staff.id;
-    option.textContent = staff.name;
-    return option;
-  });
-  const teamNames = selectedStaff.teamIds.map(
-    (teamId) => scheduleTeams.find((team) => team.id === teamId)?.name,
+    scheduleStaff.find((staff) => staff.id === selectedOperationsStaffId) ??
+    [...scheduleStaff].sort((staffA, staffB) => staffA.employeeNumber - staffB.employeeNumber)[0];
+  const sortedStaff = [...scheduleStaff].sort(
+    (staffA, staffB) => staffA.employeeNumber - staffB.employeeNumber,
   );
+  const staffCards = sortedStaff.map((staff) => {
+    const button = document.createElement("button");
+    const body = document.createElement("span");
+    const identityRow = document.createElement("span");
+    const dateRow = document.createElement("span");
+    const classificationRow = document.createElement("span");
+    const teamNames = staff.teamIds
+      .map((teamId) => scheduleTeams.find((team) => team.id === teamId)?.name.replace(/^Team\s+/, ""))
+      .filter(Boolean)
+      .join(", ");
+    const isSelected = staff.id === selectedStaff.id;
+
+    button.className = `card btn btn-light border text-start p-0${isSelected ? " active" : ""}`;
+    button.type = "button";
+    button.dataset.staffId = staff.id;
+    button.setAttribute("aria-label", `Select ${staff.name}, employee ${staff.employeeNumber}`);
+    button.setAttribute("aria-pressed", String(isSelected));
+    body.className = "card-body d-grid gap-2 p-2";
+    identityRow.className = "row g-2";
+    dateRow.className = "row g-2";
+    classificationRow.className = "row g-2";
+
+    identityRow.append(
+      createOperationsStaffCardField("E#", String(staff.employeeNumber), "col-3"),
+      createOperationsStaffCardField("Name", staff.name, "col-9"),
+    );
+    dateRow.append(
+      createOperationsStaffCardField("Start", formatStaffDate(staff.startDate), "col-6"),
+      createOperationsStaffCardField("Birth", formatStaffDate(staff.birthDate), "col-6"),
+    );
+    classificationRow.append(
+      createOperationsStaffCardField("Auth", staff.authority, "col-4"),
+      createOperationsStaffCardField("Train", staff.trainingStatus, "col-4"),
+      createOperationsStaffCardField("Team", teamNames || "None", "col-4"),
+    );
+    body.append(identityRow, dateRow, classificationRow);
+    button.append(body);
+    button.addEventListener("click", () => {
+      selectedOperationsStaffId = staff.id;
+      updateOperationsStaffProfile();
+    });
+    return button;
+  });
 
   selectedOperationsStaffId = selectedStaff.id;
-  operationsStaffSelect.replaceChildren(...staffOptions);
-  operationsStaffSelect.value = selectedStaff.id;
-  operationsStaffEmployeeNumber.value = selectedStaff.employeeNumber;
-  operationsStaffName.value = selectedStaff.name;
-  operationsStaffTeams.value = teamNames.filter(Boolean).join(", ") || "No Team";
+  operationsStaffCards.replaceChildren(...staffCards);
   operationsStaffAuthority.value = selectedStaff.authority;
   operationsStaffTrainingStatus.value = selectedStaff.trainingStatus;
-  operationsStaffStartDate.value = formatStaffDate(selectedStaff.startDate);
-  operationsStaffBirthDate.value = formatStaffDate(selectedStaff.birthDate);
-  operationsStaffStatus.textContent = `Viewing ${selectedStaff.name}.`;
+  operationsStaffStatus.textContent = `Selected ${selectedStaff.name}.`;
+  setOperationsStaffEditing(false);
 };
 
-operationsStaffSelect?.addEventListener("change", () => {
-  selectedOperationsStaffId = operationsStaffSelect.value;
-  updateOperationsStaffProfile();
-});
 updateOperationsStaffProfile();
+
+operationsStaffEditButton?.addEventListener("click", () => {
+  const selectedStaff = scheduleStaff.find((staff) => staff.id === selectedOperationsStaffId);
+
+  if (!selectedStaff) {
+    return;
+  }
+
+  setOperationsStaffEditing(true);
+  operationsStaffStatus.textContent = `Editing ${selectedStaff.name}.`;
+  operationsStaffAuthority.focus();
+});
+
+operationsStaffCancelButton?.addEventListener("click", () => {
+  const selectedStaff = scheduleStaff.find((staff) => staff.id === selectedOperationsStaffId);
+
+  updateOperationsStaffProfile();
+  operationsStaffStatus.textContent = `Changes canceled for ${selectedStaff?.name ?? "Staff"}.`;
+  operationsStaffEditButton.focus();
+});
+
+operationsStaffSaveButton?.addEventListener("click", () => {
+  const selectedStaff = scheduleStaff.find((staff) => staff.id === selectedOperationsStaffId);
+
+  if (!selectedStaff) {
+    return;
+  }
+
+  selectedStaff.authority = operationsStaffAuthority.value;
+  selectedStaff.trainingStatus = operationsStaffTrainingStatus.value;
+  updateOperationsStaffProfile();
+  operationsStaffStatus.textContent = `Saved ${selectedStaff.name}.`;
+  operationsStaffEditButton.focus();
+});
 
 const updateOperationsTeamEditor = (statusMessage) => {
   if (
@@ -309,6 +412,10 @@ const updateOperationsTeamEditor = (statusMessage) => {
 
 const showOperationsWorkforcePanel = (panelName) => {
   const showsTeams = panelName === "teams";
+
+  if (showsTeams && isOperationsStaffEditing) {
+    updateOperationsStaffProfile();
+  }
 
   operationsStaffPanel?.toggleAttribute("hidden", showsTeams);
   operationsTeamsPanel?.toggleAttribute("hidden", !showsTeams);

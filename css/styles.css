@@ -320,6 +320,7 @@ body > main {
   padding: 0.5rem 1rem 1rem;
 }
 
+#operationsStaffPanel,
 #operationsTeamsPanel {
   display: flex;
   flex: 1 1 auto;
@@ -327,12 +328,22 @@ body > main {
   min-height: 0;
 }
 
+#operationsStaffPanel[hidden],
 #operationsTeamsPanel[hidden] {
   display: none;
 }
 
+#operationsStaffPanel > .card-body,
 #operationsTeamsPanel > .card-body {
   min-height: 0;
+}
+
+#operationsStaffCards {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+#operationsTeamsPanel > .card-body {
   overflow-y: auto;
 }
 
