@@ -51,3 +51,5 @@ class LocationClient(Base):
     )
     role: Mapped[str] = mapped_column(String(20))
     priority: Mapped[str] = mapped_column(String(20))
+    responsibility: Mapped[Optional[str]] = mapped_column(String(20))
+    tenant_type: Mapped[Optional[str]] = mapped_column(String(20))
