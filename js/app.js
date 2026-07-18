@@ -1935,7 +1935,7 @@ if (weekStartToggle && calendarDates && calendarMonth) {
 
     timeHeading.className = "schedule-time-heading p-0 text-center";
     timeHeading.scope = "col";
-    timeToggle.className = "btn btn-light schedule-time-toggle";
+    timeToggle.className = "btn btn-light border schedule-time-toggle";
     timeToggle.type = "button";
     timeToggleIcon.setAttribute("class", "bi bi-gear schedule-time-toggle-icon");
     timeToggleIcon.setAttribute("aria-hidden", "true");
@@ -1963,7 +1963,7 @@ if (weekStartToggle && calendarDates && calendarMonth) {
       heading.className = "p-0";
       heading.classList.toggle("schedule-day-heading-weekend", isWeekend);
       heading.scope = "col";
-      button.className = `btn btn-light schedule-day-button${isSelected ? " active" : ""}`;
+      button.className = `btn btn-light border schedule-day-button${isSelected ? " active" : ""}`;
       button.classList.toggle("schedule-day-weekend", isWeekend);
       button.type = "button";
       button.setAttribute("aria-label", `Show ${formatDate(date)}${isToday ? ", today" : ""}`);

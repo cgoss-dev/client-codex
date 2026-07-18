@@ -2,7 +2,7 @@
 
 ## Goal
 
-Build a simple field-service CRM for scheduling and routing multiple technicians. The primary purpose of this project is to teach me Bootstrap, Python, and SQLite while we build it.
+Build a simple field-service CRM for scheduling and routing staff organized into teams. The primary purpose of this project is to teach me Bootstrap, Python, and SQLite while we build it.
 
 ## Learning Workflow
 
@@ -30,12 +30,12 @@ Build a simple field-service CRM for scheduling and routing multiple technicians
 - Keep the code readable and beginner-friendly.
 - Prefer Bootstrap utilities over custom CSS.
 - Use custom CSS only when Bootstrap does not provide the project-specific styling we need.
-- Build our own calendar, scheduling, and technician-assignment features.
+- Build our own calendar, scheduling, team, and staff-assignment features.
 - Treat Owners, Managers, and Tenants as Clients linked to Accounts and Locations.
 - Classify Locations as Residence or Rental; mark Rentals as Vacant or Occupied.
 - Keep the Bill To Account separate from the Service Location.
-- Start with accounts, clients, locations, technicians, jobs, and appointments.
-- Prevent overlapping technician appointments.
+- Start with accounts, clients, locations, staff, teams, jobs, and appointments.
+- Prevent overlapping staff appointments.
 - Keep mapping and routing code replaceable.
 - Treat Google Calendar as an optional future integration.
 - Test relevant behavior and responsive layouts before finishing changes.

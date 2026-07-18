@@ -25,7 +25,7 @@
           <a class="navbar-brand h3 app-header-title mb-0" href="#">Client Codex</a>
 
           <button
-            class="btn btn-light app-header-control app-global-new-button d-none d-md-inline-flex"
+            class="btn btn-light border app-header-control app-global-new-button d-none d-md-inline-flex"
             data-new-button
             type="button"
             aria-controls="newPanel"
@@ -34,7 +34,7 @@
           </button>
 
           <button
-            class="navbar-toggler btn btn-light app-header-control"
+            class="navbar-toggler btn btn-light border app-header-control"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#primaryNavigation"
@@ -49,7 +49,7 @@
             <ul class="navbar-nav nav nav-pills app-nav ms-xl-auto gap-2 py-3 py-xl-0">
               <li class="nav-item d-md-none">
                 <button
-                  class="nav-link btn btn-light app-global-new-button"
+                  class="nav-link btn btn-light border app-global-new-button"
                   data-new-button
                   type="button"
                   aria-controls="newPanel"
@@ -58,19 +58,19 @@
                 </button>
               </li>
               <li class="nav-item">
-                <a class="nav-link btn btn-light active" id="scheduleNavLink" href="#schedule" aria-current="page">Schedule</a>
+                <a class="nav-link btn btn-light border active" id="scheduleNavLink" href="#schedule" aria-current="page">Schedule</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link btn btn-light" id="accountsNavLink" href="#accounts">Accounts</a>
+                <a class="nav-link btn btn-light border" id="accountsNavLink" href="#accounts">Accounts</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link btn btn-light" id="billingNavLink" href="#billing">Billing</a>
+                <a class="nav-link btn btn-light border" id="billingNavLink" href="#billing">Billing</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link btn btn-light" id="operationsNavLink" href="#operations">Operations</a>
+                <a class="nav-link btn btn-light border" id="operationsNavLink" href="#operations">Operations</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link btn btn-light" id="preferencesNavLink" href="#preferences">Preferences</a>
+                <a class="nav-link btn btn-light border" id="preferencesNavLink" href="#preferences">Preferences</a>
               </li>
             </ul>
           </div>
@@ -91,7 +91,7 @@
                 <div class="card-body calendar-body px-1">
                   <div class="calendar-month-display text-center">
                     <button
-                      class="btn btn-light calendar-month-button"
+                      class="btn btn-light border calendar-month-button"
                       id="previousMonthButton"
                       type="button"
                       aria-label="Show previous month"
@@ -100,7 +100,7 @@
                     </button>
                     <time class="calendar-month-label" id="calendarMonth" datetime="" aria-live="polite"></time>
                     <button
-                      class="btn btn-light calendar-month-button"
+                      class="btn btn-light border calendar-month-button"
                       id="nextMonthButton"
                       type="button"
                       aria-label="Show next month"
@@ -128,16 +128,30 @@
               </div>
             </section>
 
-            <section class="app-sidebar-section" aria-labelledby="technician-heading">
-              <h2 id="technician-heading" class="h3 app-sidebar-title text-center">Technician</h2>
+            <section class="app-sidebar-section" aria-labelledby="staff-heading">
+              <h2 id="staff-heading" class="h3 app-sidebar-title text-center">Staff</h2>
 
               <div class="card app-sidebar-card">
-                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Filter schedule by technician">
-                  <button class="btn btn-light technician-button" type="button" aria-pressed="false">Tech 1</button>
-                  <button class="btn btn-light technician-button active" type="button" aria-pressed="true">Tech 2</button>
-                  <button class="btn btn-light technician-button" type="button" aria-pressed="false">Tech 3</button>
-                  <button class="btn btn-light technician-button" type="button" aria-pressed="false">Tech 4</button>
-                  <button class="btn btn-light technician-button" type="button" aria-pressed="false">Tech 5</button>
+                <div class="card-body d-grid gap-2 p-2">
+                  <label class="app-control-text" for="scheduleTeamFilter">Team</label>
+                  <select
+                    class="form-select form-select-sm border app-control-text app-sidebar-select"
+                    id="scheduleTeamFilter"
+                    aria-label="Filter staff by team"
+                  >
+                    <option value="all" selected>All Teams</option>
+                    <option value="team-1">Team 1</option>
+                    <option value="team-2">Team 2</option>
+                    <option value="team-3">Team 3</option>
+                  </select>
+
+                  <div class="d-grid gap-2" role="group" aria-label="Filter schedule by staff">
+                    <button class="btn btn-light border staff-button" type="button" aria-pressed="false">Staff 1</button>
+                    <button class="btn btn-light border staff-button active" type="button" aria-pressed="true">Staff 2</button>
+                    <button class="btn btn-light border staff-button" type="button" aria-pressed="false">Staff 3</button>
+                    <button class="btn btn-light border staff-button" type="button" aria-pressed="false">Staff 4</button>
+                    <button class="btn btn-light border staff-button" type="button" aria-pressed="false">Staff 5</button>
+                  </div>
                 </div>
               </div>
             </section>
@@ -147,8 +161,9 @@
 
               <div class="card app-sidebar-card">
                 <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Appointment actions">
-                  <button class="btn btn-light app-sidebar-action" type="button">Create</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Lookup</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Create</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Lookup</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Unassigned</button>
                 </div>
               </div>
             </section>
@@ -175,10 +190,10 @@
 
                 <div class="app-schedule-heading-controls" id="scheduleHeadingControls">
                   <div class="btn-group" role="group" aria-label="Move schedule date range">
-                    <button class="btn btn-light app-schedule-step-button" id="previousScheduleDatesButton" type="button">Prev</button>
-                    <button class="btn btn-light app-schedule-step-button" id="nextScheduleDatesButton" type="button">Next</button>
+                    <button class="btn btn-light border app-schedule-step-button" id="previousScheduleDatesButton" type="button">Prev</button>
+                    <button class="btn btn-light border app-schedule-step-button" id="nextScheduleDatesButton" type="button">Next</button>
                   </div>
-                  <button class="btn btn-light app-view-route-button" id="viewRouteButton" type="button" aria-pressed="false">Route Off</button>
+                  <button class="btn btn-light border app-view-route-button" id="viewRouteButton" type="button" aria-pressed="false">Route Off</button>
                 </div>
               </div>
 
@@ -214,8 +229,8 @@
             <div class="app-format-row">
               <span>Time format</span>
               <div class="btn-group" role="group" aria-label="Time format">
-                <button class="btn btn-light btn-sm app-format-button" id="timeFormat12Button" type="button">12h</button>
-                <button class="btn btn-light btn-sm app-format-button" id="timeFormat24Button" type="button">24h</button>
+                <button class="btn btn-light border btn-sm app-format-button" id="timeFormat12Button" type="button">12h</button>
+                <button class="btn btn-light border btn-sm app-format-button" id="timeFormat24Button" type="button">24h</button>
               </div>
             </div>
 
@@ -231,26 +246,26 @@
             <div class="app-format-row">
               <span>Date range</span>
               <div class="btn-group" role="group" aria-label="Date range">
-                <button class="btn btn-light btn-sm app-format-button" id="dateRange3Button" type="button">3</button>
-                <button class="btn btn-light btn-sm app-format-button" id="dateRange5Button" type="button">5</button>
-                <button class="btn btn-light btn-sm app-format-button" id="dateRange7Button" type="button">7</button>
+                <button class="btn btn-light border btn-sm app-format-button" id="dateRange3Button" type="button">3</button>
+                <button class="btn btn-light border btn-sm app-format-button" id="dateRange5Button" type="button">5</button>
+                <button class="btn btn-light border btn-sm app-format-button" id="dateRange7Button" type="button">7</button>
               </div>
             </div>
 
             <div class="app-format-row">
               <span>Appointment info</span>
               <div class="btn-group" role="group" aria-label="Appointment information lines">
-                <button class="btn btn-light btn-sm app-format-button" id="appointmentInfo1Button" type="button">1</button>
-                <button class="btn btn-light btn-sm app-format-button" id="appointmentInfo3Button" type="button">3</button>
-                <button class="btn btn-light btn-sm app-format-button" id="appointmentInfo5Button" type="button">5</button>
+                <button class="btn btn-light border btn-sm app-format-button" id="appointmentInfo1Button" type="button">1</button>
+                <button class="btn btn-light border btn-sm app-format-button" id="appointmentInfo3Button" type="button">3</button>
+                <button class="btn btn-light border btn-sm app-format-button" id="appointmentInfo5Button" type="button">5</button>
               </div>
             </div>
 
             <div class="app-format-row">
               <span>Weekends</span>
               <div class="btn-group" role="group" aria-label="Weekend visibility">
-                <button class="btn btn-light btn-sm app-format-button" id="weekendsOffButton" type="button">Off</button>
-                <button class="btn btn-light btn-sm app-format-button" id="weekendsOnButton" type="button">On</button>
+                <button class="btn btn-light border btn-sm app-format-button" id="weekendsOffButton" type="button">Off</button>
+                <button class="btn btn-light border btn-sm app-format-button" id="weekendsOnButton" type="button">On</button>
               </div>
             </div>
           </div>
@@ -269,9 +284,9 @@
 
               <div class="card app-sidebar-card">
                 <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Filter accounts by location type">
-                  <button class="btn btn-light app-sidebar-action" type="button">Residences</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Rentals</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Commercial</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Residences</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Rentals</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Commercial</button>
                 </div>
               </div>
             </section>
@@ -281,9 +296,9 @@
 
               <div class="card app-sidebar-card">
                 <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Filter accounts by client role">
-                  <button class="btn btn-light app-sidebar-action" type="button">Owners</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Managers</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Tenants</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Owners</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Managers</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Tenants</button>
                 </div>
               </div>
             </section>
@@ -520,12 +535,12 @@
 
               <div class="row g-2 mt-1">
                 <div class="col-6">
-                  <button class="btn btn-light w-100" id="cancelNewButton" type="button">Cancel</button>
+                  <button class="btn btn-light border w-100" id="cancelNewButton" type="button">Cancel</button>
                 </div>
                 <div class="col-6">
                   <button class="btn btn-primary w-100" id="newFormReviewButton" type="submit" form="newForm" disabled>Review</button>
                 </div>
-                <p class="col-12 mb-0 text-body-secondary text-center" id="newFormStatus" aria-live="polite">
+                <p class="col-12 mb-0 text-body-secondary text-center app-control-text" id="newFormStatus" aria-live="polite">
                   Select at least one detail to add.
                 </p>
               </div>
@@ -731,7 +746,7 @@
                           >
                             <div class="card-header align-items-center d-flex justify-content-between gap-2">
                               <h3 class="h5 app-detail-heading" id="client-owner-heading">Owner</h3>
-                              <button class="btn btn-light" data-swap-role-priority="owner" type="button" aria-label="Swap Priority" hidden>
+                              <button class="btn btn-light border" data-swap-role-priority="owner" type="button" aria-label="Swap Priority" hidden>
                                 Swap<span class="d-none d-lg-inline"> Priority</span>
                               </button>
                               <button
@@ -869,7 +884,7 @@
                           >
                             <div class="card-header align-items-center d-flex justify-content-between gap-2">
                               <h3 class="h5 app-detail-heading" id="client-manager-heading">Manager</h3>
-                              <button class="btn btn-light" data-swap-role-priority="manager" type="button" aria-label="Swap Priority" hidden>
+                              <button class="btn btn-light border" data-swap-role-priority="manager" type="button" aria-label="Swap Priority" hidden>
                                 Swap<span class="d-none d-lg-inline"> Priority</span>
                               </button>
                               <button
@@ -947,7 +962,7 @@
                           >
                             <div class="card-header align-items-center d-flex justify-content-between gap-2">
                               <h3 class="h5 app-detail-heading" id="client-tenant-heading">Tenant</h3>
-                              <button class="btn btn-light" data-swap-role-priority="tenant" type="button" aria-label="Swap Priority" hidden>
+                              <button class="btn btn-light border" data-swap-role-priority="tenant" type="button" aria-label="Swap Priority" hidden>
                                 Swap<span class="d-none d-lg-inline"> Priority</span>
                               </button>
                               <button
@@ -1416,10 +1431,10 @@
                     </p>
                     <pre class="bg-body-tertiary border rounded fs-6 mb-0 overflow-auto p-2"><code id="newLocationReviewData"></code></pre>
                     <div class="align-items-center d-flex flex-wrap gap-2 justify-content-between mt-3">
-                      <p class="mb-0" id="locationApiStatus" aria-live="polite">Not sent to Python yet.</p>
+                      <p class="mb-0 app-control-text" id="locationApiStatus" aria-live="polite">Not sent to Python yet.</p>
                       <div class="d-flex flex-wrap gap-2">
                         <button
-                          class="btn btn-light"
+                          class="btn btn-light border"
                           id="addAnotherLocationButton"
                           type="button"
                           hidden
@@ -1459,10 +1474,10 @@
 
               <div class="card app-sidebar-card">
                 <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Invoice actions">
-                  <button class="btn btn-light app-sidebar-action" type="button">Add Invoice</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Drafts</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Unpaid</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Paid</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Add Invoice</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Drafts</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Unpaid</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Paid</button>
                 </div>
               </div>
             </section>
@@ -1472,9 +1487,9 @@
 
               <div class="card app-sidebar-card">
                 <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Look up billing records">
-                  <button class="btn btn-light app-sidebar-action" type="button">Account #</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Client</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Location</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Account #</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Client</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Location</button>
                 </div>
               </div>
             </section>
@@ -1484,9 +1499,9 @@
 
               <div class="card app-sidebar-card">
                 <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Payment actions">
-                  <button class="btn btn-light app-sidebar-action" type="button">Record Payment</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Account Balances</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Payment History</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Record Payment</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Account Balances</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Payment History</button>
                 </div>
               </div>
             </section>
@@ -1563,13 +1578,13 @@
           aria-label="Operations sidebar"
         >
           <div class="offcanvas-body d-block app-sidebar-content px-3">
-            <section class="app-sidebar-section" aria-labelledby="operations-employees-heading">
-              <h2 id="operations-employees-heading" class="h3 app-sidebar-title text-center">Employees</h2>
+            <section class="app-sidebar-section" aria-labelledby="operations-workforce-heading">
+              <h2 id="operations-workforce-heading" class="h3 app-sidebar-title text-center">Workforce</h2>
 
               <div class="card app-sidebar-card">
-                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Employee sections">
-                  <button class="btn btn-light app-sidebar-action" type="button">Technicians</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Administration</button>
+                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Workforce sections">
+                  <button class="btn btn-light border app-sidebar-action" type="button">Staff</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Teams</button>
                 </div>
               </div>
             </section>
@@ -1579,9 +1594,9 @@
 
               <div class="card app-sidebar-card">
                 <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Company sections">
-                  <button class="btn btn-light app-sidebar-action" type="button">Policies</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Licenses</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Vendors</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Policies</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Licenses</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Vendors</button>
                 </div>
               </div>
             </section>
@@ -1625,26 +1640,26 @@
         >
           <div class="offcanvas-body d-block app-sidebar-content px-3">
             <section class="app-sidebar-section" aria-labelledby="preferences-saved-heading">
-              <h2 id="preferences-saved-heading" class="h3 app-sidebar-title text-center">Saved for Later</h2>
+              <h2 id="preferences-saved-heading" class="h3 app-sidebar-title text-center">Saved</h2>
 
               <div class="card app-sidebar-card">
-                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Saved for later sections">
-                  <button class="btn btn-light app-sidebar-action" type="button">Notes</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Appointments</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Invoices</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Clients</button>
+                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Saved sections">
+                  <button class="btn btn-light border app-sidebar-action" type="button">Notes</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Appointments</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Invoices</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Clients</button>
                 </div>
               </div>
             </section>
 
             <section class="app-sidebar-section" aria-labelledby="preferences-default-view-heading">
-              <h2 id="preferences-default-view-heading" class="h3 app-sidebar-title text-center">Default View</h2>
+              <h2 id="preferences-default-view-heading" class="h3 app-sidebar-title text-center">Default</h2>
 
               <div class="card app-sidebar-card">
-                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Default view sections">
-                  <button class="btn btn-light app-sidebar-action" type="button">Font Size/Color</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Day/Night Mode</button>
-                  <button class="btn btn-light app-sidebar-action" type="button">Date/Time Format</button>
+                <div class="card-body d-grid gap-2 p-2" role="group" aria-label="Default sections">
+                  <button class="btn btn-light border app-sidebar-action" type="button">Font Size/Color</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Day/Night Mode</button>
+                  <button class="btn btn-light border app-sidebar-action" type="button">Date/Time Format</button>
                 </div>
               </div>
             </section>
