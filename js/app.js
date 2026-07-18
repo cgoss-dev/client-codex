@@ -864,6 +864,7 @@ const updateNewFormReviewState = () => {
     confirmLocationSaveButton.disabled = true;
     confirmLocationSaveButton.textContent = "Confirm Save";
     delete confirmLocationSaveButton.dataset.savedLocationId;
+    delete confirmLocationSaveButton.dataset.saveMode;
   }
 
   if (addAnotherLocationButton) {
@@ -1052,21 +1053,44 @@ newForm?.addEventListener("submit", (event) => {
   }
 
   if (newLocationReview && newLocationReviewData) {
-    newLocationReviewData.textContent = JSON.stringify(buildAddReviewData(), null, 2);
+    const addReviewData = buildAddReviewData();
+    const hasClients = addReviewData.clients.length > 0;
+    const hasUnresolvedFind = addReviewData.clients.some(
+      (client) => client.source === "find" && !Number.isInteger(client.clientId),
+    );
+
+    newLocationReviewData.textContent = JSON.stringify(addReviewData, null, 2);
     newLocationReview.hidden = false;
 
-    if (includeLocation?.checked) {
-      confirmLocationSaveButton?.removeAttribute("disabled");
-      confirmLocationSaveButton?.removeAttribute("hidden");
+    if (includeLocation?.checked && confirmLocationSaveButton) {
+      confirmLocationSaveButton.hidden = false;
+
+      if (hasUnresolvedFind) {
+        confirmLocationSaveButton.disabled = true;
+      } else {
+        confirmLocationSaveButton.disabled = false;
+        confirmLocationSaveButton.dataset.saveMode = hasClients
+          ? "bundle"
+          : "location";
+      }
     } else if (confirmLocationSaveButton) {
       confirmLocationSaveButton.disabled = true;
       confirmLocationSaveButton.hidden = true;
     }
 
     if (locationApiStatus) {
-      locationApiStatus.textContent = includeLocation?.checked
-        ? "The Location is ready to send to Python. Client saving is not connected yet."
-        : "Client preview only. Client saving is not connected yet.";
+      if (!includeLocation?.checked) {
+        locationApiStatus.textContent =
+          "Client preview only. Include a Location before saving.";
+      } else if (hasUnresolvedFind) {
+        locationApiStatus.textContent =
+          "Find is preview-only until a saved Client is selected from search results.";
+      } else if (hasClients) {
+        locationApiStatus.textContent =
+          "The Location, new Clients, and links are ready to save together.";
+      } else {
+        locationApiStatus.textContent = "The Location is ready to save.";
+      }
     }
 
     animateCardEntrance(newLocationReview);
@@ -1092,18 +1116,24 @@ confirmLocationSaveButton?.addEventListener("click", async () => {
   confirmLocationSaveButton.disabled = true;
   confirmLocationSaveButton.textContent = "Checking…";
   confirmLocationSaveButton.setAttribute("aria-busy", "true");
+  const saveMode = confirmLocationSaveButton.dataset.saveMode;
+  const savesBundle = saveMode === "bundle";
 
   if (locationApiStatus) {
-    locationApiStatus.textContent = "Python is validating the Location.";
+    locationApiStatus.textContent = savesBundle
+      ? "Python is validating the Location and Clients."
+      : "Python is validating the Location.";
   }
 
   try {
-    const response = await fetch("/api/locations", {
+    const response = await fetch(savesBundle ? "/api/add" : "/api/locations", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(buildLocationReviewData()),
+      body: JSON.stringify(
+        savesBundle ? buildAddReviewData() : buildLocationReviewData(),
+      ),
     });
     const result = await response.json();
 
@@ -1125,7 +1155,10 @@ confirmLocationSaveButton?.addEventListener("click", async () => {
     }
 
     if (result.saved) {
-      confirmLocationSaveButton.dataset.savedLocationId = String(result.id);
+      const savedLocationId = savesBundle ? result.location.id : result.id;
+
+      confirmLocationSaveButton.dataset.savedLocationId =
+        String(savedLocationId);
       confirmLocationSaveButton.disabled = false;
       confirmLocationSaveButton.textContent = "View in Accounts";
       addAnotherLocationButton?.removeAttribute("hidden");
@@ -1134,9 +1167,16 @@ confirmLocationSaveButton?.addEventListener("click", async () => {
     }
 
     if (locationApiStatus) {
-      locationApiStatus.textContent = result.saved
-        ? `${result.message} Location #${result.id}.`
-        : `${result.message} Nothing has been saved yet.`;
+      if (result.saved && savesBundle) {
+        locationApiStatus.textContent =
+          `${result.message} Location #${result.location.id}; ` +
+          `${result.clients.length} ` +
+          `${result.clients.length === 1 ? "Client" : "Clients"}.`;
+      } else {
+        locationApiStatus.textContent = result.saved
+          ? `${result.message} Location #${result.id}.`
+          : `${result.message} Nothing has been saved yet.`;
+      }
     }
   } catch (error) {
     confirmLocationSaveButton.disabled = false;
@@ -1146,7 +1186,7 @@ confirmLocationSaveButton?.addEventListener("click", async () => {
       locationApiStatus.textContent =
         error instanceof Error
           ? error.message
-          : "Python could not validate the Location.";
+          : "Python could not save the Add data.";
     }
   } finally {
     confirmLocationSaveButton.removeAttribute("aria-busy");
